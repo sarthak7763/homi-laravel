@@ -219,6 +219,7 @@ Route::group(['middleware' => 'Isadmin'], function () {
         Route::post('/buyer-complaint-detail', 'ComplaintController@show')->name('admin-user-complaint-detail');
         Route::get('/buyer-complaint-details/{id}', 'ComplaintController@showDetail')->name('admin-complaint-detail');
          Route::post('/buyer-complaint-response-send', 'ComplaintController@responseComplaint')->name('admin-user-complaint-respond');
+         
         //---------------------------ADMIN ENQUIRY ROUTE----------------------//
         Route::get('/buyer-enquiry-list', 'EnquiryController@index')->name('admin-user-enquiry-list');
         Route::get('/buyer-enquiry-add', 'EnquiryController@add')->name('admin-user-enquiry-add');
@@ -229,82 +230,42 @@ Route::group(['middleware' => 'Isadmin'], function () {
         Route::post('/buyer-enquiry-delete', 'EnquiryController@deleteEnquiry')->name('admin-user-enquiry-delete');
         Route::post('/buyer-enquiry-detail', 'EnquiryController@show')->name('admin-user-enquiry-detail');
         Route::get('/buyer-enquiry-details/{id}', 'EnquiryController@showDetail')->name('admin-enquiry-detail');
-        //-----------------------------ADMIN PROPERTY TYPE ROUTE-----------------//
-        Route::get('/property-type-list', 'PropertyTypeController@index')->name('admin-property-type-list');
-        Route::get('/property-type-add', 'PropertyTypeController@add')->name('admin-property-type-add');
-        Route::post('/property-type-save', 'PropertyTypeController@save')->name('admin-property-type-save');
-        Route::get('/property-type-edit/{slug}', 'PropertyTypeController@edit')->name('admin-property-type-edit');
-        Route::post('/property-type-update', 'PropertyTypeController@update')->name('admin-property-type-update');
-        Route::post('/property-type-status-update', 'PropertyTypeController@updateproperty_typeStatus')->name('admin-property-type-status-update');
-        Route::post('/property-type-delete', 'PropertyTypeController@deleteproperty_type')->name('admin-property-type-delete');
-        Route::get('/property-type-details/{slug}', 'PropertyTypeController@show')->name('admin-property-type-detail');
         
         //-----------------------------ADMIN PROPERTY ROUTE-----------------//
         Route::get('/property-list', 'PropertyController@index')->name('admin-property-list');
-
-         Route::any('/property-revenue-list', 'PropertyController@getRevenue')->name('admin-revenue-list');
-
-        
 
         Route::post('/ajax-get-category-list', 'PropertyController@ajaxgetcategorylist')->name('admin-ajax-get-category-list');
 
 
         Route::post('/ajax-get-ownder-details', 'PropertyController@ajaxgetownderdetails')->name('admin-ajax-get-ownder-details');
-
-        Route::post('/ajax-show-property-info', 'PropertyController@ajaxGetPropertyInfo')->name('admin-ajax-get-property-info');
-
-        Route::post('/ajax-set-escrow-status', 'PropertyController@ajaxSetEscrowStatus')->name('admin-ajax-set-escrow-status');
         
         //Pending Property where timer expire sale status 0 in offfer table
         Route::get('/pending-property-list', 'PropertyController@pendingProperty')->name('admin-pending-property-list');
+
         Route::get('/property-add', 'PropertyController@add')->name('admin-property-add');
+
         Route::post('/property-save', 'PropertyController@save')->name('admin-property-save');
+
         Route::get('/property-edit/{slug}', 'PropertyController@edit')->name('admin-property-edit');
+
         Route::post('/property-update', 'PropertyController@update')->name('admin-property-update');
+
         Route::get('/property-details/{slug}', 'PropertyController@show')->name('admin-property-details');
 
-        Route::post('/property-wise-bid-list', 'PropertyController@propertyWiseBidList')->name('admin-show-property-wise-bid-list');
-        Route::post('/active-property-list', 'PropertyController@activePropertyList')->name('admin-active-property-list');
-        Route::get('/active-property-list', 'PropertyController@activePropertyList')->name('admin-active-property-list');
- 
-
-
-
         Route::post('/property-status-update', 'PropertyController@updatePropertyStatus')->name('admin-property-status-update');
-        Route::post('/property-delete', 'PropertyController@deleteProperty')->name('admin-property-delete');
-        Route::get('/soft-deleted-property-list', 'PropertyController@softDeletedProperty')->name('admin-soft-deleted-property-list');
-        Route::post('/destroy-property-data','PropertyController@destroyPropertyData')->name('admin-destroy-property');
-        Route::post('/property-restore', 'PropertyController@restoreProperty')->name('admin-property-restore');
-        
-        Route::get('/property-document/{slug}', 'PropertyGalleryController@viewDocument')->name('admin-property-documents-view');
 
-        Route::post('/property-document-save', 'PropertyGalleryController@saveDocument')->name('admin-property-save-document');
+        Route::post('/property-delete', 'PropertyController@deleteProperty')->name('admin-property-delete');
+
+        Route::get('/soft-deleted-property-list', 'PropertyController@softDeletedProperty')->name('admin-soft-deleted-property-list');
         
         Route::get('/property-gallery/{slug}', 'PropertyGalleryController@viewGallery')->name('admin-property-gallery-view');
-        
-        Route::get('/property-video/{slug}', 'PropertyGalleryController@viewVideo')->name('admin-property-video-view');
 
 
-        // Route::post('/property-assets-save', 'PropertyController@saveFilter')->name('admin-property-assets-save');
-        // Route::post('/property-assets-delete', 'PropertyController@deleteFilter')->name('admin-property-assets-delete');
         //--------------ADMIN PROPERTY GALLERY ROUTE-----------------//
-        Route::get('/property-gallery-attachment-list', 'PropertyGalleryController@index')->name('admin-property-gallery-list');
-        Route::get('/property-gallery-attachment-upload', 'PropertyGalleryController@add')->name('admin-property-gallery-add');
-        Route::post('/property-gallery-attachment-save', 'PropertyGalleryController@save')->name('admin-property-gallery-save');
-        Route::post('/property-gallery-attachment-delete', 'PropertyGalleryController@delete')->name('admin-property-gallery-delete');
-        Route::post('/property-gallery-attachment-save-ajax', 'PropertyGalleryController@storeMultiFile')->name('admin-upload-gallery-ajax');
-        Route::post('/property-video-attachment-save-ajax', 'PropertyGalleryController@storeMultiFileVideo')->name('admin-upload-video-ajax');
-        // Route::delete('property-gallery-attachment-delete/{id}', 'PropertyGalleryController@deleteImage')->name('admin-property-image-delete');
+
+        Route::post('/property-gallery-attachment-save-ajax', 'PropertyGalleryController@storepropertyimage')->name('admin-upload-gallery-ajax');
+
         Route::post('/property-gallery-attachment-delete', 'PropertyGalleryController@deleteImage')->name('admin-property-image-delete');
-
-        Route::post('/property-document-status-update', 'PropertyGalleryController@updateDocumentStatus')->name('admin-property-document-status-update');
-
-
-        Route::post('/set-featured-image', 'PropertyGalleryController@setFeatured')->name('admin-set-featured-image');
-
-        Route::post('/remove-featured-image', 'PropertyGalleryController@removeFeatured')->name('admin-remove-featured-image');
-
-        Route::post('/set-featured-image-position', 'PropertyGalleryController@setFeaturedImagePosition')->name('admin-set-image-position');
 
 
         //=================CMS PAGE======================================

@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label><strong>Registration Start From <span class="text-danger"></span></strong></label>
                                 <div class="controls">
-                                    <input type="date" name="start_date" id="start_date" class="form-control datepicker-autoclose" placeholder="Please select start date"> 
+                                    <input type="text" name="start_date" id="start_date" class="form-control datepicker" placeholder="Please select start date"> 
                                     <div class="help-block"></div>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                             <div class="form-group">
                                 <label><strong>To Date <span class="text-danger"></span></strong></label>
                                 <div class="controls">
-                                    <input type="date" name="end_date" id="end_date" class="form-control datepicker-autoclose" placeholder="Please select end date"> 
+                                    <input type="text" name="end_date" id="end_date" class="form-control datepicker" placeholder="Please select end date"> 
                                     <div class="help-block">
                                     </div>
                                 </div>
@@ -145,7 +145,7 @@
 <script type="text/javascript">
 
 $('.datepicker').datepicker({
-  dateFormat: 'yy-mm-dd'
+  dateFormat: 'dd/mm/yy'
 });
 
 

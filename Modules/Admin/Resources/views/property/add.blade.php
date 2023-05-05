@@ -7,6 +7,11 @@
     color: red;
     font-size: 13px;
 }
+
+label.error{
+  color: red;
+  font-size: 13px;
+}
 </style>
 
 @php 
@@ -241,7 +246,7 @@
                             <div class="card">
                               
                                 <div class="card-block">
-                                    <form method="POST" action="{{route('admin-property-save')}}" name="saveBuyerForm" id="saveBuyerForm" enctype="multipart/form-data">
+                                    <form method="POST" action="{{route('admin-property-save')}}" name="SavepropertyForm" id="SavepropertyForm" enctype="multipart/form-data">
                                         @csrf
                                         <div class="row">
                               <div class="col-md-6">
@@ -331,7 +336,7 @@
                            <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">Built In Year<span style="color:red;">*</span></label>
-                                  <input type="text" name="built_in_year" class="form-control" value="" placeholder="Enter Built In Year"  id="built_in_year" >
+                                  <input type="text" name="built_in_year" class="form-control datepicker" value="" placeholder="Enter Built In Year"  id="built_in_year" >
                                   @if($built_in_year_error!="")
                                       <span class="messages">
                                           <strong>{{ $built_in_year_error }}</strong>
@@ -571,10 +576,31 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZWubYF4RSrhWvk_cDI17x4oeUaZm7lf8&libraries=places&callback=initMap"></script>
 
 <script type="text/javascript">
+
+function preview_image() 
+{
+    
+$('#image_preview').html("");
+var total_file=document.getElementById("property_image").files.length;
+for(var i=0;i<total_file;i++)
+{
+
+  $('#image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid  mr-2'>");
+ }
+
+}
+
+
+  $('.datepicker').datepicker({
+    changeMonth: true,
+    changeYear: true,
+    dateFormat: 'mm/yy',
+});
+
   $('#property_type').on('change',function(){
     var property_type=$(this).val();
     var optionhtml='<option value="">Select price type</option>';
-    if(property_type==1)
+    if(property_type==2)
     {
       optionhtml+='<option value="1">PerSq.Ft</option><option value="2">Fixed </option><option value="3">Persq.yard</option>';
     }
@@ -682,4 +708,163 @@ originAutocomplete.addListener('place_changed', function(event) {
         });
 });
     </script>
+
+
+
+<script>
+$.ajaxSetup({
+   headers: {
+       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+
+   $("#SavepropertyForm").validate({  
+        rules: {
+            add_by:{
+                required:true
+            }, 
+            title: {
+                required: true
+            },
+            property_type:{
+              required: true,
+            },
+            property_category:{
+              required: true,
+            },
+            guest_count:{
+                required: true,
+                digits: true,
+            },
+            no_of_bedroom:{
+                required: true,
+                digits: true,
+            },
+            built_in_year:{
+                required: true,
+            },
+            no_of_kitchen:{
+                required: true,
+                digits: true,
+            },
+            no_of_bathroom:{
+                required: true,
+                digits: true,
+            },
+            no_of_pool:{
+                required: true,
+                digits: true,
+            },
+            no_of_garden:{
+                required: true,
+                digits: true,
+            },
+            no_of_balcony:{
+                required: true,
+                digits: true,
+            },
+            property_area:{
+                required: true,
+                digits: true,
+            },
+            property_number:{
+                required: true,
+                digits: true,
+            },
+            property_email:{
+                required: true,
+                email: true,
+            },
+            property_address:{
+                required: true,
+            },
+            property_price:{
+                required: true,
+            },
+            property_price_type:{
+                required: true,
+            },
+            property_image: {
+              required: true,
+              accept: "image/*"
+          },
+        },
+        messages: {
+            add_by: {
+                required: "Please choose owner.",
+            },
+            title: {
+                required: "Please enter property title",
+            },
+            property_type: {
+                required: "Please select property type",
+            },
+            property_category: {
+                required: "Please select property category",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            no_of_bedroom: {
+                required: "Please enter no. of bedroom",
+                digits: "no. of bedroom should contains only digits.",
+            },
+            built_in_year: {
+                required: "Please select built-in year",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+            guest_count: {
+                required: "Please enter guest count",
+                digits: "guest count should contains only digits.",
+            },
+        },
+        submitHandler: function(form) 
+            {
+                 
+                $("#loading").show();
+                $("#submitBuyers").hide();
+                 form.submit();
+            },
+             invalidHandler: function(){
+                  $("#submitBuyers").show();
+                  $("#loading").hide();
+        }
+  });
+
+   $("#submitBuyers").on('click',function(){
+        $("#SavepropertyForm").submit();
+        return false;
+    });
+
+</script>
+
 @endsection
