@@ -1,0 +1,892 @@
+@media screen and (max-width: 1400px) {
+    .noAccount {margin-bottom: 2rem;}
+    .logo {height: 20vh;}
+}
+
+@media screen and (min-width: 1400px) and (max-width: 1599px) {
+    .p-search-list {height: 82vh;}
+}
+@media screen and (min-width: 1024px) and (max-width: 1399px) {
+    .headsign:after {
+        margin-bottom: 30px;
+    }
+    .noAccount {
+        margin-top: 2rem !important;
+        margin-bottom: 1rem;
+    }
+    .p-search-list {height: 75vh;}
+}
+/* Large devices (desktops, less than 1200px) */
+@media screen and (max-width: 1199px) {
+    .proBox h3,
+    .proBox h2,
+    .textArea h2 {
+        font-size: 36px;
+    }
+    .timer .offermessage {
+        white-space: nowrap;
+    }
+    .timer .countdown-section .countdown-amount {
+        line-height: 70px;
+        width: 66px;
+        height: 70px;
+    }
+}
+/* Medium devices (tablets, less than 992px) */
+@media screen and (max-width: 991px) {
+    .bgFull {
+        padding-top: 500px;
+        background: url('../images/signin-img.png') no-repeat center top /100%;
+    }
+
+    .leftCol {
+        max-width: 100%;
+        flex: 0 0 100%;
+        height: auto;
+    }
+
+    .headsign {
+        font-size: 36px;
+    }
+
+    .headsign::after {
+        margin-bottom: 30px;
+    }
+
+    .signForm .login {
+        height: 64px;
+        font-size: 18px;
+    }
+
+    .textArea .needHelp {
+        font-size: 20px;
+    }
+
+    .proBox h3,
+    .proBox h2,
+    .textArea h2 {
+        font-size: 32px;
+    }
+
+    .nav-logo img {
+        position: relative;
+        top: 9px;
+    }
+
+    .social-links {
+        max-width: 35% !important;
+        flex: 0 0 35% !important;
+    }
+
+    .tabPane li .d-flex {
+        max-width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .leftImg {
+        flex: 0 0 115px;
+        max-width: 115px;
+    }
+
+    .tabPane li .midDtl {
+        flex: 0 0 calc(100% - 115px);
+        max-width: calc(100% - 115px);
+    }
+
+    .imgDetails {
+        position: relative;
+    }
+
+    .tabPane li a.seeDetails {
+        position: absolute;
+        right: 0;
+        top: 0;
+        margin: 0;
+    }
+
+    .rightPrice {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-top: 20px;
+    }
+
+    .tabPane li .priceDetails {
+        text-align: center;
+    }
+
+    .wonSection select {
+        width: 25%;
+    }
+
+    .fav_Property ul {
+        max-width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .fav_Property ul>li {
+        flex: 0 0 100%;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .fav_Property .tabPane .rightPrice {
+        border-radius: 4px;
+        margin-left: 0;
+    }
+
+    .fav_Property .tabPane .priceDetails {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+    }
+
+    .fav_Property .tabPane .priceDetails i {
+        padding-right: 10px;
+    }
+
+    .fav_Property .tabPane .priceDetails i img {
+        vertical-align: middle;
+    }
+
+    .imgRight img {height: auto !important; margin-bottom: 10px;}    
+    img.heightVH {height: auto !important;}
+
+    .filterBar {
+        display: block;
+    }
+    .filterBar select {
+        width: 100%;
+    }
+    .filterBar .ftr {
+        margin-top: 10px;
+    }
+    .filterBar .ftr label {
+        display: none;
+    }
+    #toggler {
+        left: 275px;
+    }
+    .leftSearch {
+        max-width: 340px;
+    }
+    .leftspace {
+        margin-left: 0;
+    }
+    .p-search-list li {
+        flex-wrap: wrap; 
+        -webkit-flex-wrap: wrap; 
+        overflow: hidden;
+    }
+    .p-search-list li .imgBox {
+        margin: 0 auto !important;
+    }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media screen and (max-width: 1023px) {
+    .yellowBG .valiSec .form-row {
+        margin: 0;
+    }
+
+    .yellowBG .timer div.label {
+        display: block !important;
+        text-align: center;
+    }
+
+    .yellowBG .timer span b {
+        line-height: normal;
+        padding: 0;
+    }
+
+    .yellowBG .timer #defaultCountdown {
+        width: 100%;
+    }
+
+    .ofrDue {
+        padding: 10px;
+    }
+
+    .ofrDue p {
+        margin-left: 10px;
+        font-size: 2.3vw;
+    }
+
+    .ofrDue i {
+        width: 25px;
+    }
+
+    .ofrDue p span {
+        font-size: 16px;
+    }
+
+    .docs {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .docs ul li span {
+        font-size: 16px;
+    }
+
+    .valiSec .er_message {
+        top: 0;
+        padding-left: 15px;
+    }
+
+    #mybid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    #mybid .imgarea {
+        height: auto;
+    }
+
+    #mybid .contArea {
+        padding-bottom: 15px;
+        width: 50%;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+    .signForm .iti-flag.us {
+        margin-top: 26px !important;
+    }
+    .signForm .selected-dial-code {
+        line-height: 54px;
+    }
+    .form-control:focus ~ .input-label, 
+    .form-control.active ~ .input-label {
+        font-size: 14px;
+        top: 4px;
+    }    
+    .eyeIcon {
+        position: absolute;
+        right: 3%;
+        top: 17px;
+        width: 24px !important;
+        height: 30px;
+    }
+    .signForm .select2-selection--multiple {
+        height: 64px;
+    }
+    li.select2-search:after {
+        right: 20px;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        padding-left: 0 !important;
+    }
+    .signForm .select2-search__field {
+        font-size: 16px !important;
+    }
+    .signForm .login {
+        margin-top: 30px;
+    }
+
+    .col-md-7.imgLeft {
+        padding-left: 0;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    header .navbar,
+    .headimg {
+        margin-top: 0 !important;
+    }
+    header {
+        padding-top: 10px;
+        padding-bottom: 18px;
+    }
+    header .navbar-collapse .navbar-nav {
+        margin-top: 20px;
+    }
+    header #navbarSupportedContent a.nav-link {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        border-bottom: solid 1px #ddd;
+        line-height: 25px;
+    }
+    .headDiv {
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+        padding-bottom: 5px;
+    }
+    .leftDive {
+        margin-left: 70px;
+        width: auto;
+        position: relative;
+        z-index: 6;
+    }    
+    .leftDive img {
+        margin-top: 5px !important;
+    }
+
+    .midDive {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 5;
+        padding: 0;
+    }
+    .midDive .navbar-toggler {
+        margin-left: 15px;        
+    }
+    .midDive #navbarSupportedContent {
+        background: var(--white);
+        margin-top: 14px;
+        padding: 0 0 10px 0;        
+        position: fixed;
+        width: 100%;
+        top: 48px;
+        left: 0;
+    }
+    h1.text-white {
+        font-size: 32px;
+    }
+    .text-center.mt-5 {
+        margin-top: 10px!important;
+    }
+    .rightDive {
+        max-width: 80px;
+        flex: auto;
+    }
+    .BellIcon {
+        margin-left: auto;
+        right: 0;
+    }
+    .signForm input[type="text"], 
+    .signForm input[type="email"], 
+    .signForm input[type="password"] {
+        height: 60px;
+        padding-top: 30px;
+    }
+    .signForm .form-group .input-label {
+        top: 5px !important
+    }
+}
+@media screen and (max-width: 767px) {
+    
+    .rightDive {
+        width: auto;
+        position: relative;
+        z-index: 6;
+    }
+
+    .bgFull {
+        padding-top: 400px;
+    }
+
+    .logged-user {
+        position: absolute;
+        width: auto;
+        right: 0;
+        margin-top: 0 !important;
+        z-index: 9;
+    }
+
+    .nav-logo {
+        position: absolute;
+        width: auto;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .nav-logo img {
+        top: auto;
+        margin-top: 0 !important;
+    }
+
+    .rowmailing {
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .imgBx,
+    .textArea {
+        text-align: center;
+    }
+
+    .tabPane li .midDtl {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 0;
+        padding-top: 10px;
+    }
+
+    .imgDetails .accomodation p {
+        margin-left: 0;
+        padding-right: 0;
+    }
+
+    .tabPane li .midDtl .heartIcon {
+        margin-right: 10px;
+    }
+
+    .profileBox {
+        margin-top: 0 !important;
+    }
+
+    .formGroup form .button-group .link,
+    .formGroup form .button-group button {
+        height: auto;
+        line-height: normal;
+    }
+
+    .formGroup form .form-group {
+        padding: 10px;
+        margin-top: 15px !important;
+        margin-bottom: 10px;
+    }
+
+    .imgLeft {
+        padding-left: 0;
+    }
+
+    .imgRight {
+        padding-right: 0;
+    }
+
+    .imgRight .img01 {
+        display: flex;
+        display: -webkit-flex;
+        flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        justify-content: space-between;
+        -webkit-justify-content: space-between;
+    }
+
+    #mybid {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #mybid .contArea {
+        width: 100%;
+    }
+
+    .imgRight .img01 {
+        padding-top: 5px;
+    }
+
+    .imgRight .img01 .row {
+        margin-left: -5px !important;
+        margin-right: -5px !important;
+    }
+
+    .imgRight .col-sm-6.col-xs-6 {
+        padding-left: 5px;
+        width: 50%;
+        padding-right: 5px !important;
+    }
+
+    .amenity {
+        display: block;
+    }
+
+    .yellowBG {
+        padding: 15px 0 0 0;
+    }
+
+    .yellowBG .valiSec input {
+        width: 60%;
+        height: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .yellowBG .valiSec button {
+        width: 40%;
+        font-size: 18px;
+        padding-left: 0;
+        padding-right: 0;
+        height: 60px;
+    }
+
+    .yellowBG .valiSec .er_message {
+        position: static;
+        width: 100%;
+        padding: 0;
+    }
+
+    .yellowBG .timer div.label {
+        display: block !important;
+        text-align: center;
+    }
+
+    .yellowBG .timer span b {
+        line-height: 50px;
+        padding: 0;
+        margin-top: 15px;
+    }
+
+    .yellowBG .timer #defaultCountdown {
+        width: 100%;
+    }
+
+    .userProfile {
+        margin-top: 20px;
+    }
+
+    .userProfile .user {
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .topPad {
+        padding-top: 30px;
+    }
+
+    .ofrDue {
+        margin-top: 15px;
+    }
+
+    .ofrDue p {font-size: 20px;}
+
+    .docs {
+        margin-top: 20px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .docs ul li span {
+        font-size: 16px;
+    }
+
+    .overView {
+        margin-top: 20px;
+        padding: 5px 15px;
+    }
+
+    .seeMap,
+    .seeVideo {
+        margin-top: 20px;
+    }
+
+    .seeMap h2,
+    .seeVideo h2 {
+        line-height: normal;
+        margin-bottom: 0;
+    }
+
+    .seeVideo video {
+        height: auto !important;
+    }
+
+    .dd_section {
+        width: auto;
+        margin: 0 15px;
+        top: 60px;
+    }
+
+    .dd_section .dropdown.float-left {
+        width: 45%;
+    }
+
+    .dd_section .dropdown.float-left button {
+        width: 100%;
+    }
+
+    .dd_section .dropdown.float-right {
+        width: 35%;
+    }
+
+    .dd_section .dropdown.float-right button.toggleBTN {
+        width: 100%;
+    }
+
+    .dd_section .searchIcon {
+        margin-left: 15px;
+        padding-right: 8px;
+    }
+
+    /*MODAL*/
+    .mybid_modal {
+        display: block !important;
+    }
+
+    .mybid_modal .imgarea {
+        width: auto;
+        height: auto;
+    }
+
+    .mybid .mybid_modal .contArea {
+        padding: 15px;
+        width: auto;
+    }
+
+    .mybid .mybid_modal .amount .box1 {
+        max-width: 33.33%;
+    }
+
+    .yellowBG .valiSec {
+        margin-top: 0;
+    }
+
+    footer {
+        text-align: center;
+    }
+
+    footer .container .row [class*="col-"] {
+        margin-bottom: 20px;
+    }
+
+    footer .parraG {
+        padding-top: 25px;
+    }
+
+    .social-links {
+        display: block !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+    }
+
+    .setBox.form-control {
+        width: 100%;
+    }
+
+    .headBar .col-md-6.text-right {
+        float: right;
+        width: auto;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+    }
+    .results {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .leftSearch {
+        height: 100%; 
+        overflow: auto; 
+        background: var(--white);
+    }
+    .leftSearch .p-search-list{
+        height: 100%;
+    }
+    .amenity li {
+        margin-bottom: 15px; 
+        width: 100%; 
+        display: inline-block;
+    }
+    .eyeIcon {
+        position: absolute;
+        right: 5%;
+        top: 12px;
+        width: 24px !important;
+        height: 30px;
+    }
+    .signForm .select2-selection--multiple {
+        height: 54px;
+    }
+    
+    .signForm .login {
+        margin-top: 20px;
+    }
+
+    .BellIcon {
+        right: 0;
+        z-index: 6;
+    }
+
+    .BellIcon .dropdown-menu.show {
+        min-width: 15rem;
+        max-width: inherit;
+    }
+
+    .rowmob .col-md-10 {max-width: 83.333333%;float: left;}
+    .rowmob .col-md-2 {max-width: 16.666667%;float: left;}
+
+    .callDiv, .mailtoDiv {
+        margin: 0;
+        display: block;
+        text-align: left;
+    }
+}
+/* Extra small devices (portrait phones, less than 576px) */
+@media screen and (max-width: 575px) {
+    .bgFull {
+        padding-top: 300px;
+    }
+
+    .logo {
+        height: auto;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .logo img {
+        width: 200px;
+    }
+
+    .headsign {
+        font-size: 28px;
+    }
+
+    .signForm .login {
+        width: 100%;
+    }
+
+    .noAccount {
+        margin: 20px 0 !important;
+        font-size: 18px;
+    }
+
+    .signForm .login {
+        height: 54px;
+        font-size: 16px;
+    }
+
+    .proBox h3,
+    .proBox h2,
+    .textArea h2 {
+        font-size: 28px;
+    }
+
+    .tabsPenal ul li a {
+        margin-right: 15px;
+        margin-left: 15px;
+    }
+
+    .imgBx img {
+        width: 340px;
+    }
+
+    .formGroup {
+        margin-top: 20px !important;
+    }
+
+    .accomodation .row {
+        margin-bottom: -15px;
+    }
+
+    .accomodation .row [class*="col-"] {
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-bottom: 15px;
+    }
+
+    .wonSection select {
+        width: 35%;
+    }
+
+    .videoGallery .col-md-4.mb-4,
+    .imageGallery .col-md-3.mb-4 {
+        width: 50%;
+        padding: 0 5px;
+        margin-bottom: 0.8rem!important;
+    }
+
+    footer .container .row [class*="col-"] {
+        margin-bottom: 15px;
+    }
+    
+    #toggler {
+        left: -65px; 
+        transition: 0.2s; 
+        -webkit-transition: 0.2s;
+    }
+    #toggler.tglDIV {
+        left: 280px !important; 
+        transition: all ease-in-out 0.8s; 
+        transform: -webkit-transition:all ease-in-out 0.8s;
+    }
+    .leftSearch {
+        max-width: 280px;
+    }
+    #contentDIV {
+        transform: translateX(-100%); 
+        -webkit-transform: translateX(-100%);
+    }
+    #contentDIV.appear {
+        transform: translateX(0%); 
+        -webkit-transform: translateX(0%);
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media screen and (max-width: 479px) {
+    .proBox {
+        padding-left: 0;
+        text-align: center;
+        padding-top: 10px;
+    }
+
+    .proBox .userBox {
+        position: static;
+        top: auto;
+        left: auto;
+    }
+
+    .proBox h3 {
+        text-align: left;
+    }
+
+    .proBox h3,
+    .proBox h2,
+    .textArea h2 {
+        font-size: 24px;
+    }
+
+    .tabsPenal ul li a {
+        margin-right: 10px;
+        margin-left: 10px;
+        font-size: 17px;
+    }
+
+    .wonSection select {
+        width: 50%;
+    }
+
+    .imgDetails .mainPrice,
+    .tabPane li .priceDetails h3 {
+        font-size: 20px;
+    }
+
+    .imgBx img {
+        width: 280px;
+    }
+
+    .messageBox {
+        margin-top: 20px;
+    }
+
+    .fav_Property .tabPane .priceDetails {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .noAccount {
+        font-size: 16px;
+    }
+
+    .imgDetails .mainPrice,
+    .tabPane li .priceDetails h3 {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width: 359px) {
+    .tabsPenal ul li a {
+        margin-right: 7px;
+        margin-left: 7px;
+        font-size: 16px;
+    }
+
+    .callDiv,
+    .mailtoDiv {
+        font-size: 16px;
+    }
+
+    .mailtoDiv {
+        margin-left: 10px;
+    }
+
+    .textArea .needHelp {
+        font-size: ;
+    }
+}
+

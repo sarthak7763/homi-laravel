@@ -1,0 +1,112 @@
+
+@media screen and (max-width: 1400px) {
+  .header .main-navigation ul li a {
+    padding: 0 20px;
+  }
+}
+
+@media screen and (max-width: 1366px) {
+  .header .main-navigation ul li a {
+    padding: 0 20px;
+  }
+
+}
+
+@media screen and (max-width: 1300px) {
+
+}
+@media screen and (max-width: 1200px) {
+
+}
+
+@media screen and (max-width: 1199px) {
+	.header .main-navigation ul li a {
+    padding: 0 10px;
+  }
+  .user-control li {
+    padding: 0 10px;
+  }
+
+}
+
+
+@media screen and (max-width: 991px) {
+  .header .top-logo a img {
+    width: 35px;
+  }
+  .header {
+    padding: 10px 0;
+  }
+	.alert-info.alert p {
+    font-size: 16px;
+  }
+  .user-control li {
+    padding: 0 15px;
+  }
+  .footer .logo {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  .header .main-navigation {
+    height: 100%;
+    width: 0px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #001821;
+    overflow-x: hidden;
+    transition: 0.8s;
+    padding :0;
+    display: block;
+    box-shadow: 0 0 15px #001821;
+  }
+  .header .main-navigation ul {
+    display: block;
+    padding: 0 15px;
+    margin: 0;
+  }
+  .header .main-navigation ul li a {
+    padding: 0px 0px 15px;
+  }
+  .user-control .toggle-btn {
+    display: block;
+  }
+  .main-navigation .close-btn {
+    display: block;
+    padding: 15px;
+  }
+}
+
+
+@media screen and (max-width: 767px) {
+  .footer-main {
+    column-count: 3;
+  }
+  .alert-info .alert-dismissible .btn-close {
+    right: 17%;
+  }
+}
+
+
+@media screen and (max-width: 575px) {
+  .alert-info .alert-dismissible .btn-close {
+    right: 4%;
+  }
+}
+
+
+@media screen and (max-width: 479px) {
+
+}
+
+
+@media screen and (max-width: 375px) {
+	
+}
+
+
+@media screen and (max-width: 359px){
+
+
+}
