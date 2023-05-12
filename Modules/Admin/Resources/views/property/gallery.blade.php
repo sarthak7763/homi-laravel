@@ -116,8 +116,16 @@
 
                             <div class="gallery" id="image_preview"></div>
 
+                            @if(count($galleryList)==0)
+                                <div class="alert alert-warning">Please upload at least one image to publish the property.</div>
+                            @endif
+
+                            @php 
+                            $gallerycount= count($galleryList);
+                            $remaingallerycount=8-$gallerycount;
+                            @endphp
                             @if(count($galleryList) < 8)
-                            <div class="alert alert-warning">Maximum 8 images to publish property.</div>
+                            <div class="alert alert-warning">You can add Maximum {{$remaingallerycount}} images to the property.</div>
                             @endif
 
                             <div class="card-block gallery-page">

@@ -29,7 +29,9 @@ class Property extends Model
         'no_of_pool',
         'no_of_garden',
         'no_of_balcony',
+        'no_of_floors',
         'property_area',
+        'property_condition',
         'property_address',
         'property_latitude',
         'property_longitude',
@@ -80,57 +82,6 @@ class Property extends Model
         $value = URL::to('/').'/no_image/property.jpg';
         }
         return $value;
-    }
-
-    public function getPropertyCountry(){
-        return $this->hasOne('App\Models\Country','id','country');
-    }
-     public function getPropertyState(){
-        return $this->hasOne('App\Models\State','id','state');
-    }
-     public function getPropertyCity(){
-        return $this->hasOne('App\Models\City','id','city');
-    }
-
-    public function favProperty(){
-      return $this->hasMany('App\Models\FavProperty','property_id','id');
-    }
-
-    public function getBids(){
-      return $this->hasMany('App\Models\Bid','property_id','id');
-    }
-
-    public static function getAwardedBids()
-    {
-     return $this->hasMany('App\Models\Bid','property_id','id')->where('bid_status',"Awarded");
-    }
-
-    public function SaleOffer(){
-        return $this->hasOne('App\Models\PropertyOffer','property_id','id');
-    }
-
-    public function getPropertyType(){
-        return $this->hasOne('App\Models\PropertyType','id','property_type');
-    }
-
-    public function getGallery(){
-        return $this->hasMany('App\Models\PropertyGallery','property_id','id');
-    }
-
-    public function getBanner(){
-        return $this->hasMany('App\Models\PropertyGallery','property_id','id');
-    }
-
-    public function getDocument(){
-        return $this->hasMany('App\Models\PropertyGallery','property_id','id')->where('type',"Document");
-    }
-
-    public function getVideo(){
-        return $this->hasMany('App\Models\PropertyGallery','property_id','id')->where('type',"Video");
-    }
-
-    public function getImage(){
-        return $this->hasMany('App\Models\PropertyGallery','property_id','id')->where('type',"Image");
     }
 
 }

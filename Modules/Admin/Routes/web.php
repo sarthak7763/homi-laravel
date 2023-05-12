@@ -254,6 +254,8 @@ Route::group(['middleware' => 'Isadmin'], function () {
 
         Route::post('/property-status-update', 'PropertyController@updatePropertyStatus')->name('admin-property-status-update');
 
+        Route::post('/property-publish-status-update', 'PropertyController@updatePropertyPublishStatus')->name('admin-property-publish-status-update');
+
         Route::post('/property-delete', 'PropertyController@deleteProperty')->name('admin-property-delete');
 
         Route::get('/soft-deleted-property-list', 'PropertyController@softDeletedProperty')->name('admin-soft-deleted-property-list');

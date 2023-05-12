@@ -30,15 +30,10 @@
                     </div>
                     @if(Auth::user()->hasRole('Admin'))                            
                         <a class="btn btn-primary btn-round" href="{{route('admin-property-add')}}">Add Property</a>
-                    @elseif(Auth::user()->hasRole('sub-admin'))
-
-                        @if(auth()->user()->can('admin-property-add'))
-                           
-                            <a class="btn btn-primary btn-round" href="{{route('admin-property-add')}}">Add Property</a>
-                        @endif
-                    @endif
                    
-                   <!--  <button type="button" class="btn btn-primary btn-round" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Apply Filters</button> -->
+                    <button type="button" class="btn btn-primary btn-round" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Apply Filters</button>
+
+                   @endif
 
                      
                 </div>
@@ -81,55 +76,40 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">        
+
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label><strong>End Date <span class="text-danger"></span></strong></label>
-                                        <div class="controls">
-                                            <input type="date" name="end_date" id="end_date" class="form-control datepicker-autoclose" placeholder="Please select end date"> 
-                                            <div class="help-block">
-                                            </div>
-                                        </div>
+                                        <label><strong>Property Type</strong></label>
+                                        <select name="property_type" id='property_type' class="form-control">
+                                            <option value="">Select Type</option>
+                                            <option value="1">Rent</option>
+                                            <option value="2">Sell</option>
+                                        </select>
                                     </div>
                                 </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label><strong>Property Category</strong></label>
+                                        <select name="property_category" id='property_category' class="form-control">
+                                           
+                                        </select>
+                                    </div>
+                                </div>
+                               
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label><strong>Publish Status :</strong></label>
-                                        <select id='status' class="form-control">
-                                            <option value="">Active/Inactive</option>
+                                        <select name="status" id='status' class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="0">Pending</option>
                                             <option value="1">Active</option>
-                                            <option value="0">Inactive</option>
+                                            <option value="2">Inactive</option>
                                         </select>
                                     </div>
-                                </div>
-                                
-                                <div class="col-md-6">       
-                                    <div class="form-group">
-                                        <label><strong>Property Price From <span class="text-danger"></span></strong></label>
-                                        <div class="controls">
-                                            <input type="text" name="base_price_from" id="base_price_from" class="form-control" placeholder="Please select price start from">
-                                            <div class="help-block"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label><strong>Property Price To <span class="text-danger"></span></strong></label>
-                                        <div class="controls">
-                                            <input type="text" name="base_price_to" id="base_price_to" class="form-control" placeholder="Please select price to"> 
-                                            <div class="help-block">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                        
-                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label><strong>Property Type</strong></label>
-                                        <select id='property_type' class="form-control">
-                                            
-                                        </select>
-                                    </div>
-                                </div>
+                                </div>                        
+
                                  <div class="col-md-6">        
                                     <div class="form-group">
                                         <label><strong>Property Location</strong></label>
@@ -183,26 +163,6 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="propertyEscrowModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content propertyEscrowContent">
-      <div class="modal-header">
-        <h5 class="modal-title model_property_title" id="exampleModalLabel">Update Close of Escrow Status</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-       <div class="addData">
-       </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary update_close_of_ecsrow_btn" data-property_id="" data-bidder_id="" data-bid_id="">Update Status</button>
-      </div>
-    </div>
-  </div>
-</div>
 @endsection   
 @section('js')
 <script type="text/javascript">
@@ -365,7 +325,7 @@ $(document).on('click', '.badge_status_change', function(e)
             $.ajax({
                 type: "POST",
                 url: url,
-                data: {_token: "{{ csrf_token() }}",id:id},
+                data: {_token: "{{ csrf_token() }}",property_id:id},
                 dataType: "json",
                  beforeSend: function(){
                     $("#loading").show();
@@ -383,8 +343,56 @@ $(document).on('click', '.badge_status_change', function(e)
                               toastr.error("Property status inactive successfully");
                         }
 
+                     }else{
+                            toastr.error(response.message);
+                        }
+                   
+                }         
+            })
+        } 
+        // else {
+        //     swal("Cancelled", "property is not change", "error");
+        // }
+        });         
+}); 
+
+
+$(document).on('click', '.badge_publish_status_change', function(e)
+{ 
+        var status_class = $(this).attr('class');
+        var id = $(this).attr('id');
+        var url = "{{ route('admin-property-publish-status-update') }}";
+        
+       var title ='Are you sure to publish this property ?';
+        e.preventDefault();      
+        swal({
+          title: title,
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if(isConfirm){
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {_token: "{{ csrf_token() }}",property_id:id},
+                dataType: "json",
+                 beforeSend: function(){
+                    $("#loading").show();
+                },
+                complete: function(){
+                    $("#loading").hide();
+                },
+                success: function (response){
+                    if(response.status=="success"){
+                        toastr.success("Property published successfully");
+                        window.location.reload();
+
                  }else{
-                        toastr.error("To activate property status you have to upload atleast 5 featured images in gallery section.");
+                        toastr.error("Something went wrong.");
                     }
                    
                 }         
@@ -428,7 +436,7 @@ $(document).on('click', '.badge_delete_status_change', function(e)
             $.ajax({
                 type: "POST",
                 url: url,
-                data: {_token: "{{ csrf_token() }}",id:id},
+                data: {_token: "{{ csrf_token() }}",property_id:id},
                 dataType: "json",
                  beforeSend: function(){
                     $("#loading").show();

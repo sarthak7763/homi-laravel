@@ -11,6 +11,7 @@ class Userrentinglocationsearch extends Model
     protected $table="user_renting_location_search";
       protected $fillable = [
         'user_id',
+        'user_category',
         'user_location',
         'user_latitude',
         'user_longitude',

@@ -62,6 +62,10 @@ Route::get('getcontactsettingslist', [PagesController::class, 'getcontactsetting
 
 Route::get('getuserlocation', [DashboardController::class, 'getuserlocation']);
 
+Route::post('getstatelist', [DashboardController::class, 'getstatelist']);
+
+Route::post('getcitylist', [DashboardController::class, 'getcitylist']);
+
 Route::post('getpropertycategorylist', [DashboardController::class, 'getpropertycategorylist']);
 
 Route::post('gethomepagedata', [DashboardController::class, 'gethomepagedata']);

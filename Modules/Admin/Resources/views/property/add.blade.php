@@ -25,6 +25,8 @@ label.error{
   $pool_count_error="";
   $garden_count_error="";
   $balcony_count_error="";
+  $floors_count_error="";
+  $property_condition_error="";
   $property_area_count_error="";
   $phone_number_error="";
   $address_error="";
@@ -107,6 +109,24 @@ label.error{
       @php $balcony_count_error=$validationmessage['no_of_balcony']; @endphp
       @else
       @php $balcony_count_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['property_area']))
+      @php $property_area_count_error=$validationmessage['property_area']; @endphp
+      @else
+      @php $property_area_count_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['no_of_floors']))
+      @php $floors_count_error=$validationmessage['no_of_floors']; @endphp
+      @else
+      @php $floors_count_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['property_condition']))
+      @php $property_condition_error=$validationmessage['property_condition']; @endphp
+      @else
+      @php $property_condition_error=""; @endphp
       @endif
 
       @if($validationmessage!="" && isset($validationmessage['property_area']))
@@ -312,7 +332,7 @@ label.error{
                                            
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="font-weight-bold">Maximum Quests Allowed<span style="color:red;">*</span></label>
+                                    <label class="font-weight-bold">Maximum Guests Allowed<span style="color:red;">*</span></label>
                                     <input type="text" class="form-control" name="guest_count" id="guest_count" value="" placeholder="Enter No. of guests allowed ">
                                     @if($guest_count_error!="")
                                         <span class="messages">
@@ -323,7 +343,7 @@ label.error{
                             </div> 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="font-weight-bold">Bedroom<span style="color:red;">*</span></label>
+                                    <label class="font-weight-bold">No. of Bedroom<span style="color:red;">*</span></label>
                                     <input type="text" name="no_of_bedroom" class="form-control" value="" placeholder="Enter no. of bedroom"  id="no_of_bedroom" >
                                     @if($bedroom_count_error!="")
                                         <span class="messages">
@@ -347,7 +367,7 @@ label.error{
 
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">Kitchen<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Kitchen<span style="color:red;">*</span></label>
                                   <input type="text" class="form-control" name="no_of_kitchen" id="no_of_kitchen" value="" placeholder="Enter no. of kitchen">
                                   @if($kitchen_count_error!="")
                                       <span class="messages">
@@ -359,7 +379,7 @@ label.error{
                                           
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">Bathrooms<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Bathrooms<span style="color:red;">*</span></label>
                                   <input type="text" class="form-control" value="" name="no_of_bathroom" id="no_of_bathroom" placeholder="Enter No. of bathrooms">
                                   @if($bathroom_count_error!="")
                                       <span class="messages">
@@ -372,7 +392,7 @@ label.error{
                                 
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">Pool<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Pool<span style="color:red;">*</span></label>
                                   <input type="text" name="no_of_pool" class="form-control"   value="" id="no_of_pool" placeholder="Enter No. of Pool">
                                   @if($pool_count_error!="")
                                       <span class="messages">
@@ -383,7 +403,7 @@ label.error{
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">Garden<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Garden<span style="color:red;">*</span></label>
                                   <input type="text" name="no_of_garden" class="form-control" value="" id="no_of_garden" placeholder="Enter No. of garden ">
                                   @if($garden_count_error!="")
                                       <span class="messages">
@@ -394,7 +414,7 @@ label.error{
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">Balcony<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Balcony<span style="color:red;">*</span></label>
                                   <input type="text" class="form-control" value="" name="no_of_balcony" id="no_of_balcony" placeholder="Enter No. of balcony">
                                   @if($balcony_count_error!="")
                                       <span class="messages">
@@ -405,7 +425,7 @@ label.error{
                           </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold">Property Area<span style="color:red;">*</span></label>
+                                <label class="font-weight-bold">Property Area <span>(Sq. Ft.)</span><span style="color:red;">*</span></label>
                                     <input type="text" class="form-control"  value="" name="property_area" id="property_area" placeholder="Enter property area">
                                          
                                
@@ -417,11 +437,40 @@ label.error{
                             </div>
                         </div>
 
+                        <div class="col-md-6">
+                              <div class="form-group">
+                                  <label class="font-weight-bold">Floor No.<span style="color:red;">*</span></label>
+                                  <input type="text" class="form-control" value="" name="no_of_floors" id="no_of_floors" placeholder="Enter Floor No.">
+                                  @if($floors_count_error!="")
+                                      <span class="messages">
+                                          <strong>{{ $floors_count_error }}</strong>
+                                      </span>
+                                  @endif
+                              </div>
+                          </div>
+
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label class="font-weight-bold">Property Condition<span style="color:red;">*</span></label>
+                                  <select class="form-control" name="property_condition" id="property_condition">
+                                    <option value="">Select Condition</option>
+                                    @foreach($condition as $list)
+                                    <option value="{{$list->id}}">{{$list->name}}</option>
+                                    @endforeach
+                                  </select>
+                                  @if($property_condition_error!="")
+                                      <span class="messages">
+                                          <strong>{{ $property_condition_error }}</strong>
+                                      </span>
+                                  @endif
+                              </div>
+                          </div>
+
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold">Phone Number<span style="color:red;">*</span></label>
-                                <input type="text" class="form-control" value="" name="property_number" id="property_number" placeholder="Enter Property Number" >
+                                <label class="font-weight-bold">Contact Number<span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" value="" name="property_number" id="property_number" placeholder="Enter Contact Number" >
 
                                 @if($phone_number_error!="")
                                     <span class="messages">
@@ -433,8 +482,8 @@ label.error{
                                         
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold">Email<span style="color:red;">*</span></label>
-                                <input type="email" class="form-control"name="property_email" id="property_email" placeholderF="Enter Property Email">
+                                <label class="font-weight-bold">Contact Email<span style="color:red;">*</span></label>
+                                <input type="email" class="form-control"name="property_email" id="property_email" placeholderF="Enter Contact Email">
 
                                 @if($email_error!="")
                                     <span class="messages">
@@ -459,20 +508,7 @@ label.error{
                             </div>
                         </div> 
 
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Price <span style="color:red;">*</span></label>
-                                <input type="text" class="form-control" value="" name="property_price" id="property_price" placeholder="Enter Property Price" >
-                                
-                                @if($price_error!="")
-                                    <span class="messages">
-                                        <strong>{{ $price_error }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                      <div class="col-md-6">
+                          <div class="col-md-6">
                           <div class="form-group">
                               <label class="font-weight-bold">Price type<span style="color:red;">*</span></label>
                               <select name="property_price_type" class="form-control" id="property_price_type">
@@ -486,6 +522,19 @@ label.error{
                              
                           </div>
                       </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Price <span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" value="" name="property_price" id="property_price" placeholder="Enter Property Price" >
+                                
+                                @if($price_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $price_error }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div> 
 
                 <div class="col-md-6">
                     <div class="form-group">
@@ -605,7 +654,7 @@ for(var i=0;i<total_file;i++)
       optionhtml+='<option value="1">PerSq.Ft</option><option value="2">Fixed </option><option value="3">Persq.yard</option>';
     }
     else{
-      optionhtml+='<option value="4">Per night</option><option value="5">Per month</option><option value="6">Annual</option>';
+      optionhtml+='<option value="4">Per night</option>';
     }
 
     $('#property_price_type').html(optionhtml);
@@ -764,9 +813,16 @@ $.ajaxSetup({
                 required: true,
                 digits: true,
             },
+            no_of_floors:{
+              required: true,
+              digits: true,
+            },
             property_area:{
                 required: true,
                 digits: true,
+            },
+            property_condition:{
+              required: true,
             },
             property_number:{
                 required: true,
@@ -785,10 +841,6 @@ $.ajaxSetup({
             property_price_type:{
                 required: true,
             },
-            property_image: {
-              required: true,
-              accept: "image/*"
-          },
         },
         messages: {
             add_by: {
@@ -809,42 +861,62 @@ $.ajaxSetup({
             },
             no_of_bedroom: {
                 required: "Please enter no. of bedroom",
-                digits: "no. of bedroom should contains only digits.",
+                digits: "no. of bedroom value should contains only digits.",
             },
             built_in_year: {
                 required: "Please select built-in year",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            no_of_kitchen: {
+                required: "Please enter no. of kitchen",
+                digits: "no. of kitchen value should contains only digits.",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            no_of_bathroom: {
+                required: "Please enter no. of bathroom",
+                digits: "no. of bathroom value should contains only digits.",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            no_of_pool: {
+                required: "Please enter no. of pool",
+                digits: "no. of pool value should contains only digits.",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            no_of_garden: {
+                required: "Please enter no. of garden",
+                digits: "no. of garden value should contains only digits.",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            no_of_balcony: {
+                required: "Please enter no. of balcony",
+                digits: "no. of balcony value should contains only digits.",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            no_of_floors: {
+                required: "Please enter floor no.",
+                digits: "floor no. should contains only digits.",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            property_condition: {
+                required: "Please select property condition",
             },
-            guest_count: {
-                required: "Please enter guest count",
-                digits: "guest count should contains only digits.",
+            property_area: {
+                required: "Please enter property area",
+                digits: "property area value should contains only digits.",
+            },
+            property_number: {
+                required: "Please enter contact number",
+                digits: "contact number should contains only digits.",
+            },
+            property_email: {
+                required: "Please enter conatct email",
+                email: "Please enter valid contact email address.",
+            },
+            property_address: {
+                required: "Please enter property address",
+            },
+            property_price: {
+                required: "Please enter property price",
+            },
+            property_price_type: {
+                required: "Please select property price type",
+            },
+            property_image: {
+                required: "Please select property thumbnail image",
+                accept: "only image files allowed.",
             },
         },
         submitHandler: function(form) 

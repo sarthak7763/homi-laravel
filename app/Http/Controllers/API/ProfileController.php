@@ -7,7 +7,7 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Userlocationsearch;
+use App\Models\Userbuyinglocationsearch;
 use App\Models\FavProperty;
 use App\Models\Property;
 use Validator;
@@ -31,7 +31,7 @@ class ProfileController extends BaseController
 		        	$profile_pic=url('/').'/no_image/user.jpg';
 		        }
 
-		        $userlocationsearchresult=Userlocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
+		        $userlocationsearchresult=Userbuyinglocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
 		        if($userlocationsearchresult)
 		        {
 		        	$userlocationsearchresultarray=$userlocationsearchresult->toArray();
