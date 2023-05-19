@@ -42,7 +42,7 @@
 
                         <button type="submit" class="btn btn-primary">Login</button>
                         <div class="forgot-password">
-                            <p><a href="{{url('/')}}/dealer/forgot-password">Forgot Password</a></p>
+                            <p><a href="{{url('/')}}/dealer/forget-password">Forgot Password</a></p>
                         </div>
 
                         <div class="signup-footer mt-5 text-center">

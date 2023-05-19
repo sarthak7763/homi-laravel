@@ -234,6 +234,9 @@ Route::group(['middleware' => 'Isadmin'], function () {
         //-----------------------------ADMIN PROPERTY ROUTE-----------------//
         Route::get('/property-list', 'PropertyController@index')->name('admin-property-list');
 
+
+        Route::get('/property-list-seller-wise', 'PropertyController@seller_wise_property')->name('admin-property-list-seller-wise');
+
         Route::post('/ajax-get-category-list', 'PropertyController@ajaxgetcategorylist')->name('admin-ajax-get-category-list');
 
 

@@ -4,7 +4,7 @@
 <form class="md-float-material form-material" action="{{ route('admin.login') }}" method="POST" name="loginForm">
  @csrf
     <div class="text-center">
-    <img src="{{asset('assets_front/images/brand-logo/logo.png')}}" alt="logo.png">
+    <img src="{{asset('assets_front/images/logo.png')}}" alt="logo.png">
     </div>
     <div class="auth-box card">
         <div class="card-block">

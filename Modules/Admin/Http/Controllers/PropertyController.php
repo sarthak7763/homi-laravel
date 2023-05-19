@@ -74,41 +74,24 @@ class PropertyController extends Controller {
                         if (!empty($request->get('search'))) {
                             $instance->where(function($w) use($request){
                                 $search = $request->get('search');
-                                $w->Where('title', 'LIKE', "%$search%")
-                                ->orWhere('location', 'LIKE', "%$search%")
-                                ->orWhere('address', 'LIKE', "%$search%")
-                                ->orWhere('zipcode', 'LIKE', "%$search%")
-                                ->orWhere('property_size', 'LIKE', "%$search%")
-                                ->orWhere('price_from', 'LIKE', "%$search%")
-                                ->orWhere('price_to', 'LIKE', "%$search%")
-                                ->orWhere('currency_type', 'LIKE', "%$search%") 
-                                ->orWhere('no_of_bedroom', 'LIKE', "%$search%")
-                                ->orWhere('no_of_bathroom', 'LIKE', "%$search%")
-                                ->orWhere('year_from', 'LIKE', "%$search%")
-                                ->orWhere('year_to', 'LIKE', "%$search%");
+                                $w->Where('title', 'LIKE', "%$search%");
                             });
                         }
                     
+                        if(!empty($request->get('property_category'))) {
+                            $instance->where('property_category', $request->get('property_category'));
+                        }
 
                         if(!empty($request->get('property_type'))) {
                             $instance->where('property_type', $request->get('property_type'));
                         }
-                     
-                        if($request->get('status') == '0' || $request->get('status') == '1') {
-                            $instance->where('status', $request->get('status'));
-                        }
-                        
-                        if ($request->get('delete_status') == '0' || $request->get('delete_status') == '1'){
-                            $instance->where('delete_status', $request->get('delete_status'));
-                        }
 
-                        if(!empty($request->get('base_price_from'))  &&  !empty($request->get('base_price_to'))) {
-                            $instance->where(function($w) use($request){
-                                $start_price = $request->get('base_price_from');
-                                $end_price = $request->get('base_price_to');
-                          
-                                $w->orwhereRaw("base_price >= '" . $start_price . "' AND base_price <= '" . $end_price . "'");
-                            });
+                        if(!empty($request->get('property_condition'))) {
+                            $instance->where('property_condition', $request->get('property_condition'));
+                        }
+                     
+                        if(!empty($request->get('status'))) {
+                            $instance->where('property_status', $request->get('status'));
                         }
 
 
@@ -117,16 +100,6 @@ class PropertyController extends Controller {
                                 $property_location = $request->get('property_location');
                                 $w->orwhere('location', 'LIKE', "%$property_location%");
                             });
-                        }
-
-                        if(!empty($request->get('start_date'))  &&  !empty($request->get('end_date'))) {
-                            $instance->where(function($w) use($request){
-                               $start_date = $request->get('start_date');
-                               $end_date = $request->get('end_date');
-                               $start_date = date('Y-m-d', strtotime($start_date));
-                               $end_date = date('Y-m-d', strtotime($end_date));
-                               $w->orwhereRaw("date(created_at) >= '" . $start_date . "' AND date(created_at) <= '" . $end_date . "'");
-                           });
                         } 
                     })
                     ->make(true);
@@ -140,91 +113,104 @@ class PropertyController extends Controller {
         }
   	}
 
-    public function pendingProperty(Request $request) {
-        try{
-            $stateList = State::where('status',1)->get();    
-            if($request->ajax()) { 
+    
+    public function seller_wise_property(Request $request) {
+        try{  
+            if($request->ajax()) {   
+                $data = Property::where('add_by',$request->owner_id)->get();
 
-                $data = PropertyOffer::whereHas('OfferPropertyInfo', function($has) {
-                        $has->where('escrow_status',"Pending");
-                        $has->where('delete_status',0);
-                    })->with(['OfferPropertyInfo' => function ($has) {
-                        $has->where('escrow_status',"Pending");
-                    }])->where('delete_status',0)->get();
-                             
                 return Datatables::of($data)
                     ->addIndexColumn()
                     ->addColumn('image', function($row){
-                        $image = '';
-                        $route_view=route('admin-property-details',$row->OfferPropertyInfo->id);
-                        $image = '<img class="img-circle" src="'.$row->OfferPropertyInfo->image.'" height="50" width="50" id="thumbnil">';
-                        
+                        if($row->property_image!="")
+                        {
+                            $imageurl=url('/').'/images/property/thumbnail/'.$row->property_image;
+                        }
+                        else{
+                            $imageurl=url('/').'/no_image/property.jpg';
+                        }
+
+                        $route_view=route('admin-property-details',$row->id);
+                        $image = '<img class="img-circle" src="'.$imageurl.'" height="50" width="50" id="thumbnil">';
                         return $image;
                     })
                     ->addColumn('title', function($row){
-                        $title = $row->OfferPropertyInfo->title;
-                        return $title;
-                    }) 
-                  
-                    ->addColumn('state', function($row){
-                        $state = @$row->OfferPropertyInfo->getPropertyState->name ? $row->OfferPropertyInfo->getPropertyState->name : "";
 
-                        return $state;
+                        $title_start = '<a title="'.$row->title.'" href="'.route('admin-property-details',$row->slug).'">'.substr($row->title, 0, 15).'...</a><br>';
+                        return $title_start;
                     }) 
-                    ->addColumn('city', function($row){
-                        $city = @$row->OfferPropertyInfo->getPropertyCity->name ? $row->OfferPropertyInfo->getPropertyCity->name : "";
-
-                        return $city;
-                    }) 
-                   
                     ->addColumn('status', function($row){
-                        $status = $row->status;
-                        $escrow = $row->OfferPropertyInfo->escrow_status;
-                        if($escrow =="Pending"){
-                            $status='<span class="badge badge-danger" style="cursor: pointer;" id="'.$row->id.'">Closed or in escrow</span>';
-                        }else{
-                            if($status==1){
-                                $status='<span class="badge badge-success badge_status_change" style="cursor: pointer;" id="'.$row->OfferPropertyInfo->id.'">Active</span>';
-                            }else{
-                                $status='<span class="badge badge-danger badge_status_change" style="cursor: pointer;" id="'.$row->OfferPropertyInfo->id.'">Inactive</span>';
-                            }
+                        $status = $row->property_status;
+                        if($status==0){
+                            $status='<span class="badge badge-warning" style="cursor: pointer;" id="'.$row->id.'">Pending</span>';
                         }
+                        elseif($status==1)
+                        {
+                            $status='<span class="badge badge-success badge_status_change" style="cursor: pointer;" id="'.$row->id.'">Active</span>';
+                        }
+                        else{
+                             $status='<span class="badge badge-danger badge_status_change" style="cursor: pointer;" id="'.$row->id.'">Inactive</span>';
+                        }
+                        
                         return $status;
                     }) 
-                     ->addColumn('escrow_status', function($row){
-                        $escrow="";
-                        $escrow_status = $row->OfferPropertyInfo->escrow_status;
-                        if($escrow_status=="Active"){
-                            $escrow='<span class="badge badge-success" id="'.$row->id.'">Active</span>';
-                        }
-                        if($escrow_status=="Pending"){
-                            $escrow='<span class="badge badge-warning" id="'.$row->id.'">Pending</span>';
-                        }
-                        if($escrow_status=="Cancelled"){
-                            $escrow='<span class="badge badge-inverse"  id="'.$row->id.'">Cancelled</span>';
-                        }
-                        if($escrow_status=="Sold"){
-                             $escrow='<span class="badge badge-danger" id="'.$row->id.'">Sold</span>';
-                        }
-                        return $escrow;
-                    }) 
-                   
+                    ->addColumn('created_at', function ($data) {
+                        $created_date=date('M d, Y g:i A', strtotime($data->created_at));
+                        return $created_date;   
+                    })
                     ->addColumn('action__', function($row){
-                        $route=route('admin-property-edit',$row->OfferPropertyInfo->slug);
-                        $route_view=route('admin-property-details',$row->OfferPropertyInfo->slug);
-                        $action=' <a href="'.$route_view.'" title="Show" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></a> <a href="'.$route.'" title="Edit" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
-                       ';
-                        return $action;
+                        $route=route('admin-property-edit',$row->slug);
+                        $route_view=route('admin-property-details',$row->slug);
+                        $route_gallery=route('admin-property-gallery-view',$row->slug);
+
+                        $action=' <a href="'.$route_view.'" title="Show" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></a> <a href="'.$route.'" title="Edit" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a> <a href="'.$route_gallery.'" title="Upload Gallery" class="btn btn-inverse btn-sm"><i class="fa fa-upload"></i></a>';
+                        if($row->property_status==0)
+                        {
+                            $action.='<button title="publish" class="btn btn-sm badge_publish_status_change" style="background-color: aqua;color: black;font-size: 11px;" id="'.$row->id.'">Publish Property</button>';
+                        }
+
+                        return $action; 
                     })  
-               
+                    ->filter(function ($instance) use ($request) {
+                        if (!empty($request->get('search'))) {
+                            $instance->where(function($w) use($request){
+                                $search = $request->get('search');
+                                $w->Where('title', 'LIKE', "%$search%");
+                            });
+                        }
+                    
+                        if(!empty($request->get('property_category'))) {
+                            $instance->where('property_category', $request->get('property_category'));
+                        }
+
+                        if(!empty($request->get('property_type'))) {
+                            $instance->where('property_type', $request->get('property_type'));
+                        }
+
+                        if(!empty($request->get('property_condition'))) {
+                            $instance->where('property_condition', $request->get('property_condition'));
+                        }
+                     
+                        if(!empty($request->get('status'))) {
+                            $instance->where('property_status', $request->get('status'));
+                        }
+
+
+                        if(!empty($request->get('property_location'))  &&  !empty($request->get('property_location'))) {
+                            $instance->where(function($w) use($request){
+                                $property_location = $request->get('property_location');
+                                $w->orwhere('location', 'LIKE', "%$property_location%");
+                            });
+                        } 
+                    })
                     ->make(true);
             }  
-            return view('admin::property.pending-property',compact('stateList'));  
-         }
+        }
         catch (\Exception $e) {
             return redirect()->back()->with('error', 'something wrong');
         }
     }
+
 
     public function add() {
         try{ 

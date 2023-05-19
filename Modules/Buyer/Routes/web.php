@@ -3,16 +3,21 @@
 /*----------------BUYER LOGIN ROUTES ---------------------*/
 Route::get('/dealer', 'BuyerController@buyerlogin')->name('buyer-login');
 Route::get('/dealer/login', 'BuyerController@buyerlogin')->name('buyer-login');
+
 Route::post('/dealer-login', 'BuyerController@buyer_login')->name('buyer.login.post');
  Route::get('/dealer/page/{slug}','BuyerController@cmsPages')->name('buyer-cms-page-view'); 
+
 Route::get('/dealer/forget-password', 'BuyerController@buyerForgotPassword')->name('buyer-forget-password');
+
 Route::get('/dealer/forgot-password/{token}', 'BuyerController@buyerForgotPasswordValidate')->name('buyer-reset-password-link');
+
 Route::post('/dealer/forgot-password', 'BuyerController@buyerResetPassword')->name('buyer-forget-password-post');
 
 Route::post('/dealer/reset-password', 'BuyerController@buyerUpdatePassword')->name('buyer-reset-password');
 
 /*----------------BUYER REGISTER ROUTES ---------------------*/
 Route::get('/dealer/register', 'BuyerController@buyerRegisterGet')->name('buyer.register');
+
 Route::post('/dealer/registerpost','BuyerController@sellerSignupPost')->name('buyer.post.register');
 
 Route::get('/dealer/verify-email/{token}', 'BuyerController@BuyerVerifyEmail')->name('buyer.verify.email');

@@ -25,7 +25,7 @@
               </div>
             @endif
             <div class="text-center">
-                            <img src="{{asset('assets_front/images/brand-logo/logo.png')}}" alt="logo.png">
+                            <img src="{{asset('assets_front/images/logo.png')}}" alt="logo.png">
                         </div>
                         <div class="auth-box card">
                             <div class="card-block">

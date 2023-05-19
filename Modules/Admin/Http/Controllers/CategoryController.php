@@ -111,8 +111,7 @@ class CategoryController extends Controller{
         'type.in'=>'Please select valid category type.',
       ]);
 
-      $checkcategory=Category::where('name',$data['name'])->where('category_type',$data['type'])
-                                                          ->get()->first();
+      $checkcategory=Category::where('name',$data['name'])->where('category_type',$data['type'])->get()->first();
      
       if($checkcategory)
       {

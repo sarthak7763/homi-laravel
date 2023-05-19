@@ -31,12 +31,12 @@
         <div class="container h-100">
             <div class="row align-items-center justify-content-center h-100">
                 <div class="col-12">
-                    <form action="{{ route('buyer.post.register') }}" method="POST" class="signup-form p-5">
+                    <form action="{{ route('buyer.post.register')}}" method="POST" class="signup-form p-5">@csrf
                         <h1>Welcome!</h1>
                         <strong>Signup your account</strong>
                         <div class="mb-4">
-                            <input type="text" name="name" class="form-control" id=""
-                                aria-describedby="emailHelp" placeholder="Enter your name here">
+                            <input type="text" name="name" class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter your name here">
+                               
                         </div>
                         <div class="mb-4">
                             <input type="email" name="email" class="form-control" id="exampleInputEmail1"
@@ -97,7 +97,7 @@
                             <label class="form-check-label" for="exampleCheck1">I Accept <a href="#">Terms and
                                     Conditions</a></label>
                         </div>
-                        <button type="submit"  class="btn btn-primary">Signup</button>
+                        <button type="submit"  id="btnSignup" class="btn btn-primary">Signup</button>
                         <div class="signup-footer mt-5 text-center">
                             <p>Already have an account? <a href="{{url('/')}}/dealer/login">Sign in</a></p>
                         </div>
@@ -124,7 +124,7 @@ $.ajaxSetup({
 });
 
 $(document).on("click", "#btnSignup", function() {
-
+    
     $('form[name=signupBuyerForm]').validate({
         rules: {
             name: {
@@ -132,41 +132,41 @@ $(document).on("click", "#btnSignup", function() {
                 maxlength: 30
             },
 
-            email: {
-                required: true,
-                email: true,
-                remote: {
-                    url: "{{route('buyer-sign-up-email-check')}}",
+            // email: {
+            //     required: true,
+            //     email: true,
+            //     remote: {
+            //         url: "{{route('buyer-sign-up-email-check')}}",
 
-                    type: "POST",
+            //         type: "POST",
 
-                    data: {
+            //         data: {
 
-                        email: function() {
-                            return $('#buyerSignupForm :input[name="email"]').val();
-                        },
+            //             email: function() {
+            //                 return $('#buyerSignupForm :input[name="email"]').val();
+            //             },
 
-                    }
-                }
-            },
-            mobile_no: {
-                required: true,
-                digits: true,
-                minlength: 6,
-                maxlength: 13,
-                remote: {
-                    url: "{{route('buyer-sign-up-mobile-check')}}",
-                    type: "post",
-                    data: {
+            //         }
+            //     }
+            // },
+            // mobile_no: {
+            //     required: true,
+            //     digits: true,
+            //     minlength: 6,
+            //     maxlength: 13,
+            //     remote: {
+            //         url: "{{route('buyer-sign-up-mobile-check')}}",
+            //         type: "post",
+            //         data: {
 
-                        mobile_no: function() {
-                            return $('#buyerSignupForm :input[name="mobile_no"]').val();
+            //             mobile_no: function() {
+            //                 return $('#buyerSignupForm :input[name="mobile_no"]').val();
 
-                        }
+            //             }
 
-                    }
-                }
-            },
+            //         }
+            //     }
+            // },
             password: {
                 required: true,
                 minlength: 5
@@ -175,9 +175,7 @@ $(document).on("click", "#btnSignup", function() {
                 minlength: 5,
                 equalTo: "#password"
             },
-            'city[]': {
-                required: true,
-            },
+           
 
         },
         messages: {
@@ -211,10 +209,7 @@ $(document).on("click", "#btnSignup", function() {
                 equalTo: "Confirm password must be same as password",
 
             },
-            'city[]': {
-                required: "Select at least one city",
-
-            },
+            
 
         },
         submitHandler: function(form) {

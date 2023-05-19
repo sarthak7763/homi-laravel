@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Userbuyinglocationsearch;
 use App\Models\FavProperty;
 use App\Models\Property;
+use App\Models\Userbooking;
 use Validator;
 use Hash;
 use DB;
@@ -406,7 +407,7 @@ class ProfileController extends BaseController
                }
     }
 
-    public function getuserfavpropertylist()
+    public function getuserfavpropertylist(Request $request)
     {
     	try{
 	        $user=auth()->user();
@@ -487,6 +488,334 @@ class ProfileController extends BaseController
 	        }  
     	}
     	catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+    }
+
+
+    public function getuserbookings(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	$ongoingbookinglist=Userbooking::where('booking_status',0)->where('user_id',$user->id)->get();
+	        	if($ongoingbookinglist)
+	        	{
+	        		$ongoingbookinglistarray=$ongoingbookinglist->toArray();
+	        		if($ongoingbookinglistarray)
+	        		{
+	        			$ongoing_bookings=$this->getpropertybookingslist($user->id,$ongoingbookinglistarray,$type=0);
+	        		}
+	        		else{
+	        			$ongoing_bookings=[];
+	        		}
+	        	}
+	        	else{
+	        		$ongoing_bookings=[];
+	        	}
+
+	        	$completebookinglist=Userbooking::where('booking_status',1)->where('user_id',$user->id)->get();
+	        	if($completebookinglist)
+	        	{
+	        		$completebookinglistarray=$completebookinglist->toArray();
+	        		if($completebookinglistarray)
+	        		{
+	        			$complete_bookings=$this->getpropertybookingslist($user->id,$completebookinglistarray,$type=1);
+	        		}
+	        		else{
+	        			$complete_bookings=[];
+	        		}
+	        	}
+	        	else{
+	        		$complete_bookings=[];
+	        	}
+
+
+	        	$cancelbookinglist=Userbooking::where('booking_status',2)->where('user_id',$user->id)->get();
+	        	if($cancelbookinglist)
+	        	{
+	        		$cancelbookinglistarray=$cancelbookinglist->toArray();
+	        		if($cancelbookinglistarray)
+	        		{
+	        			$cancel_bookings=$this->getpropertybookingslist($user->id,$cancelbookinglistarray,$type=2);
+	        		}
+	        		else{
+	        			$cancel_bookings=[];
+	        		}
+	        	}
+	        	else{
+	        		$cancel_bookings=[];
+	        	}
+
+	        	$success['ongoing'] =  $ongoing_bookings;
+	            $success['complete'] =  $complete_bookings;
+	            $success['cancel'] =  $cancel_bookings;
+	            return $this::sendResponse($success, 'My Bookings List.');
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+    }
+
+    public function getpropertybookingslist($userid,$bookinglistarray,$type)
+    {
+    	$ongoing_bookings=[];
+
+    	foreach($bookinglistarray as $list)
+    	{
+    		$property_id=$list['property_id'];
+    		$checkproperty=Property::where('id',$property_id)->get()->first();
+    		if($checkproperty)
+    		{
+    			$checkpropertyarray=$checkproperty->toArray();
+
+	    		if($checkpropertyarray['property_image']!="")
+		        {
+		        	$property_image=url('/').'/images/property/thumbnail/'.$checkpropertyarray['property_image'];
+		        }
+		        else{
+		        	$property_image=url('/').'/no_image/property.jpg';
+		        }
+
+		        if($type==0)
+		        {
+		        	$booking_status="Ongoing";
+		        }
+		        elseif($type==1)
+		        {
+		        	$booking_status="Complete";
+		        }
+		        elseif($type==2)
+		        {
+		        	$booking_status="Cancel";
+		        }
+		        else{
+		        	$booking_status="N.A.";
+		        }
+
+		        if($type==0)
+		        {
+		        	$current_date=date('Y-m-d');
+		        	if($list['user_checkin_date'] > $current_date){
+
+					    $cancel_booking=1;
+
+					}else{
+					    $cancel_booking=0;
+					}
+		        }
+		        else{
+		        	$cancel_booking=0;
+		        }
+
+		        $ongoing_bookings[]=array(
+		        	'booking_id'=>$list['id'],
+		        	'property_id'=>$list['property_id'],
+					'title'=>$checkpropertyarray['title'],
+					'property_address'=>$checkpropertyarray['property_address'],
+					'property_image'=>$property_image,
+					'property_price'=>$list['booking_property_price'],
+					'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+					'property_bedrooms'=>$checkpropertyarray['no_of_bedroom'],
+					'property_description'=>$checkpropertyarray['property_description'],
+					'property_area'=>$checkpropertyarray['property_area'],
+					'rating'=>5,
+					'check_in_date'=>$list['user_checkin_date'],
+					'check_out_date'=>$list['user_checkout_date'],
+					'booking_status'=>$booking_status,
+					'cancel_booking'=>$cancel_booking
+				);
+    		}
+    	}
+    	return $ongoing_bookings;
+    }
+
+
+
+    public function getbookingdetails(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+				$validator = Validator::make($request->all(), [
+				            'booking_id' => 'required'
+				        ]);
+
+		        if($validator->fails()){
+		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+		        }
+
+			    $booking_id=$request->booking_id;
+
+			    $checkbooking=Userbooking::where('id',$booking_id)->where('user_id',$user->id)->get()->first();
+			    if($checkbooking)
+			    {
+			    	$property_id=$checkbooking->property_id;
+    				$checkproperty=Property::where('id',$property_id)->get()->first();
+    				if($checkproperty)
+    				{
+    					$checkpropertyarray=$checkproperty->toArray();
+			    		if($checkpropertyarray['property_image']!="")
+				        {
+				        	$property_image=url('/').'/images/property/thumbnail/'.$checkpropertyarray['property_image'];
+				        }
+				        else{
+				        	$property_image=url('/').'/no_image/property.jpg';
+				        }
+
+						if($checkbooking->booking_status==0)
+				        {
+				        	$booking_status="Ongoing";
+				        }
+				        elseif($checkbooking->booking_status==1)
+				        {
+				        	$booking_status="Complete";
+				        }
+				        elseif($checkbooking->booking_status==2)
+				        {
+				        	$booking_status="Cancel";
+				        }
+				        else{
+				        	$booking_status="N.A.";
+				        }
+
+					   $booking_det=array(
+			        	'booking_id'=>$checkbooking->id,
+			        	'property_id'=>$checkbooking->property_id,
+						'title'=>$checkpropertyarray['title'],
+						'property_address'=>$checkpropertyarray['property_address'],
+						'property_image'=>$property_image,
+						'property_price'=>$checkbooking->booking_property_price,
+						'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+						'property_bedrooms'=>$checkpropertyarray['no_of_bedroom'],
+						'property_description'=>$checkpropertyarray['property_description'],
+						'property_area'=>$checkpropertyarray['property_area'],
+						'rating'=>5,
+						'check_in_date'=>$checkbooking->user_checkin_date,
+						'check_out_date'=>$checkbooking->user_checkout_date,
+						'booking_status'=>$booking_status,
+						'booking_property_price'=>$checkbooking->booking_property_price,
+						'booking_tax_price'=>$checkbooking->booking_tax_price,
+						'booking_price'=>$checkbooking->booking_price,
+						'user_name'=>$checkbooking->user_name,
+						'user_email'=>$checkbooking->user_email,
+						'user_age'=>$checkbooking->user_age,
+						'user_gender'=>$checkbooking->user_gender,
+						'user_number'=>$checkbooking->user_number,
+						'user_adult_count'=>$checkbooking->user_adult_count,
+						'user_children_count'=>$checkbooking->user_children_count
+					);
+
+
+					$success['booking_det'] =  $booking_det;
+		            return $this::sendResponse($success, 'My Bookings Detail Page.');
+
+
+    				}
+    				else{
+    					return $this::sendError('Unauthorised.', ['error'=>'Something went wrong.']);
+    				}
+			    }
+			    else{
+			    	return $this::sendError('Unauthorised.', ['error'=>'Something went wrong.']); 
+			    }
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+    }
+
+    public function submitcancelbooking(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+    }
+
+    public function submitbookingrating(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+    }
+
+    public function getuserongoingbookinglist(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+    }
+
+    public function getusercompletebookinglist(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+    }
+
+    public function getusercancelbookinglist(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
+	        }
+	    }
+	    catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
                }
     }

@@ -430,6 +430,16 @@ function sendPushNotification($title,$description,$registrationIds,$payload,$dev
         return response()->json($res_data, $code);
     }
 
+
+    function getdaysdiff($check_in_date,$check_out_date)
+    {
+        $earlier = new DateTime($check_in_date);
+        $later = new DateTime($check_out_date);
+
+        $abs_diff = $later->diff($earlier)->format("%a"); //3
+        return $abs_diff;
+    }
+
     function checkfavproperty($userid,$propertyid)
     {
         $checkproperty=Property::where('id',$propertyid)->where('property_status',1)->get()->first();
@@ -450,6 +460,50 @@ function sendPushNotification($title,$description,$registrationIds,$payload,$dev
 
         return $favourite;
     }
+
+    function removeElementWithValue($array, $key, $value){
+        $finalarray=[];
+     foreach($array as $subKey => $subArray){
+          if($subArray[$key] == $value){
+               unset($array[$subKey]);
+          }
+          else{
+            $finalarray[]=$subArray;
+          }
+     }
+
+     return $finalarray;
+}
+
+function removeElementWithKey($mainArray,$searchkey)
+{
+    $finalarray=[];
+    foreach ($mainArray as $key => $mainData){
+
+        if(isset($mainData[$searchkey])){
+            $finalarray[] = array_except($mainData, [$searchkey]);
+        }
+        else{
+            $finalarray[]=$mainData;
+        } 
+     }
+
+     return $finalarray;
+}
+
+function array_except($array, $keys) {
+  return array_diff_key($array, array_flip((array) $keys));   
+} 
+
+function AddElementtoarray($mainArray,$searchkey,$searchvalue)
+{
+    foreach ($mainArray as $key => $mainData){
+        $mainArray[$key][$searchkey] = $searchvalue;
+     }
+     
+    return $mainArray;
+
+}
 
 
    

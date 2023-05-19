@@ -15,6 +15,7 @@ use App\Models\FavProperty;
 use App\Models\Notifications;
 use App\Models\UserNotification;
 use App\Models\Userrentinglocationsearch;
+use App\Models\Usertempbooking;
 use Validator;
 use Hash;
 use DB;
@@ -25,128 +26,62 @@ class DashboardController extends BaseController
 	public function getstatelist(Request $request)
 	{
 		try{
-	        $user = auth()->guard("api")->user();
-	        if($user)
-	        {
-	        	//login user
 
-	        	$validator = Validator::make($request->all(), [
-		            'country_code' => 'required'
-		        ]);
+		$validator = Validator::make($request->all(), [
+	            'country_code' => 'required'
+	        ]);
 
-		        if($validator->fails()){
-		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
-		        }
-
-			    $country_code=$request->country_code;
-			    if(isset($request->search) && $request->search!="")
-			    {
-			    	$search=$request->search;
-			    }
-			    else{
-			    	$search="";
-			    }
-
-			    $checkcountrycode=DB::table('countries')->where('iso2',$country_code)->get()->first();
-			    if($checkcountrycode)
-			    {
-			    	$countryid=$checkcountrycode->id;
-			    	if($search!="")
-			    	{
-			    		$stateslist=DB::table('states')->where('country_id',$countryid)->where('name', 'like', '%'.$search.'%')->get();
-			    	}
-			    	else{
-			    		$stateslist=DB::table('states')->where('country_id',$countryid)->get();
-			    	}
-			    	
-			    	if($stateslist)
-			    	{
-			    		$stateslistarray=$stateslist->toArray();
-			    		$stateslist_arr=[];
-			    		foreach($stateslistarray as $list)
-			    		{
-			    			$stateslist_arr[]=array(
-			    				'id'=>$list->id,
-			    				'name'=>$list->name,
-			    				'country_id'=>$list->country_id,
-			    				'country_name'=>$checkcountrycode->name,
-			    				'lat'=>$list->latitude,
-			    				'lng'=>$list->longitude
-			    			);
-			    		}
-			    	}
-			    	else{
-			    		$stateslist_arr=[];
-			    	}
-
-			    	$success['stateslist']=$stateslist_arr;
-            		return $this::sendResponse($success, 'Property States List.');
-			    }
-			    else{
-			    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
-			    }
-
+	        if($validator->fails()){
+	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
 	        }
-	        else{
-	        	//guest user
 
-	        	$validator = Validator::make($request->all(), [
-		            'country_code' => 'required'
-		        ]);
+		    $country_code=$request->country_code;
+		    if(isset($request->search) && $request->search!="")
+		    {
+		    	$search=$request->search;
+		    }
+		    else{
+		    	$search="";
+		    }
 
-		        if($validator->fails()){
-		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
-		        }
+		    $checkcountrycode=DB::table('countries')->where('iso2',$country_code)->get()->first();
+		    if($checkcountrycode)
+		    {
+		    	$countryid=$checkcountrycode->id;
+		    	if($search!="")
+		    	{
+		    		$stateslist=DB::table('states')->where('country_id',$countryid)->where('name', 'like', '%'.$search.'%')->get();
+		    	}
+		    	else{
+		    		$stateslist=DB::table('states')->where('country_id',$countryid)->get();
+		    	}
+		    	
+		    	if($stateslist)
+		    	{
+		    		$stateslistarray=$stateslist->toArray();
+		    		$stateslist_arr=[];
+		    		foreach($stateslistarray as $list)
+		    		{
+		    			$stateslist_arr[]=array(
+		    				'id'=>$list->id,
+		    				'name'=>$list->name,
+		    				'country_id'=>$list->country_id,
+		    				'country_name'=>$checkcountrycode->name,
+		    				'lat'=>$list->latitude,
+		    				'lng'=>$list->longitude
+		    			);
+		    		}
+		    	}
+		    	else{
+		    		$stateslist_arr=[];
+		    	}
 
-			   $country_code=$request->country_code;
-			   	if(isset($request->search) && $request->search!="")
-			    {
-			    	$search=$request->search;
-			    }
-			    else{
-			    	$search="";
-			    }
-
-			    $checkcountrycode=DB::table('countries')->where('iso2',$country_code)->get()->first();
-			    if($checkcountrycode)
-			    {
-			    	$countryid=$checkcountrycode->id;
-			    	if($search!="")
-			    	{
-			    		$stateslist=DB::table('states')->where('country_id',$countryid)->where('name', 'like', '%'.$search.'%')->get();
-			    	}
-			    	else{
-			    		$stateslist=DB::table('states')->where('country_id',$countryid)->get();
-			    	}
-
-			    	if($stateslist)
-			    	{
-			    		$stateslistarray=$stateslist->toArray();
-			    		$stateslist_arr=[];
-			    		foreach($stateslistarray as $list)
-			    		{
-			    			$stateslist_arr[]=array(
-			    				'id'=>$list->id,
-			    				'name'=>$list->name,
-			    				'country_id'=>$list->country_id,
-			    				'country_name'=>$checkcountrycode->name,
-			    				'lat'=>$list->latitude,
-			    				'lng'=>$list->longitude
-			    			);
-			    		}
-			    	}
-			    	else{
-			    		$stateslist_arr=[];
-			    	}
-
-			    	$success['stateslist']=$stateslist_arr;
-            		return $this::sendResponse($success, 'Property States List.');
-			    }
-			    else{
-			    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
-			    }
-
-	        }
+		    	$success['stateslist']=$stateslist_arr;
+        		return $this::sendResponse($success, 'Property States List.');
+		    }
+		    else{
+		    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
+		    }
 	    }
 	    catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong']);    
@@ -157,152 +92,75 @@ class DashboardController extends BaseController
 	public function getcitylist(Request $request)
 	{
 		try{
-	        $user = auth()->guard("api")->user();
-	        if($user)
-	        {
-	        	//login user
 
-	        	$validator = Validator::make($request->all(), [
-		            'country_id' => 'required',
-		            'state_id'=>'required'
-		        ]);
+		$validator = Validator::make($request->all(), [
+	            'country_id' => 'required',
+	            'state_id'=>'required'
+	        ]);
 
-		        if($validator->fails()){
-		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
-		        }
-
-			    $country_id=$request->country_id;
-			    $state_id=$request->state_id;
-
-			    if(isset($request->search) && $request->search!="")
-			    {
-			    	$search=$request->search;
-			    }
-			    else{
-			    	$search="";
-			    }
-
-			    $checkcountry=DB::table('countries')->where('id',$country_id)->get()->first();
-			    if($checkcountry)
-			    {
-			    	$checkcountrystate=DB::table('states')->where('id',$state_id)->where('country_id',$country_id)->get()->first();
-			    	if($checkcountrystate)
-			    	{
-			    		
-
-			    	if($search!="")
-			    	{
-			    		$citieslist=DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->where('name', 'like', '%'.$search.'%')->get();
-			    	}
-			    	else{
-			    		$citieslist=DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->get();
-			    	}
-
-				    	if($citieslist)
-				    	{
-				    		$citieslistarray=$citieslist->toArray();
-				    		$citieslist_arr=[];
-				    		foreach($citieslistarray as $list)
-				    		{
-				    			$citieslist_arr[]=array(
-				    				'id'=>$list->id,
-				    				'name'=>$list->name,
-				    				'country_id'=>$list->country_id,
-				    				'state_id'=>$list->state_id,
-				    				'country_name'=>$checkcountry->name,
-				    				'state_name'=>$checkcountrystate->name,
-				    				'lat'=>$list->latitude,
-				    				'lng'=>$list->longitude
-				    			);
-				    		}
-				    	}
-				    	else{
-				    		$citieslist_arr=[];
-				    	}
-
-				    	$success['citieslist']=$citieslist_arr;
-	            		return $this::sendResponse($success, 'Property Cities List.');
-			    	}
-			    	else{
-			    		return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid State.']);
-			    	}
-			    }
-			    else{
-			    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
-			    }
-
+	        if($validator->fails()){
+	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
 	        }
-	        else{
-	        	//guest user
 
-	        	$validator = Validator::make($request->all(), [
-		            'country_id' => 'required',
-		            'state_id'=>'required'
-		        ]);
+		    $country_id=$request->country_id;
+		    $state_id=$request->state_id;
 
-		        if($validator->fails()){
-		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
-		        }
+		    if(isset($request->search) && $request->search!="")
+		    {
+		    	$search=$request->search;
+		    }
+		    else{
+		    	$search="";
+		    }
 
-			   $country_id=$request->country_id;
-			   $state_id=$request->state_id;
+		    $checkcountry=DB::table('countries')->where('id',$country_id)->get()->first();
+		    if($checkcountry)
+		    {
+		    	$checkcountrystate=DB::table('states')->where('id',$state_id)->where('country_id',$country_id)->get()->first();
+		    	if($checkcountrystate)
+		    	{
+		    		
 
-			   	if(isset($request->search) && $request->search!="")
-			    {
-			    	$search=$request->search;
-			    }
-			    else{
-			    	$search="";
-			    }
+		    	if($search!="")
+		    	{
+		    		$citieslist=DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->where('name', 'like', '%'.$search.'%')->get();
+		    	}
+		    	else{
+		    		$citieslist=DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->get();
+		    	}
 
-			    $checkcountry=DB::table('countries')->where('id',$country_id)->get()->first();
-			    if($checkcountry)
-			    {
-			    	$checkcountrystate=DB::table('states')->where('id',$state_id)->where('country_id',$country_id)->get()->first();
-			    	if($checkcountrystate)
+			    	if($citieslist)
 			    	{
-				    	if($search!="")
-				    	{
-				    		$citieslist=DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->where('name', 'like', '%'.$search.'%')->get();
-				    	}
-				    	else{
-				    		$citieslist=DB::table('cities')->where('country_id',$country_id)->where('state_id',$state_id)->get();
-				    	}
-
-				    	if($citieslist)
-				    	{
-				    		$citieslistarray=$citieslist->toArray();
-				    		$citieslist_arr=[];
-				    		foreach($citieslistarray as $list)
-				    		{
-				    			$citieslist_arr[]=array(
-				    				'id'=>$list->id,
-				    				'name'=>$list->name,
-				    				'country_id'=>$list->country_id,
-				    				'state_id'=>$list->state_id,
-				    				'country_name'=>$checkcountry->name,
-				    				'state_name'=>$checkcountrystate->name,
-				    				'lat'=>$list->latitude,
-				    				'lng'=>$list->longitude
-				    			);
-				    		}
-				    	}
-				    	else{
-				    		$citieslist_arr=[];
-				    	}
-
-				    	$success['citieslist']=$citieslist_arr;
-	            		return $this::sendResponse($success, 'Property Cities List.');
+			    		$citieslistarray=$citieslist->toArray();
+			    		$citieslist_arr=[];
+			    		foreach($citieslistarray as $list)
+			    		{
+			    			$citieslist_arr[]=array(
+			    				'id'=>$list->id,
+			    				'name'=>$list->name,
+			    				'country_id'=>$list->country_id,
+			    				'state_id'=>$list->state_id,
+			    				'country_name'=>$checkcountry->name,
+			    				'state_name'=>$checkcountrystate->name,
+			    				'lat'=>$list->latitude,
+			    				'lng'=>$list->longitude
+			    			);
+			    		}
 			    	}
 			    	else{
-			    		return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid State.']);
+			    		$citieslist_arr=[];
 			    	}
-			    }
-			    else{
-			    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
-			    }
 
-	        }
+			    	$success['citieslist']=$citieslist_arr;
+            		return $this::sendResponse($success, 'Property Cities List.');
+		    	}
+		    	else{
+		    		return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid State.']);
+		    	}
+		    }
+		    else{
+		    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
+		    }
 	    }
 	    catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong']);    
@@ -359,112 +217,77 @@ class DashboardController extends BaseController
 	        	$property_type=1;
 	        }
 
-	        $user = auth()->guard("api")->user();
-	        if($user)
-	        {
-	        	//login user
-	        	$categorylist=Category::where('category_type',$property_type)->where('status',1)->get();
-	        	if($categorylist)
-	        	{
-	        		$categorylistarray=$categorylist->toArray();
-	        		if($categorylistarray)
-	        		{
-	        			foreach($categorylistarray as $list)
-	        			{
-	        				$category_arr[]=array(
-	        					'id'=>$list['id'],
-	        					'name'=>$list['name']
-	        				);
-	        			}
-	        		}
-	        		else{
-	        			$category_arr=[];
-	        		}
-	        	}
-	        	else{
-	        		$category_arr=[];
-	        	}
+	        $categorylist=Category::where('category_type',$property_type)->where('status',1)->get();
+        	if($categorylist)
+        	{
+        		$categorylistarray=$categorylist->toArray();
+        		if($categorylistarray)
+        		{
+        			foreach($categorylistarray as $list)
+        			{
+        				$category_arr[]=array(
+        					'id'=>$list['id'],
+        					'name'=>$list['name']
+        				);
+        			}
+        		}
+        		else{
+        			$category_arr=[];
+        		}
+        	}
+        	else{
+        		$category_arr=[];
+        	}
 
-	        	$category_all[]=array(
-	        		'id'=>0,
-	        		'name'=>'All'
-	        	);
+        	$category_all[]=array(
+        		'id'=>0,
+        		'name'=>'All'
+        	);
 
-	        	if(count($category_arr) > 0)
-	        	{
-	        		$final_category_arr=array_merge($category_all,$category_arr);
-	        	}
-	        	else{
-	        		$final_category_arr=$category_all;
-	        	}
+        	if(count($category_arr) > 0)
+        	{
+        		$final_category_arr=array_merge($category_all,$category_arr);
+        	}
+        	else{
+        		$final_category_arr=$category_all;
+        	}
+
+        	$minmaxdata = DB::table('tbl_property')
+		   ->select(\DB::raw('MIN(property_price) AS minprice, MAX(property_price) AS maxprice, MIN(property_area) AS minarea, MAX(property_area) AS maxarea'))
+		   ->get();
+		   if($minmaxdata)
+		   {
+	   		$minmaxdataarray=$minmaxdata->toArray();
+	   		$minprice=(int)$minmaxdataarray[0]->minprice;
+	   		$maxprice=(int)$minmaxdataarray[0]->maxprice;
+	   		$minarea=(int)$minmaxdataarray[0]->minarea;
+	   		$maxarea=(int)$minmaxdataarray[0]->maxarea;
+		   }
+		   else{
+		   	$minprice=0;
+		   	$maxprice=0;
+		   	$minarea=0;
+		   	$maxarea=0;
+		   }
+
+		   	// $user = auth()->guard("api")->user();
+	     //    if($user)
+	     //    {
+	     //    	//login user
+	     //    	$final_category_arr = removeElementWithValue($final_category_arr, "id", 0);  	
+	     //    }
+	     //    else{
+	     //    	//guest login
+	     //    	$final_category_arr = removeElementWithValue($final_category_arr, "id", 7);   	
+	     //    }
 	        	
+        	$success['categorylist']=$final_category_arr;
+        	$success['minprice']=$minprice;
+        	$success['maxprice']=$maxprice;
+        	$success['minarea']=$minarea;
+        	$success['maxarea']=$maxarea;
 
-	        	$success['categorylist']=$final_category_arr;
-            	return $this::sendResponse($success, 'Property Category List.');
-	        }
-	        else{
-	        	//guest login
-	        	$categorylist=Category::where('category_type',$property_type)->where('status',1)->get();
-	        	if($categorylist)
-	        	{
-	        		$categorylistarray=$categorylist->toArray();
-	        		if($categorylistarray)
-	        		{
-	        			foreach($categorylistarray as $list)
-	        			{
-	        				$category_arr[]=array(
-	        					'id'=>$list['id'],
-	        					'name'=>$list['name']
-	        				);
-	        			}
-	        		}
-	        		else{
-	        			$category_arr=[];
-	        		}
-	        	}
-	        	else{
-	        		$category_arr=[];
-	        	}
-
-	        	$category_all[]=array(
-	        		'id'=>0,
-	        		'name'=>'All'
-	        	);
-
-	        	if(count($category_arr) > 0)
-	        	{
-	        		$final_category_arr=array_merge($category_all,$category_arr);
-	        	}
-	        	else{
-	        		$final_category_arr=$category_all;
-	        	}
-
-	        	$minmaxdata = DB::table('tbl_property')
-			   ->select(\DB::raw('MIN(property_price) AS minprice, MAX(property_price) AS maxprice, MIN(property_area) AS minarea, MAX(property_area) AS maxarea'))
-			   ->get();
-			   if($minmaxdata)
-			   {
-		   		$minmaxdataarray=$minmaxdata->toArray();
-		   		$minprice=(int)$minmaxdataarray[0]->minprice;
-		   		$maxprice=(int)$minmaxdataarray[0]->maxprice;
-		   		$minarea=(int)$minmaxdataarray[0]->minarea;
-		   		$maxarea=(int)$minmaxdataarray[0]->maxarea;
-			   }
-			   else{
-			   	$minprice=0;
-			   	$maxprice=0;
-			   	$minarea=0;
-			   	$maxarea=0;
-			   }
-
-
-	        	$success['categorylist']=$final_category_arr;
-	        	$success['minprice']=$minprice;
-	        	$success['maxprice']=$maxprice;
-	        	$success['minarea']=$minarea;
-	        	$success['maxarea']=$maxarea;
-            	return $this::sendResponse($success, 'Property Category List.');
-	        }
+        	return $this::sendResponse($success, 'Property Category List.');
 	    }
 	    catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
@@ -541,16 +364,16 @@ class DashboardController extends BaseController
                 $userlocation->status=1;
                 $userlocation->save();
 
-                if(isset($lat) && isset($lng))
+                if($lat!="" && $lng!="")
                 {
-                	$nearbypropertylist=$this->gethomenearbypropertieslocationwise($lat,$lng,$user->id,$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat,$lng,$user->id,$property_type,$property_category);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($user->id,$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat,$lng,$user->id,$property_type,$property_category);
                 }
                 else{
-                	$nearbypropertylist=$this->gethomenearbyproperties($user->id,$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat="",$lng="",$user->id,$property_type,$property_category);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($user->id,$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat="",$lng="",$user->id,$property_type,$property_category);
                 }
 
                 $success['nearby'] =  $nearbypropertylist;
@@ -563,17 +386,17 @@ class DashboardController extends BaseController
 
 	        	// guest login
 
-		        if(isset($lat) && isset($lng))
+		        if($lat!="" && $lng!="")
                 {
-                	$nearbypropertylist=$this->gethomenearbypropertieslocationwise($lat,$lng,$userid="",$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat,$lng,$userid="",$property_type,$property_category);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($userid="",$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat,$lng,$userid="",$property_type,$property_category);
 
                 }
                 else{
-                	$nearbypropertylist=$this->gethomenearbyproperties($userid="",$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat="",$lng="",$userid="",$property_type,$property_category);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($userid="",$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat="",$lng="",$userid="",$property_type,$property_category);
 
                 }
 
@@ -590,14 +413,66 @@ class DashboardController extends BaseController
     }
 
 
-public function gethomenearbypropertieslocationwise($lat,$lng,$userid,$property_type,$property_category)
+public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$property_category)
 {
 	if($property_category!=0)
 	{
-		$nearbypropertylist=Property::where('property_status',1)->where('property_type',$property_type)->where('property_category',$property_category)->get();
+		if($lat!="" && $lng!="")
+		{
+			$nearbypropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category)
+            ->orderBy('distance')
+            ->having('distance', '<=', 15)
+            ->limit(10)
+            ->get();
+		}
+		else{
+			$nearbypropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category)
+            ->orderBy('id','DESC')
+            ->limit(10)
+            ->get();
+		}
+		
+
 	}
 	else{
-		$nearbypropertylist=Property::where('property_status',1)->where('property_type',$property_type)->get();
+		if($lat!="" && $lng!="")
+		{
+			$nearbypropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->orderBy('distance')
+            ->having('distance', '<=', 15)
+            ->limit(10)
+           	->get();
+		}
+		else{
+			$nearbypropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->orderBy('id','DESC')
+            ->limit(10)
+            ->get();
+		}
 	}
 	
 	if($nearbypropertylist)
@@ -608,9 +483,9 @@ public function gethomenearbypropertieslocationwise($lat,$lng,$userid,$property_
 		foreach($nearbylistarr as $list)
 		{
 
-			if($list['property_image']!="")
+			if($list->property_image!="")
 	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+	        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 	        }
 	        else{
 	        	$property_image=url('/').'/no_image/property.jpg';
@@ -618,7 +493,7 @@ public function gethomenearbypropertieslocationwise($lat,$lng,$userid,$property_
 
 	        if($userid!="")
 	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
+	        	$favourite=checkfavproperty($userid,$list->id);
 	        }
 	        else{
 	        	$favourite=0;
@@ -628,27 +503,40 @@ public function gethomenearbypropertieslocationwise($lat,$lng,$userid,$property_
 	        if($property_type==1)
 	        {
 		        $nearbypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
 					'favourite'=>$favourite,
 					'rating'=>5
 				);
 	        }
 	        else{
 		        	$nearbypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
 					'favourite'=>$favourite
 				);
 	        }
+
+	        // if($userid!="")
+	        // {
+	        // 	//login user
+	        // 	$nearbypropertylistarr = removeElementWithKey($nearbypropertylistarr, "favourite");
+
+	        // 	$nearbypropertylistarr = AddElementtoarray($nearbypropertylistarr, "new_key",12);	
+	        // }
+	        // else{
+	        // 	//guest login  
+
+	        // 	$nearbypropertylistarr = removeElementWithKey($nearbypropertylistarr, "property_date");	
+	        // }
 			
 		}
 	}
@@ -659,86 +547,68 @@ public function gethomenearbypropertieslocationwise($lat,$lng,$userid,$property_
 	return $nearbypropertylistarr;
 }
 
-public function gethomenearbyproperties($userid,$property_type,$property_category)
+public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,$property_category)
 {
-
 	if($property_category!=0)
 	{
-		$nearbypropertylist=Property::where('property_status',1)->where('property_type',$property_type)->where('property_category',$property_category)->get();
-	}
-	else{
-		$nearbypropertylist=Property::where('property_status',1)->where('property_type',$property_type)->get();
-	}
-
-	if($nearbypropertylist)
-	{
-		$nearbylistarr=$nearbypropertylist->toArray();
-
-		$nearbypropertylistarr=[];
-		foreach($nearbylistarr as $list)
+		if($lat!="" && $lng!="")
 		{
-
-			if($list['property_image']!="")
-	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
-	        }
-	        else{
-	        	$property_image=url('/').'/no_image/property.jpg';
-	        }
-
-	        if($userid!="")
-	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
-	        }
-	        else{
-	        	$favourite=0;
-	        }
-
-	        if($property_type==1)
-	        {
-		        $nearbypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
-					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'favourite'=>$favourite,
-					'rating'=>5
-				);
-	        }
-	        else{
-		        $nearbypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
-					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'favourite'=>$favourite
-				);
-	        }
-			
+			$recentlyaddedpropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category)
+            ->orderBy('publish_date','DESC')
+            ->having('distance', '<=', 15)
+            ->limit(10)
+            ->get();
+		}
+		else{
+			$recentlyaddedpropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category)
+            ->orderBy('publish_date','DESC')
+            ->limit(10)
+            ->get();
 		}
 	}
 	else{
-		$nearbypropertylistarr=[];
+		if($lat!="" && $lng!="")
+		{
+			$recentlyaddedpropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->orderBy('publish_date','DESC')
+            ->having('distance', '<=', 15)
+            ->limit(10)
+            ->get();
+		}
+		else{
+			$recentlyaddedpropertylist = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->orderBy('publish_date','DESC')
+            ->limit(10)
+            ->get();
+		}
+		
+
 	}
-
-	return $nearbypropertylistarr;
-}
-
-public function gethomerecentlyaddedproperties($userid,$property_type,$property_category)
-{
-
-	if($property_category!=0)
-	{
-		$recentlyaddedpropertylist=Property::where('property_status',1)->where('property_type',$property_type)->where('property_category',$property_category)->get();
-	}
-	else{
-		$recentlyaddedpropertylist=Property::where('property_status',1)->where('property_type',$property_type)->get();
-	}
-
+	
 	if($recentlyaddedpropertylist)
 	{
 		$recentlyaddedlistarr=$recentlyaddedpropertylist->toArray();
@@ -746,9 +616,10 @@ public function gethomerecentlyaddedproperties($userid,$property_type,$property_
 		$recentlyaddedpropertylistarr=[];
 		foreach($recentlyaddedlistarr as $list)
 		{
-			if($list['property_image']!="")
+
+			if($list->property_image!="")
 	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+	        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 	        }
 	        else{
 	        	$property_image=url('/').'/no_image/property.jpg';
@@ -756,43 +627,43 @@ public function gethomerecentlyaddedproperties($userid,$property_type,$property_
 
 	        if($userid!="")
 	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
+	        	$favourite=checkfavproperty($userid,$list->id);
 	        }
 	        else{
 	        	$favourite=0;
 	        }
 	        
+
 	        if($property_type==1)
 	        {
 		        $recentlyaddedpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
 				);
 	        }
 	        else{
-		        $recentlyaddedpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	$recentlyaddedpropertylistarr[]=array(
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
 	        }
-			
 		}
 	}
 	else{
@@ -830,6 +701,23 @@ public function getnearbypropertieslist(Request $request)
         	$property_type=1;
         }
 
+        if(isset($request->category) && $request->category!="")
+	    {
+	    	$property_category=$request->category;
+	    	if($property_category!=0)
+	    	{
+	    		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$property_category)->get()->first();
+
+	    		if(!$checkpropertycategory)
+	    		{
+	    			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	    		}
+	    	}
+	    }
+	    else{
+	    	$property_category=0;
+	    }
+
 		if(isset($request->page) && $request->page!="")
 	    {
 	    	$page=$request->page;
@@ -862,37 +750,36 @@ public function getnearbypropertieslist(Request $request)
 	        if($user)
 	        {
 	        	//user login api
-
-	        	$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$user->id,$page,$sort_by);
-	        	if($nearbypropertydata['code']==200)
+	        	if($lat!="" && $lng!="")
 	        	{
-	        		$success['nearby'] =  $nearbypropertydata['nearbypropertylist'];
-	        		$success['total']=(int)$nearbypropertydata['total'];
-					$success['page']=(int)$nearbypropertydata['page'];
-					$success['last_page']=(int)$nearbypropertydata['last_page'];
-            		return $this::sendResponse($success, 'Nearby Properties List.');
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by);
 	        	}
 	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbypropertydata['message']]);
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by);
 	        	}
 		    }
 		    else{
 		    	//guest login api
-
-		    	$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$userid="",$page,$sort_by);
-		    	if($nearbypropertydata['code']==200)
+		    	if($lat!="" && $lng!="")
 	        	{
-	        		$success['nearby'] =  $nearbypropertydata['nearbypropertylist'];
-            		$success['total']=(int)$nearbypropertydata['total'];
-					$success['page']=(int)$nearbypropertydata['page'];
-					$success['last_page']=(int)$nearbypropertydata['last_page'];
-            		return $this::sendResponse($success, 'Nearby Properties List.');
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by);
 	        	}
 	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbypropertydata['message']]);
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by);
 	        	}
-
 		    }
+
+		    if($nearbypropertydata['code']==200)
+        	{
+        		$success['nearby'] =  $nearbypropertydata['nearbypropertylist'];
+        		$success['total']=(int)$nearbypropertydata['total'];
+				$success['page']=(int)$nearbypropertydata['page'];
+				$success['last_page']=(int)$nearbypropertydata['last_page'];
+        		return $this::sendResponse($success, 'Nearby Properties List.');
+        	}
+        	else{
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbypropertydata['message']]);
+        	}
 		}
 		catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
@@ -900,39 +787,93 @@ public function getnearbypropertieslist(Request $request)
 }
 
 
-public function get_nearby_properties_list($lat,$lng,$property_type,$userid,$page,$sort_by)
+public function get_nearby_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by)
 {
-	$nearbypropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
+	if($property_category!=0)
+	{
+		if($lat!="" && $lng!="")
+		{
+			$nearbypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category);
+		}
+		else{
+			$nearbypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category);
+		}
+	}
+	else{
+		if($lat!="" && $lng!="")
+		{
+			$nearbypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		else{
+			$nearbypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		
 
-	$perPage = 2;
-    $total = $nearbypropertyquery->count();
-    $last_page=ceil($total / $perPage);
+	}
 
     if($sort_by==1)
     {
-    	$nearbypropertyquery=$nearbypropertyquery->orderBy('property_price', 'ASC');
+    	$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.property_price', 'ASC');
     }
     elseif($sort_by==2)
     {
-    	$nearbypropertyquery=$nearbypropertyquery->orderBy('property_price', 'DESC');
+    	$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.property_price', 'DESC');
     }
     elseif($sort_by==3)
     {
-    	$nearbypropertyquery=$nearbypropertyquery->orderBy('id', 'DESC');
+    	$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
-    	$nearbypropertyquery=$nearbypropertyquery->orderBy('property_rating', 'ASC');
+    	$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.property_rating', 'ASC');
     }
     elseif($sort_by==5)
     {
-    	$nearbypropertyquery=$nearbypropertyquery->orderBy('property_rating', 'DESC');
+    	$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
     }
     else{
-    	$nearbypropertyquery=$nearbypropertyquery->orderBy('id', 'DESC');
+    	if($lat!="" && $lng!="")
+    	{
+    		$nearbypropertyquery=$nearbypropertyquery->orderBy('distance');
+    	}
+    	else{
+    		$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.id','DESC');
+    	}
     }
-    
 
+    if($lat!="" && $lng!="")
+    {
+    	$nearbypropertyquery=$nearbypropertyquery->having('distance', '<=', 15);
+    }
+
+    $perPage = 10;
+    $total = $nearbypropertyquery->count();
+    $last_page=ceil($total / $perPage);
+    
     $nearbypropertylist = $nearbypropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
     if($nearbypropertylist)
     {
@@ -940,9 +881,9 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$userid,$pag
     	$nearbypropertylistarr=[];
 		foreach($nearbylistarr as $list)
 		{
-			if($list['property_image']!="")
+			if($list->property_image!="")
 	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+	        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 	        }
 	        else{
 	        	$property_image=url('/').'/no_image/property.jpg';
@@ -950,7 +891,7 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$userid,$pag
 
 	        if($userid!="")
 	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
+	        	$favourite=checkfavproperty($userid,$list->id);
 	        }
 	        else{
 	        	$favourite=0;
@@ -959,31 +900,31 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$userid,$pag
 	        if($property_type==1)
 	        {
 		        $nearbypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
 					'favourite'=>$favourite,
 					'rating'=>5,
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area']
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area
 				);
 	        }
 	        else{
 		        	$nearbypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
 					'favourite'=>$favourite,
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area']
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area
 				);
 	        }	        
 		}
@@ -1013,6 +954,19 @@ public function getrecentlyaddeddpropertylist(Request $request)
 {
 	try{
 
+		$validator = Validator::make($request->all(), [
+		            'lat'=>'required',
+		            'lng'=>'required'
+		        ]);
+
+        if($validator->fails()){
+            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+        }
+
+        $lat=$request->lat;
+	    $lng=$request->lng;
+
+
 			//property type 1: renting
         	//property type 2: buying
 
@@ -1031,6 +985,24 @@ public function getrecentlyaddeddpropertylist(Request $request)
 		    else{
 		    	$page=1;
 		    }
+
+
+		if(isset($request->category) && $request->category!="")
+	    {
+	    	$property_category=$request->category;
+	    	if($property_category!=0)
+	    	{
+	    		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$property_category)->get()->first();
+
+	    		if(!$checkpropertycategory)
+	    		{
+	    			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	    		}
+	    	}
+	    }
+	    else{
+	    	$property_category=0;
+	    }
 
 		    //Buying:
 		// Lowest price : 1
@@ -1057,74 +1029,124 @@ public function getrecentlyaddeddpropertylist(Request $request)
 	        {
 	        	//user login api
 
-	        	$recentlypropertydata=$this->get_recentlyadded_properties_list($property_type,$user->id,$page,$sort_by);
-	        	if($recentlypropertydata['code']==200)
+	        	if($lat!="" && $lng!="")
 	        	{
-	        		$success['recently_added'] =  $recentlypropertydata['recentlypropertylist'];
-	        		$success['total']=(int)$recentlypropertydata['total'];
-					$success['page']=(int)$recentlypropertydata['page'];
-					$success['last_page']=(int)$recentlypropertydata['last_page'];
-            		return $this::sendResponse($success, 'Recently added Properties List.');
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by);
 	        	}
 	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentlypropertydata['message']]);
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by);
 	        	}
-                
+	        	   
 	        }
 	        else{
 	        	//guest login api
-
-	        	$recentlypropertydata=$this->get_recentlyadded_properties_list($property_type,$userid="",$page,$sort_by);
-	        	if($recentlypropertydata['code']==200)
+	        	if($lat!="" && $lng!="")
 	        	{
-	        		$success['recently_added'] =  $recentlypropertydata['recentlypropertylist'];
-	        		$success['total']=(int)$recentlypropertydata['total'];
-					$success['page']=(int)$recentlypropertydata['page'];
-					$success['last_page']=(int)$recentlypropertydata['last_page'];
-            		return $this::sendResponse($success, 'Recently added Properties List.');
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by);
 	        	}
 	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentlypropertydata['message']]);
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by);
 	        	}
-
 	        }
+
+	        if($recentlypropertydata['code']==200)
+        	{
+        		$success['recently_added'] =  $recentlypropertydata['recentlypropertylist'];
+        		$success['total']=(int)$recentlypropertydata['total'];
+				$success['page']=(int)$recentlypropertydata['page'];
+				$success['last_page']=(int)$recentlypropertydata['last_page'];
+        		return $this::sendResponse($success, 'Recently added Properties List.');
+        	}
+        	else{
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentlypropertydata['message']]);
+        	}
 	    }
 	    catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
                }
 }
 
-public function get_recentlyadded_properties_list($property_type,$userid,$page,$sort_by)
+public function get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by)
 {
-	$recentlypropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
 
-	$perPage = 2;
-    $total = $recentlypropertyquery->count();
-    $last_page=ceil($total / $perPage);
+	if($property_category!=0)
+	{
+		if($lat!="" && $lng!="")
+		{
+			$recentlypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+                ->WHERE('tbl_pr.property_status','1')
+                ->WHERE('tbl_pr.property_type',$property_type)
+                ->WHERE('tbl_pr.property_category',$property_category);
+		}
+		else{
+			$recentlypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category);
+		}
+	}
+	else{
+		if($lat!="" && $lng!="")
+		{
+			$recentlypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		else{
+			$recentlypropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		
+
+	}
 
     if($sort_by==1)
     {
-    	$recentlypropertyquery=$recentlypropertyquery->orderBy('property_price', 'ASC');
+    	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.property_price', 'ASC');
     }
     elseif($sort_by==2)
     {
-    	$recentlypropertyquery=$recentlypropertyquery->orderBy('property_price', 'DESC');
+    	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.property_price', 'DESC');
     }
     elseif($sort_by==3)
     {
-    	$recentlypropertyquery=$recentlypropertyquery->orderBy('id', 'DESC');
+    	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
-    	$recentlypropertyquery=$recentlypropertyquery->orderBy('property_rating', 'ASC');
+    	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.property_rating', 'ASC');
     }
     elseif($sort_by==5)
     {
-    	$recentlypropertyquery=$recentlypropertyquery->orderBy('property_rating', 'DESC');
+    	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
     }
     else{
-    	$recentlypropertyquery=$recentlypropertyquery->orderBy('id', 'DESC');
+    	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.publish_date', 'DESC');
     }
+
+    if($lat!="" && $lng!="")
+    {
+    	$recentlypropertyquery=$recentlypropertyquery->having('distance', '<=', 15);
+    }
+
+    $perPage = 10;
+    $total = $recentlypropertyquery->count();
+    $last_page=ceil($total / $perPage);
 
     $recentlypropertylist = $recentlypropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
 
@@ -1134,9 +1156,9 @@ public function get_recentlyadded_properties_list($property_type,$userid,$page,$
     	$recentlypropertylistarr=[];
     	foreach($recentlylistarr as $list)
     	{
-    		if($list['property_image']!="")
+    		if($list->property_image!="")
 	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+	        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 	        }
 	        else{
 	        	$property_image=url('/').'/no_image/property.jpg';
@@ -1144,7 +1166,7 @@ public function get_recentlyadded_properties_list($property_type,$userid,$page,$
 
 	        if($userid!="")
 	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
+	        	$favourite=checkfavproperty($userid,$list->id);
 	        }
 	        else{
 	        	$favourite=0;
@@ -1153,30 +1175,30 @@ public function get_recentlyadded_properties_list($property_type,$userid,$page,$
 	        if($property_type==1)
 	        {
 		        $recentlypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
 				);
 	        }
 	        else{
 		        $recentlypropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
 	        }
@@ -1294,15 +1316,7 @@ public function getproperty_details_api($property_id,$userid)
 				array_push($property_gallery,$property_image);
 			}
 
-			if($checkpropertyarray['property_type']==1)
-			{
-				$category_type=2;
-			}
-			else{
-				$category_type=1;
-			}
-
-			$checkpropertycategory=Category::where('category_type',$category_type)->where('id',$checkpropertyarray['property_category'])->get()->first();
+			$checkpropertycategory=Category::where('category_type',$checkpropertyarray['property_type'])->where('id',$checkpropertyarray['property_category'])->get()->first();
 			if($checkpropertycategory)
 			{
 				$property_category=$checkpropertycategory->name;
@@ -1459,6 +1473,19 @@ public function getproperty_details_api($property_id,$userid)
     public function filterpropertylisting(Request $request)
     {
     	try{
+
+    		$validator = Validator::make($request->all(), [
+		            'lat'=>'required',
+		            'lng'=>'required'
+		        ]);
+
+	        if($validator->fails()){
+	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+	        }
+
+	        $lat=$request->lat;
+		    $lng=$request->lng;
+
     	//property type 1: renting
         //property type 2: buying
 
@@ -1597,7 +1624,7 @@ public function getproperty_details_api($property_id,$userid)
 	    	$floor_count=$request->floor_count;
 	    }
 	    else{
-	    	$floor_count=1;
+	    	$floor_count="";
 	    }
 
 	    if(isset($request->condition) && $request->condition!="")
@@ -1608,96 +1635,86 @@ public function getproperty_details_api($property_id,$userid)
 	    	$condition="";
 	    }
 
-
-	    if($list_type=="nearBy")
-	    {
-	    	if($request->lat!="")
-	    	{
-	    		$lat=$request->lat;
-	    	}
-	    	else{
-	    		return $this::sendError('Unauthorised Exception.', ['error'=>'Please provide location latitude']);
-	    	}
-
-	    	if($request->lng!="")
-	    	{
-	    		$lng=$request->lng;
-	    	}
-	    	else{
-	    		return $this::sendError('Unauthorised Exception.', ['error'=>'Please provide location longitude']);
-	    	}
-	    }
-
 	    $user = auth()->guard("api")->user();
         if($user)
         {
         	//user login api
-
         	if($list_type=="nearBy")
         	{
-        		$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
-	        	if($nearbyfilterpropertydata['code']==200)
-	        	{
-	        		$success['nearby'] =  $nearbyfilterpropertydata['filterpropertylist'];
-	        		$success['total']=(int)$nearbyfilterpropertydata['total'];
-					$success['page']=(int)$nearbyfilterpropertydata['page'];
-					$success['last_page']=(int)$nearbyfilterpropertydata['last_page'];
-	        		return $this::sendResponse($success, 'Nearby Filter Properties List.');
-	        	}
-	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbyfilterpropertydata['message']]);
-	        	}
+        		if($lat!="" && $lng!="")
+        		{
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        		}
+        		else{
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        		}
+        		
         	}
         	else{
-        		$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition);
-	        	if($recentfilterpropertydata['code']==200)
-	        	{
-	        		$success['recently_added'] =  $recentfilterpropertydata['filterpropertylist'];
-	        		$success['total']=(int)$recentfilterpropertydata['total'];
-					$success['page']=(int)$recentfilterpropertydata['page'];
-					$success['last_page']=(int)$recentfilterpropertydata['last_page'];
-	        		return $this::sendResponse($success, 'Recent Filter Properties List.');
-	        	}
-	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentfilterpropertydata['message']]);
-	        	}
-        	}	
-            
+        		if($lat!="" && $lng!="")
+        		{
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        		}
+        		else{
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        		}
+        	}   
         }
         else{
         	//guest login api
 
         	if($list_type=="nearBy")
         	{
-        		$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
-	        	if($nearbyfilterpropertydata['code']==200)
-	        	{
-	        		$success['nearby'] =  $nearbyfilterpropertydata['filterpropertylist'];
-	        		$success['total']=(int)$nearbyfilterpropertydata['total'];
-					$success['page']=(int)$nearbyfilterpropertydata['page'];
-					$success['last_page']=(int)$nearbyfilterpropertydata['last_page'];
-	        		return $this::sendResponse($success, 'Nearby Filter Properties List.');
-	        	}
-	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbyfilterpropertydata['message']]);
-	        	}
+        		if($lat!="" && $lng!="")
+        		{
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        		}
+        		else{
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        		}
+        		
         	}
         	else{
-        		$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition);
-	        	if($recentfilterpropertydata['code']==200)
-	        	{
-	        		$success['recently_added'] =  $recentfilterpropertydata['filterpropertylist'];
-	        		$success['total']=(int)$recentfilterpropertydata['total'];
-					$success['page']=(int)$recentfilterpropertydata['page'];
-					$success['last_page']=(int)$recentfilterpropertydata['last_page'];
-	        		return $this::sendResponse($success, 'Recent Filter Properties List.');
-	        	}
-	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentfilterpropertydata['message']]);
-	        	}
+        		if($lat!="" && $lng!="")
+        		{
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        		}
+        		else{
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        		}
         	}
-
         }
+
+       	if(isset($nearbyfilterpropertydata) && $nearbyfilterpropertydata!="")
+       	{
+	       	if($nearbyfilterpropertydata['code']==200)
+	    	{
+	    		$success['nearby'] =  $nearbyfilterpropertydata['filterpropertylist'];
+	    		$success['total']=(int)$nearbyfilterpropertydata['total'];
+				$success['page']=(int)$nearbyfilterpropertydata['page'];
+				$success['last_page']=(int)$nearbyfilterpropertydata['last_page'];
+	    		return $this::sendResponse($success, 'Nearby Filter Properties List.');
+	    	}
+	    	else{
+	    		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbyfilterpropertydata['message']]);
+	    	}
+       	}
+        
+       	if(isset($recentfilterpropertydata) && $recentfilterpropertydata!="")
+       	{
+	       	if($recentfilterpropertydata['code']==200)
+	    	{
+	    		$success['recently_added'] =  $recentfilterpropertydata['filterpropertylist'];
+	    		$success['total']=(int)$recentfilterpropertydata['total'];
+				$success['page']=(int)$recentfilterpropertydata['page'];
+				$success['last_page']=(int)$recentfilterpropertydata['last_page'];
+	    		return $this::sendResponse($success, 'Recent Filter Properties List.');
+	    	}
+	    	else{
+	    		return $this::sendError('Unauthorised Exception.', ['error'=>$recentfilterpropertydata['message']]);
+	    	}
+       	}
+    	
     }
     catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
@@ -1708,55 +1725,73 @@ public function getproperty_details_api($property_id,$userid)
 
     public function get_nearby_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng)
     {
-    	$filterpropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
+    	if($lat!="" && $lng!="")
+		{
+			$filterpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+                ->WHERE('tbl_pr.property_status','1')
+                ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		else{
+			$filterpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
 
-    	if(isset($category) && $category!="")
+		if(isset($category) && $category!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_category',$category);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_category',$category);
     	}
 
     	if(isset($min_price) && $min_price!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_price','>=',$min_price);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_price','>=',$min_price);
     	}
 
     	if(isset($max_price) && $max_price!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_price','<=',$max_price);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_price','<=',$max_price);
     	}
 
     	if(isset($min_area) && $min_area!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_area','>=',$min_area);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_area','>=',$min_area);
     	}
 
     	if(isset($max_area) && $max_area!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_area','<=',$max_area);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_area','<=',$max_area);
     	}
 
     	if(isset($publish_date) && $publish_date!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('publish_date',$publish_date);
+    		$new_publish_date=date('Y-m-d',strtotime($publish_date));
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.publish_date',$new_publish_date);
     	}
 
     	if(isset($bed_count) && $bed_count!="")
     	{
     		if($bed_count==1)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
     		}
     		elseif($bed_count==2)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
     		}
     		elseif($bed_count==3)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
     		}
     		elseif($bed_count==4)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom','>=',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom','>=',$bed_count);
     		}
     	}
 
@@ -1764,29 +1799,30 @@ public function getproperty_details_api($property_id,$userid)
     	{
     		if($floor_count==1)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==2)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==3)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==4)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==5)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors','>=',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors','>=',$floor_count);
     		}
     	}
 
     	if(isset($built_year) && $built_year!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$built_year);
+    		$new_built_year=date('Y-m',strtotime($built_year));
+    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$new_built_year);
     	}
 
     	if(isset($condition) && $condition!="")
@@ -1794,33 +1830,45 @@ public function getproperty_details_api($property_id,$userid)
     		$filterpropertyquery=$filterpropertyquery->where('property_condition',$condition);
     	}
 
-		$perPage = 2;
-	    $total = $filterpropertyquery->count();
-	    $last_page=ceil($total / $perPage);
-
-	    if($sort_by==1)
+	   	if($sort_by==1)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_price', 'ASC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_price', 'ASC');
 	    }
 	    elseif($sort_by==2)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_price', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_price', 'DESC');
 	    }
 	    elseif($sort_by==3)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('id', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.id', 'DESC');
 	    }
 	    elseif($sort_by==4)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_rating', 'ASC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_rating', 'ASC');
 	    }
 	    elseif($sort_by==5)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_rating', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
 	    }
 	    else{
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('id', 'DESC');
+	    	if($lat!="" && $lng!="")
+	    	{
+	    		$filterpropertyquery=$filterpropertyquery->orderBy('distance');
+	    	}
+	    	else{
+	    		$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.id', 'DESC');
+	    	}
+	    	
 	    }
+
+	    if($lat!="" && $lng!="")
+	    {
+	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', 15);
+	    }
+
+	    $perPage = 10;
+	    $total = $filterpropertyquery->count();
+	    $last_page=ceil($total / $perPage);
 
 	    $filterpropertylist = $filterpropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
 
@@ -1830,9 +1878,9 @@ public function getproperty_details_api($property_id,$userid)
 	    	$filterpropertylistarr=[];
 	    	foreach($filterlistarr as $list)
 	    	{
-	    		if($list['property_image']!="")
+	    		if($list->property_image!="")
 		        {
-		        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+		        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 		        }
 		        else{
 		        	$property_image=url('/').'/no_image/property.jpg';
@@ -1840,7 +1888,7 @@ public function getproperty_details_api($property_id,$userid)
 
 		        if($userid!="")
 		        {
-		        	$favourite=checkfavproperty($userid,$list['id']);
+		        	$favourite=checkfavproperty($userid,$list->id);
 		        }
 		        else{
 		        	$favourite=0;
@@ -1849,30 +1897,30 @@ public function getproperty_details_api($property_id,$userid)
 		        if($property_type==1)
 		        {
 			        $filterpropertylistarr[]=array(
-			        	'property_id'=>$list['id'],
-						'title'=>$list['title'],
-						'property_address'=>$list['property_address'],
+			        	'property_id'=>$list->id,
+						'title'=>$list->title,
+						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
-						'property_price'=>$list['property_price'],
-						'property_date'=>date('d M Y',strtotime($list['created_at'])),
-						'property_bedrooms'=>$list['no_of_bedroom'],
-						'property_description'=>$list['property_description'],
-						'property_area'=>$list['property_area'],
+						'property_price'=>$list->property_price,
+						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_bedrooms'=>$list->no_of_bedroom,
+						'property_description'=>$list->property_description,
+						'property_area'=>$list->property_area,
 						'favourite'=>$favourite,
 						'rating'=>5
 					);
 		        }
 		        else{
 			        $filterpropertylistarr[]=array(
-			        	'property_id'=>$list['id'],
-						'title'=>$list['title'],
-						'property_address'=>$list['property_address'],
+			        	'property_id'=>$list->id,
+						'title'=>$list->title,
+						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
-						'property_price'=>$list['property_price'],
-						'property_date'=>date('d M Y',strtotime($list['created_at'])),
-						'property_bedrooms'=>$list['no_of_bedroom'],
-						'property_description'=>$list['property_description'],
-						'property_area'=>$list['property_area'],
+						'property_price'=>$list->property_price,
+						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_bedrooms'=>$list->no_of_bedroom,
+						'property_description'=>$list->property_description,
+						'property_area'=>$list->property_area,
 						'favourite'=>$favourite
 					);
 		        }
@@ -1895,59 +1943,78 @@ public function getproperty_details_api($property_id,$userid)
 	    	$data=array('code'=>200,'message'=>'success','filterpropertylist'=>$filterpropertylistarr,'total'=>0,'page'=>(int)$page,'last_page'=>0);
 			return $data;
 	    }
+
     }
 
-    public function get_recently_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition)
+    public function get_recently_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng)
     {
-    	$filterpropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
+    	if($lat!="" && $lng!="")
+		{
+			$filterpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+                ->WHERE('tbl_pr.property_status','1')
+                ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		else{
+			$filterpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
 
-    	if(isset($category) && $category!="")
+		if(isset($category) && $category!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_category',$category);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_category',$category);
     	}
 
     	if(isset($min_price) && $min_price!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_price','>=',$min_price);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_price','>=',$min_price);
     	}
 
     	if(isset($max_price) && $max_price!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_price','<=',$max_price);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_price','<=',$max_price);
     	}
 
     	if(isset($min_area) && $min_area!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_area','>=',$min_area);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_area','>=',$min_area);
     	}
 
     	if(isset($max_area) && $max_area!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('property_area','<=',$max_area);
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.property_area','<=',$max_area);
     	}
 
     	if(isset($publish_date) && $publish_date!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('publish_date',$publish_date);
+    		$new_publish_date=date('Y-m-d',strtotime($publish_date));
+    		$filterpropertyquery=$filterpropertyquery->where('tbl_pr.publish_date',$new_publish_date);
     	}
 
     	if(isset($bed_count) && $bed_count!="")
     	{
     		if($bed_count==1)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
     		}
     		elseif($bed_count==2)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
     		}
     		elseif($bed_count==3)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
     		}
     		elseif($bed_count==4)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_bedroom','>=',$bed_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom','>=',$bed_count);
     		}
     	}
 
@@ -1955,29 +2022,30 @@ public function getproperty_details_api($property_id,$userid)
     	{
     		if($floor_count==1)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==2)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==3)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==4)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
     		elseif($floor_count==5)
     		{
-    			$filterpropertyquery=$filterpropertyquery->where('no_of_floors','>=',$floor_count);
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors','>=',$floor_count);
     		}
     	}
 
     	if(isset($built_year) && $built_year!="")
     	{
-    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$built_year);
+    		$new_built_year=date('Y-m',strtotime($built_year));
+    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$new_built_year);
     	}
 
     	if(isset($condition) && $condition!="")
@@ -1985,33 +2053,38 @@ public function getproperty_details_api($property_id,$userid)
     		$filterpropertyquery=$filterpropertyquery->where('property_condition',$condition);
     	}
 
-		$perPage = 2;
-	    $total = $filterpropertyquery->count();
-	    $last_page=ceil($total / $perPage);
-
-	    if($sort_by==1)
+	   	if($sort_by==1)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_price', 'ASC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_price', 'ASC');
 	    }
 	    elseif($sort_by==2)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_price', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_price', 'DESC');
 	    }
 	    elseif($sort_by==3)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('id', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.id', 'DESC');
 	    }
 	    elseif($sort_by==4)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_rating', 'ASC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_rating', 'ASC');
 	    }
 	    elseif($sort_by==5)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('property_rating', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
 	    }
 	    else{
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('id', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.publish_date', 'DESC');
 	    }
+
+	    if($lat!="" && $lng!="")
+	    {
+	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', 15);
+	    }
+
+	    $perPage = 10;
+	    $total = $filterpropertyquery->count();
+	    $last_page=ceil($total / $perPage);
 
 	    $filterpropertylist = $filterpropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
 
@@ -2021,9 +2094,9 @@ public function getproperty_details_api($property_id,$userid)
 	    	$filterpropertylistarr=[];
 	    	foreach($filterlistarr as $list)
 	    	{
-	    		if($list['property_image']!="")
+	    		if($list->property_image!="")
 		        {
-		        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+		        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 		        }
 		        else{
 		        	$property_image=url('/').'/no_image/property.jpg';
@@ -2031,7 +2104,7 @@ public function getproperty_details_api($property_id,$userid)
 
 		        if($userid!="")
 		        {
-		        	$favourite=checkfavproperty($userid,$list['id']);
+		        	$favourite=checkfavproperty($userid,$list->id);
 		        }
 		        else{
 		        	$favourite=0;
@@ -2040,30 +2113,30 @@ public function getproperty_details_api($property_id,$userid)
 		        if($property_type==1)
 		        {
 			        $filterpropertylistarr[]=array(
-			        	'property_id'=>$list['id'],
-						'title'=>$list['title'],
-						'property_address'=>$list['property_address'],
+			        	'property_id'=>$list->id,
+						'title'=>$list->title,
+						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
-						'property_price'=>$list['property_price'],
-						'property_date'=>date('d M Y',strtotime($list['created_at'])),
-						'property_bedrooms'=>$list['no_of_bedroom'],
-						'property_description'=>$list['property_description'],
-						'property_area'=>$list['property_area'],
+						'property_price'=>$list->property_price,
+						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_bedrooms'=>$list->no_of_bedroom,
+						'property_description'=>$list->property_description,
+						'property_area'=>$list->property_area,
 						'favourite'=>$favourite,
 						'rating'=>5
 					);
 		        }
 		        else{
 			        $filterpropertylistarr[]=array(
-			        	'property_id'=>$list['id'],
-						'title'=>$list['title'],
-						'property_address'=>$list['property_address'],
+			        	'property_id'=>$list->id,
+						'title'=>$list->title,
+						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
-						'property_price'=>$list['property_price'],
-						'property_date'=>date('d M Y',strtotime($list['created_at'])),
-						'property_bedrooms'=>$list['no_of_bedroom'],
-						'property_description'=>$list['property_description'],
-						'property_area'=>$list['property_area'],
+						'property_price'=>$list->property_price,
+						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_bedrooms'=>$list->no_of_bedroom,
+						'property_description'=>$list->property_description,
+						'property_area'=>$list->property_area,
 						'favourite'=>$favourite
 					);
 		        }
@@ -2094,8 +2167,21 @@ public function getsearchpropertylist(Request $request)
 {
 	try{
 
+			$validator = Validator::make($request->all(), [
+		            'lat'=>'required',
+		            'lng'=>'required'
+		        ]);
+
+	        if($validator->fails()){
+	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+	        }
+
+	        $lat=$request->lat;
+		    $lng=$request->lng;
+
+
 			//property type 1: renting
-        //property type 2: buying
+        	//property type 2: buying
 
 			if(isset($request->type) && $request->type!="")
 	        {
@@ -2104,6 +2190,23 @@ public function getsearchpropertylist(Request $request)
 	        else{
 	        	$property_type=1;
 	        }
+
+		    if(isset($request->category) && $request->category!="")
+		    {
+		    	$property_category=$request->category;
+		    	if($property_category!=0)
+		    	{
+		    		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$property_category)->get()->first();
+
+		    		if(!$checkpropertycategory)
+		    		{
+		    			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+		    		}
+		    	}
+		    }
+		    else{
+		    	$property_category=0;
+		    }
 
 	        if(isset($request->search) && $request->search!="")
 	        {
@@ -2129,9 +2232,6 @@ public function getsearchpropertylist(Request $request)
 		    	$sort_by=0;
 		    }
 
-		    $lat="";
-		    $lng="";
-
 
 	        $user = auth()->guard("api")->user();
 	        if($user)
@@ -2139,32 +2239,11 @@ public function getsearchpropertylist(Request $request)
 	        	//user login api
 	        	if($lat!="" && $lng!="")
 	        	{
-	        		$nearbysearchpropertydata=$this->get_nearby_search_properties_list($property_type,$user->id,$page,$sort_by,$search,$lat,$lng);
-		        	if($nearbysearchpropertydata['code']==200)
-		        	{
-		        		$success['property_list'] =  $nearbysearchpropertydata['searchpropertylist'];
-		        		$success['total']=(int)$nearbysearchpropertydata['total'];
-						$success['page']=(int)$nearbysearchpropertydata['page'];
-						$success['last_page']=(int)$nearbysearchpropertydata['last_page'];
-	            		return $this::sendResponse($success, 'Nearby Search Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbysearchpropertydata['message']]);
-		        	}
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$user->id,$page,$sort_by,$search,$lat,$lng);
+		        	
 	        	}
 	        	else{
-	        		$recentsearchpropertydata=$this->get_recent_search_properties_list($property_type,$user->id,$page,$sort_by,$search);
-		        	if($recentsearchpropertydata['code']==200)
-		        	{
-		        		$success['property_list'] =  $recentsearchpropertydata['searchpropertylist'];
-		        		$success['total']=(int)$recentsearchpropertydata['total'];
-						$success['page']=(int)$recentsearchpropertydata['page'];
-						$success['last_page']=(int)$recentsearchpropertydata['last_page'];
-	            		return $this::sendResponse($success, 'Recent Search Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentsearchpropertydata['message']]);
-		        	}
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$user->id,$page,$sort_by,$search,$lat="",$lng="");
 	        	}
                 
 	        }
@@ -2173,77 +2252,120 @@ public function getsearchpropertylist(Request $request)
 
 	        	if($lat!="" && $lng!="")
 	        	{
-	        		$nearbysearchpropertydata=$this->get_nearby_search_properties_list($property_type,$userid="",$page,$sort_by,$search,$lat,$lng);
-		        	if($nearbysearchpropertydata['code']==200)
-		        	{
-		        		$success['property_list'] =  $nearbysearchpropertydata['searchpropertylist'];
-		        		$success['total']=(int)$nearbysearchpropertydata['total'];
-						$success['page']=(int)$nearbysearchpropertydata['page'];
-						$success['last_page']=(int)$nearbysearchpropertydata['last_page'];
-	            		return $this::sendResponse($success, 'Nearby Search Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbysearchpropertydata['message']]);
-		        	}
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$userid="",$page,$sort_by,$search,$lat,$lng);
 	        	}
 	        	else{
-	        		$recentsearchpropertydata=$this->get_recent_search_properties_list($property_type,$userid="",$page,$sort_by,$search);
-		        	if($recentsearchpropertydata['code']==200)
-		        	{
-		        		$success['property_list'] =  $recentsearchpropertydata['searchpropertylist'];
-		        		$success['total']=(int)$recentsearchpropertydata['total'];
-						$success['page']=(int)$recentsearchpropertydata['page'];
-						$success['last_page']=(int)$recentsearchpropertydata['last_page'];
-	            		return $this::sendResponse($success, 'Recent Search Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentsearchpropertydata['message']]);
-		        	}
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$userid="",$page,$sort_by,$search,$lat="",$lng="");
 	        	}
 
 	        }
+
+	        if($searchpropertydata['code']==200)
+        	{
+        		$success['property_list'] =  $searchpropertydata['searchpropertylist'];
+        		$success['total']=(int)$searchpropertydata['total'];
+				$success['page']=(int)$searchpropertydata['page'];
+				$success['last_page']=(int)$searchpropertydata['last_page'];
+        		return $this::sendResponse($success, 'Search Properties List.');
+        	}
+        	else{
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$searchpropertydata['message']]);
+        	}
 	    }
 	    catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
                }
 }
 
-public function get_nearby_search_properties_list($property_type,$userid,$page,$sort_by,$search,$lat,$lng)
+public function get_search_properties_list($property_type,$property_category,$userid,$page,$sort_by,$search,$lat,$lng)
 {
-	$searchpropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
+	if($property_category!=0)
+	{
+		if($lat!="" && $lng!="")
+		{
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category);
+		}
+		else{
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category);
+		}
+	}
+	else{
+		if($lat!="" && $lng!="")
+		{
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		else{
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
+	}
 
 	if(isset($search) && $search!="")
 	{
 		$searchpropertyquery=$searchpropertyquery->where('title', 'LIKE', '%' .$search . '%');
 	}
 
-	$perPage = 2;
-    $total = $searchpropertyquery->count();
-    $last_page=ceil($total / $perPage);
-
-    if($sort_by==1)
+	if($sort_by==1)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'ASC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_price', 'ASC');
     }
     elseif($sort_by==2)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_price', 'DESC');
     }
     elseif($sort_by==3)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'ASC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_rating', 'ASC');
     }
     elseif($sort_by==5)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
     }
     else{
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
+    	if($lat!="" && $lng!="")
+    	{
+    		$searchpropertyquery=$searchpropertyquery->orderBy('distance');
+    	}
+    	else{
+    		$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.publish_date','DESC');
+    	}
     }
+
+    if($lat!="" && $lng!="")
+    {
+    	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', 15);
+    }
+
+    $perPage = 10;
+    $total = $searchpropertyquery->count();
+    $last_page=ceil($total / $perPage);
 
     $searchpropertylist = $searchpropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
 
@@ -2253,9 +2375,9 @@ public function get_nearby_search_properties_list($property_type,$userid,$page,$
     	$searchpropertylistarr=[];
     	foreach($searchlistarr as $list)
     	{
-    		if($list['property_image']!="")
+    		if($list->property_image!="")
 	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+	        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 	        }
 	        else{
 	        	$property_image=url('/').'/no_image/property.jpg';
@@ -2263,7 +2385,7 @@ public function get_nearby_search_properties_list($property_type,$userid,$page,$
 
 	        if($userid!="")
 	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
+	        	$favourite=checkfavproperty($userid,$list->id);
 	        }
 	        else{
 	        	$favourite=0;
@@ -2272,30 +2394,30 @@ public function get_nearby_search_properties_list($property_type,$userid,$page,$
 	        if($property_type==1)
 	        {
 		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
 				);
 	        }
 	        else{
 		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
 	        }
@@ -2318,118 +2440,7 @@ public function get_nearby_search_properties_list($property_type,$userid,$page,$
     	$data=array('code'=>200,'message'=>'success','searchpropertylist'=>$searchpropertylistarr,'total'=>0,'page'=>(int)$page,'last_page'=>0);
 		return $data;
     }
-}
 
-public function get_recent_search_properties_list($property_type,$userid,$page,$sort_by,$search)
-{
-	$searchpropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
-
-	if(isset($search) && $search!="")
-	{
-		$searchpropertyquery=$searchpropertyquery->where('title', 'LIKE', '%' .$search . '%');
-	}
-
-	$perPage = 2;
-    $total = $searchpropertyquery->count();
-    $last_page=ceil($total / $perPage);
-
-    if($sort_by==1)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'ASC');
-    }
-    elseif($sort_by==2)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'DESC');
-    }
-    elseif($sort_by==3)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
-    }
-    elseif($sort_by==4)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'ASC');
-    }
-    elseif($sort_by==5)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'DESC');
-    }
-    else{
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
-    }
-
-    $searchpropertylist = $searchpropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
-
-    if($searchpropertylist)
-    {
-    	$searchlistarr=$searchpropertylist->toArray();
-    	$searchpropertylistarr=[];
-    	foreach($searchlistarr as $list)
-    	{
-    		if($list['property_image']!="")
-	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
-	        }
-	        else{
-	        	$property_image=url('/').'/no_image/property.jpg';
-	        }
-
-	        if($userid!="")
-	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
-	        }
-	        else{
-	        	$favourite=0;
-	        }
-
-	        if($property_type==1)
-	        {
-		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
-					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
-					'favourite'=>$favourite,
-					'rating'=>5
-				);
-	        }
-	        else{
-		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
-					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
-					'favourite'=>$favourite
-				);
-	        }
-    	}
-
-    	if(count($searchpropertylistarr) > 0)
-		{
-			$data=array('code'=>200,'message'=>'success','searchpropertylist'=>$searchpropertylistarr,'total'=>(int)$total,'page'=>(int)$page,'last_page'=>(int)$last_page);
-			return $data;
-		}
-		else{
-			$searchpropertylistarr=[];
-    		$data=array('code'=>200,'message'=>'success','searchpropertylist'=>$searchpropertylistarr,'total'=>0,'page'=>(int)$page,'last_page'=>0
-    		);
-			return $data;
-		}
-    }
-    else{
-    	$searchpropertylistarr=[];
-    	$data=array('code'=>200,'message'=>'success','searchpropertylist'=>$searchpropertylistarr,'total'=>0,'page'=>(int)$page,'last_page'=>0);
-		return $data;
-    }
 }
 
 
@@ -2571,32 +2582,10 @@ public function searchrentingproperty(Request $request)
 
                 if($lat!="" && $lng!="")
                 {
-                	$nearbyrentingdata=$this->get_nearby_renting_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
-		        	if($nearbyrentingdata['code']==200)
-		        	{
-		        		$success['property_list'] =  $nearbyrentingdata['searchpropertylist'];
-		        		$success['total']=(int)$nearbyrentingdata['total'];
-						$success['page']=(int)$nearbyrentingdata['page'];
-						$success['last_page']=(int)$nearbyrentingdata['last_page'];
-	            		return $this::sendResponse($success, 'Nearby Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbyrentingdata['message']]);
-		        	}
+                	$searchrentingdata=$this->get_search_property_renting_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
                 }
                 else{
-                	$recentrentingdata=$this->get_recent_renting_list($property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
-		        	if($recentrentingdata['code']==200)
-		        	{
-		        		$success['property_list'] =  $recentrentingdata['searchpropertylist'];
-		        		$success['total']=(int)$recentrentingdata['total'];
-						$success['page']=(int)$recentrentingdata['page'];
-						$success['last_page']=(int)$recentrentingdata['last_page'];
-	            		return $this::sendResponse($success, 'Nearby Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentrentingdata['message']]);
-		        	}
+                	$searchrentingdata=$this->get_search_property_renting_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
                 }
 	        }
 	        else{
@@ -2604,34 +2593,24 @@ public function searchrentingproperty(Request $request)
 
 	        	if($lat!="" && $lng!="")
                 {
-                	$nearbyrentingdata=$this->get_nearby_renting_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
-		        	if($nearbyrentingdata['code']==200)
-		        	{
-		        		$success['property_list'] =  $nearbyrentingdata['searchpropertylist'];
-		        		$success['total']=(int)$nearbyrentingdata['total'];
-						$success['page']=(int)$nearbyrentingdata['page'];
-						$success['last_page']=(int)$nearbyrentingdata['last_page'];
-	            		return $this::sendResponse($success, 'Nearby Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbyrentingdata['message']]);
-		        	}
+                	$searchrentingdata=$this->get_search_property_renting_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
                 }
                 else{
-                	$recentrentingdata=$this->get_recent_renting_list($property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
-		        	if($recentrentingdata['code']==200)
-		        	{
-		        		$success['property_list'] =  $recentrentingdata['searchpropertylist'];
-		        		$success['total']=(int)$recentrentingdata['total'];
-						$success['page']=(int)$recentrentingdata['page'];
-						$success['last_page']=(int)$recentrentingdata['last_page'];
-	            		return $this::sendResponse($success, 'Nearby Properties List.');
-		        	}
-		        	else{
-		        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentrentingdata['message']]);
-		        	}
+                	$searchrentingdata=$this->get_search_property_renting_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
                 }
 	        }
+
+	        if($searchrentingdata['code']==200)
+        	{
+        		$success['property_list'] =  $searchrentingdata['searchpropertylist'];
+        		$success['total']=(int)$searchrentingdata['total'];
+				$success['page']=(int)$searchrentingdata['page'];
+				$success['last_page']=(int)$searchrentingdata['last_page'];
+        		return $this::sendResponse($success, 'Search Renting Properties List.');
+        	}
+        	else{
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$searchrentingdata['message']]);
+        	}
 	}
 	catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
@@ -2640,132 +2619,50 @@ public function searchrentingproperty(Request $request)
 
 
 
-public function get_nearby_renting_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count)
+public function get_search_property_renting_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count)
 {
 	if($property_category!=0)
 	{
-		$searchpropertyquery=Property::where('property_status',1)->where('property_type',$property_type)->where('property_category',$property_category);
-	}
-	else{
-		$searchpropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
-	}
-
-	if(isset($adult_count) && $adult_count!="")
-	{
-		$searchpropertyquery=$searchpropertyquery->where('guest_count','>=',$adult_count);
-	}
-
-	$perPage = 2;
-    $total = $searchpropertyquery->count();
-    $last_page=ceil($total / $perPage);
-
-    if($sort_by==1)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'ASC');
-    }
-    elseif($sort_by==2)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'DESC');
-    }
-    elseif($sort_by==3)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
-    }
-    elseif($sort_by==4)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'ASC');
-    }
-    elseif($sort_by==5)
-    {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'DESC');
-    }
-    else{
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
-    }
-
-    $searchpropertylist = $searchpropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
-
-    if($searchpropertylist)
-    {
-    	$searchlistarr=$searchpropertylist->toArray();
-    	$searchpropertylistarr=[];
-    	foreach($searchlistarr as $list)
-    	{
-    		if($list['property_image']!="")
-	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
-	        }
-	        else{
-	        	$property_image=url('/').'/no_image/property.jpg';
-	        }
-
-	        if($userid!="")
-	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
-	        }
-	        else{
-	        	$favourite=0;
-	        }
-
-	        if($property_type==1)
-	        {
-		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
-					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
-					'favourite'=>$favourite,
-					'rating'=>5
-				);
-	        }
-	        else{
-		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
-					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
-					'favourite'=>$favourite
-				);
-	        }
-    	}
-
-    	if(count($searchpropertylistarr) > 0)
+		if($lat!="" && $lng!="")
 		{
-			$data=array('code'=>200,'message'=>'success','searchpropertylist'=>$searchpropertylistarr,'total'=>(int)$total,'page'=>(int)$page,'last_page'=>(int)$last_page);
-			return $data;
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category);
 		}
 		else{
-			$searchpropertylistarr=[];
-    		$data=array('code'=>200,'message'=>'success','searchpropertylist'=>$searchpropertylistarr,'total'=>0,'page'=>(int)$page,'last_page'=>0
-    		);
-			return $data;
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type)
+            ->WHERE('tbl_pr.property_category',$property_category);
 		}
-    }
-    else{
-    	$searchpropertylistarr=[];
-    	$data=array('code'=>200,'message'=>'success','searchpropertylist'=>$searchpropertylistarr,'total'=>0,'page'=>(int)$page,'last_page'=>0);
-		return $data;
-    }
-}
-
-public function get_recent_renting_list($property_type,$property_category,$userid,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count)
-{
-	if($property_category!=0)
-	{
-		$searchpropertyquery=Property::where('property_status',1)->where('property_type',$property_type)->where('property_category',$property_category);
 	}
 	else{
-		$searchpropertyquery=Property::where('property_status',1)->where('property_type',$property_type);
+		if($lat!="" && $lng!="")
+		{
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*"
+                ,DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(tbl_pr.property_latitude)) 
+                * cos(radians(tbl_pr.property_longitude) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(tbl_pr.property_latitude))) AS distance"))
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
+		else{
+			$searchpropertyquery = DB::table("tbl_property as tbl_pr")
+            ->select("tbl_pr.*")
+            ->WHERE('tbl_pr.property_status','1')
+            ->WHERE('tbl_pr.property_type',$property_type);
+		}
 	}
 
 	if(isset($adult_count) && $adult_count!="")
@@ -2773,33 +2670,44 @@ public function get_recent_renting_list($property_type,$property_category,$useri
 		$searchpropertyquery=$searchpropertyquery->where('guest_count','>=',$adult_count);
 	}
 
-	$perPage = 2;
-    $total = $searchpropertyquery->count();
-    $last_page=ceil($total / $perPage);
-
-    if($sort_by==1)
+	if($sort_by==1)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'ASC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_price', 'ASC');
     }
     elseif($sort_by==2)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_price', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_price', 'DESC');
     }
     elseif($sort_by==3)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'ASC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_rating', 'ASC');
     }
     elseif($sort_by==5)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('property_rating', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
     }
     else{
-    	$searchpropertyquery=$searchpropertyquery->orderBy('id', 'DESC');
+    	if($lat!="" && $lng!="")
+    	{
+    		$searchpropertyquery=$searchpropertyquery->orderBy('distance');
+    	}
+    	else{
+    		$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.id','DESC');
+    	}
     }
+
+    if($lat!="" && $lng!="")
+    {
+    	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', 15);
+    }
+
+    $perPage = 10;
+    $total = $searchpropertyquery->count();
+    $last_page=ceil($total / $perPage);
 
     $searchpropertylist = $searchpropertyquery->offset(($page - 1) * $perPage)->limit($perPage)->get();
 
@@ -2809,9 +2717,9 @@ public function get_recent_renting_list($property_type,$property_category,$useri
     	$searchpropertylistarr=[];
     	foreach($searchlistarr as $list)
     	{
-    		if($list['property_image']!="")
+    		if($list->property_image!="")
 	        {
-	        	$property_image=url('/').'/images/property/thumbnail/'.$list['property_image'];
+	        	$property_image=url('/').'/images/property/thumbnail/'.$list->property_image;
 	        }
 	        else{
 	        	$property_image=url('/').'/no_image/property.jpg';
@@ -2819,7 +2727,7 @@ public function get_recent_renting_list($property_type,$property_category,$useri
 
 	        if($userid!="")
 	        {
-	        	$favourite=checkfavproperty($userid,$list['id']);
+	        	$favourite=checkfavproperty($userid,$list->id);
 	        }
 	        else{
 	        	$favourite=0;
@@ -2828,30 +2736,30 @@ public function get_recent_renting_list($property_type,$property_category,$useri
 	        if($property_type==1)
 	        {
 		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
 				);
 	        }
 	        else{
 		        $searchpropertylistarr[]=array(
-		        	'property_id'=>$list['id'],
-					'title'=>$list['title'],
-					'property_address'=>$list['property_address'],
+		        	'property_id'=>$list->id,
+					'title'=>$list->title,
+					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
-					'property_price'=>$list['property_price'],
-					'property_date'=>date('d M Y',strtotime($list['created_at'])),
-					'property_bedrooms'=>$list['no_of_bedroom'],
-					'property_description'=>$list['property_description'],
-					'property_area'=>$list['property_area'],
+					'property_price'=>$list->property_price,
+					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_bedrooms'=>$list->no_of_bedroom,
+					'property_description'=>$list->property_description,
+					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
 	        }
@@ -2877,7 +2785,7 @@ public function get_recent_renting_list($property_type,$property_category,$useri
 }
 
 
-public function getpropertybookingdetails()
+public function getpropertybookingdetails(Request $request)
 {
 	try{
 		$validator = Validator::make($request->all(), [
@@ -2890,9 +2798,16 @@ public function getpropertybookingdetails()
 
 	        $property_id=$request->property_id;
 
+	        $checkproperty=Property::where('id',$property_id)->where('property_status',1)->get()->first();
+        	if(!$checkproperty)
+        	{
+        		return $this::sendError('Unauthorised.', ['error'=>'Invalid Property.']);
+        	}
+
 	        $user = auth()->guard("api")->user();
 	        if($user)
 	        {
+	        	$property_type=1;
 	        	$getuserrentinglocation=Userrentinglocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
 	        	if($getuserrentinglocation)
 	        	{
@@ -2921,22 +2836,22 @@ public function getpropertybookingdetails()
 			            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
 			        }
 
-			if(isset($request->category) && $request->category!="")
-	        {
-	        	$user_category=$request->category;
-	        	if($user_category!=0)
-	        	{
-	        		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$user_category)->get()->first();
+					if(isset($request->category) && $request->category!="")
+			        {
+			        	$user_category=$request->category;
+			        	if($user_category!=0)
+			        	{
+			        		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$user_category)->get()->first();
 
-	        		if(!$checkpropertycategory)
-	        		{
-	        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
-	        		}
-	        	}
-	        }
-	        else{
-	        	$user_category=0;
-	        }
+			        		if(!$checkpropertycategory)
+			        		{
+			        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+			        		}
+			        	}
+			        }
+			        else{
+			        	$user_category=0;
+			        }
 
 			        $user_location=$request->location;
 	        		$user_latitude=$request->lat;
@@ -2948,18 +2863,65 @@ public function getpropertybookingdetails()
 
 	        	}
 
-	        	
+	        	$daysdiff=getdaysdiff($user_checkin_date,$user_checkout_date);
+
+	        	$checkpropertyarray=$checkproperty->toArray();
+
+	        	if($checkpropertyarray['property_image']!="")
+		        {
+		        	$property_image=url('/').'/images/property/thumbnail/'.$checkpropertyarray['property_image'];
+		        }
+		        else{
+		        	$property_image=url('/').'/no_image/property.jpg';
+		        }
+
+			$checkpropertycategory=Category::where('category_type',$checkpropertyarray['property_type'])->where('id',$checkpropertyarray['property_category'])->get()->first();
+
+			if($checkpropertycategory)
+			{
+				$property_category=$checkpropertycategory->name;
+			}
+			else{
+				$property_category='-';
+			}
+
+	        $booking_price=$checkpropertyarray['property_price']*$daysdiff;
+	        $booking_tax="56";
+	        $total_booking_price=$booking_price+$booking_tax;
+
+	        $propertyarray=array(
+				'property_id'=>$checkpropertyarray['id'],
+				'property_image'=>$property_image,
+				'property_type'=>$checkpropertyarray['property_type'],
+				'title'=>$checkpropertyarray['title'],
+				'property_address'=>$checkpropertyarray['property_address'],
+				'property_price'=>$checkpropertyarray['property_price'],
+				'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+				'property_category'=>$property_category,
+				'guest_count'=>$checkpropertyarray['guest_count'],
+				'no_of_bedroom'=>$checkpropertyarray['no_of_bedroom'],
+				'property_area'=>$checkpropertyarray['property_area'],
+				'property_description'=>$checkpropertyarray['property_description'],
+				'booking_price'=>$booking_price,
+				'booking_tax'=>$booking_tax,
+				'total_booking_price'=>$total_booking_price,
+				'property_rating'=>5
+			);	
 
 	        	$searcharray=array(
 	        		'user_category'=>$user_category,
 	        		'user_location'=>$user_location,
 	        		'user_latitude'=>$user_latitude,
 	        		'user_longitude'=>$user_longitude,
-	        		'user_checkin_date'=>$user_checkin_date,
-	        		'user_checkout_date'=>$user_checkout_date,
+	        		'user_checkin_date'=>date('d M,Y',strtotime($user_checkin_date)),
+	        		'user_checkout_date'=>date('d M,Y',strtotime($user_checkout_date)),
 	        		'user_adults_count'=>$user_adults_count,
 	        		'user_children_count'=>$user_children_count
 	        	);
+
+					$success['propertyarray']=$propertyarray;
+					$success['searcharray']=$searcharray;
+	            	return $this::sendResponse($success, 'Property Booking Details.');
 	        }
 	        else{
 	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']);
@@ -2968,6 +2930,150 @@ public function getpropertybookingdetails()
 	catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
                }
+}
+
+public function insertuserbookinginfo(Request $request)
+{
+	try{
+		$validator = Validator::make($request->all(), [
+		            'property_id' => 'required',
+		            'name'=>'required',
+		            'email'=>'required',
+		            'age'=>'required',
+		            'gender'=>'required',
+		            'number'=>'required'
+		        ]);
+
+	        if($validator->fails()){
+	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+	        }
+
+	        $property_id=$request->property_id;
+	        $booking_user_name=$request->name;
+	        $booking_user_email=$request->email;
+	        $booking_user_age=$request->age;
+	        $booking_user_gender=$request->gender;
+	        $booking_user_number=$request->number;
+
+	        $checkproperty=Property::where('id',$property_id)->where('property_status',1)->get()->first();
+        	if(!$checkproperty)
+        	{
+        		return $this::sendError('Unauthorised.', ['error'=>'Invalid Property.']);
+        	}
+
+	        $user = auth()->guard("api")->user();
+	        if($user)
+	        {
+	        	$property_type=1;
+	        	$getuserrentinglocation=Userrentinglocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
+	        	if($getuserrentinglocation)
+	        	{
+	        		$user_category=$getuserrentinglocation->user_category;
+	        		$user_location=$getuserrentinglocation->user_location;
+	        		$user_latitude=$getuserrentinglocation->user_latitude;
+	        		$user_longitude=$getuserrentinglocation->user_longitude;
+	        		$user_checkin_date=$getuserrentinglocation->user_checkin_date;
+	        		$user_checkout_date=$getuserrentinglocation->user_checkout_date;
+	        		$user_adults_count=$getuserrentinglocation->user_adults_count;
+	        		$user_children_count=$getuserrentinglocation->user_children_count;
+	        	}
+	        	else{
+		        	$validator = Validator::make($request->all(), [
+			            'location' => 'required',
+			            'lat'=>'required',
+			            'lng'=>'required',
+			            'category'=>'required',
+			            'check_in_date'=>'required',
+			            'check_out_date'=>'required',
+			            'adult_count'=>'required',
+			            'children_count'=>'required'
+			        ]);
+
+			        if($validator->fails()){
+			            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+			        }
+
+					if(isset($request->category) && $request->category!="")
+			        {
+			        	$user_category=$request->category;
+			        	if($user_category!=0)
+			        	{
+			        		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$user_category)->get()->first();
+
+			        		if(!$checkpropertycategory)
+			        		{
+			        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+			        		}
+			        	}
+			        }
+			        else{
+			        	$user_category=0;
+			        }
+
+			        $user_location=$request->location;
+	        		$user_latitude=$request->lat;
+	        		$user_longitude=$request->lng;
+	        		$user_checkin_date=$request->check_in_date;
+	        		$user_checkout_date=$request->check_out_date;
+	        		$user_adults_count=$request->adult_count;
+	        		$user_children_count=$request->children_count;
+
+	        	}
+
+	        $daysdiff=getdaysdiff($user_checkin_date,$user_checkout_date);
+
+	        $checkpropertyarray=$checkproperty->toArray();
+
+	        $booking_price=$checkpropertyarray['property_price']*$daysdiff;
+	        $booking_tax="56";
+	        $total_booking_price=$booking_price+$booking_tax;
+
+	        $usertempbooking=new Usertempbooking;
+	        $usertempbooking->user_id=$user->id;
+	        $usertempbooking->property_id=$property_id;
+	        $usertempbooking->user_name=$booking_user_name;
+	        $usertempbooking->user_email=$booking_user_email;
+	        $usertempbooking->user_age=$booking_user_age;
+	        $usertempbooking->user_gender=$booking_user_gender;
+	        $usertempbooking->user_number=$booking_user_number;
+	        $usertempbooking->user_checkin_date=$user_checkin_date;
+	        $usertempbooking->user_checkout_date=$user_checkout_date;
+	        $usertempbooking->booking_property_price=$booking_price;
+	        $usertempbooking->booking_tax_price=$booking_tax;
+	        $usertempbooking->booking_price=$total_booking_price;
+	        $usertempbooking->user_adult_count=$user_adults_count;
+	        $usertempbooking->user_children_count=$user_children_count;
+	        $usertempbooking->booking_status=0; //ongoing
+	        $usertempbooking->save();
+
+	        $this->saveuserbookinginfo($user->id);
+
+			$success=[];
+	        return $this::sendResponse($success, 'Property Booking successfully done.');
+
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']);
+	        }
+	}
+	catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
+               }
+}
+
+public function saveuserbookinginfo($userid)
+{
+		Usertempbooking::query()
+		 ->where('user_id',$userid)
+		 ->orderBy('id','DESC')
+		 ->each(function ($oldPost) {
+		  $newPost = $oldPost->replicate();
+		  $newPost->setTable('user_booking');
+		  $newPost->save();
+		  $oldPost->delete();
+		});
+
+		return true;
 }
 
 

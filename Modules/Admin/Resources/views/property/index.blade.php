@@ -67,16 +67,7 @@
                      <div class="card my-1">
                         <div class="card-block collapse mt-3"  id="collapseExample">
                             <div class="row">
-                                <div class="col-md-6">       
-                                    <div class="form-group">
-                                        <label><strong>Start Date <span class="text-danger"></span></strong></label>
-                                        <div class="controls">
-                                            <input type="date" name="start_date" id="start_date" class="form-control datepicker-autoclose" placeholder="Please select start date"> 
-                                            <div class="help-block"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label><strong>Property Type</strong></label>
@@ -106,6 +97,18 @@
                                             <option value="0">Pending</option>
                                             <option value="1">Active</option>
                                             <option value="2">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label><strong>Property Condition</strong></label>
+                                        <select name="property_condition" id='property_condition' class="form-control">
+                                            <option value="">Select Condition</option>
+                                            @foreach($condition as $list)
+                                            <option value="{{$list->id}}">{{$list->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>                        
@@ -172,6 +175,42 @@
       dateFormat: 'yy-mm-dd'
     });
 
+    $('#property_type').on('change',function(){
+    var property_type=$(this).val();
+    var optionhtml='<option value="">Select price type</option>';
+    if(property_type==2)
+    {
+      optionhtml+='<option value="1">PerSq.Ft</option><option value="2">Fixed </option><option value="3">Persq.yard</option>';
+    }
+    else{
+      optionhtml+='<option value="4">Per night</option>';
+    }
+
+    $('#property_price_type').html(optionhtml);
+
+     $.ajax({
+        type: "POST",
+        data:{_token: "{{ csrf_token() }}",property_type:property_type}, 
+        url: "{{ route('admin-ajax-get-category-list') }}",
+        dataType:'json',
+        beforeSend: function(){
+            $("#loading").show();
+        },
+        complete: function(){
+            $("#loading").hide();
+        },
+        success:function(result){
+            if(result.code==200) {
+                $('#property_category').html(result.categoryhtml);
+            }
+            else {
+                alert('error');
+            }
+        }
+    });
+
+  });
+
 function table_ajax(){
       var i = 1;
       var table = $('#propertytable').DataTable({
@@ -184,10 +223,8 @@ function table_ajax(){
              data: function (d) {
                 d.status = $('#status').val(),
                 d.search = $('input[type="search"]').val(),
-                d.start_date = $('#start_date').val(),
-                d.end_date = $('#end_date').val(),
-                d.base_price_from=$('#base_price_from').val(),
-                d.base_price_to=$('#base_price_to').val(),
+                d.property_category = $('#property_category').val(),
+                d.property_condition = $('#property_condition').val(),
                 d.property_location=$('#property_location').val(),
                 d.property_type=$('#property_type').val();
 
@@ -233,58 +270,26 @@ $(document).ready(function() {
     $(".js-example-placeholder-multiple").select2({
         placeholder: "Select"
     });
-   table_ajax();
-  
-        //  $.fn.dataTable.ext.search.push(
-        //     function( settings, data, dataIndex ) {
-        //         console.log('data');
-        //         var min = $('#start_date').datepicker('getDate');
-        //         var max = $('#end_date').datepicker('getDate');
-        //         var startDate = new Date(data[5]);
-        //         if (min == null && max == null) return true;
-        //         if (min == null && startDate <= max) return true;
-        //         if (max == null && startDate >= min) return true;
-        //         if (startDate <= max && startDate >= min) return true;
-        //         return false;
-        //     }
-        // );
+
+        table_ajax();
 
         $('#status').change(function(){
-           // table.draw();
-           table_ajax();
-        });
-     
-        // $('#delete_status').change(function(){
-        //     table.draw();
-        // });
-        
-        $('#start_date, #end_date').change( function() {
-           // table.draw();
-            table_ajax();
-        });
-
-       $('#state, #city').change( function() {
-           // table.draw();
            table_ajax();
         });
 
-        $('#escrow_status').change( function() {
-           // table.draw();
+       $('#property_condition').change( function() {
+           table_ajax();
+        });
+
+        $('#property_category').change( function() {
            table_ajax();
         });
 
          $('#property_type').change( function() {
-           // table.draw();
-           table_ajax();
-        });
-
-        $('#base_price_from, #base_price_to').keyup( function() {
-          
            table_ajax();
         });
 
           $('#property_location').keyup( function() {
-          
            table_ajax();
         });
 

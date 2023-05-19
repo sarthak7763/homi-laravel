@@ -1,102 +1,135 @@
 @extends('buyer::auth.auth_layout.authmaster')
-@section('title',"Homi-Reset Password")
+@section('title',"Homi Forgot Password")
 @section('content')
- <div class="row">
-    <div class="col-md-5 leftCol bg-white px-4">
-        <div class="logo snIN d-flex justify-content-center align-items-center">
-            <img src="{{asset('assets_front/images/brand-logo/logo.png')}}"/>
-        </div>
-        <h2 class="headsign d-inline-block">{{ __('Reset Password') }}</h2>
-     
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-          @if (isset($errors) && count($errors) > 0)
-                <div class="alert alert-danger">
-                    @foreach ($errors->all() as $error)
-                    {{ $error }}
-                    @endforeach
-                </div>
-            @endif 
-            @if(session()->has('success'))
-              <div class="alert alert-success alert-dismissible fade show" role="alert">
-               <label  class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true"  style="font-size: 19px;margin-top: -1px;">&times;</span>
-                </label>
-                   {{ session()->get('success') }}
-              </div>
-            @endif
-             @if(session()->has('error'))
-               <div class="alert alert-danger alert-dismissible fade show" role="alert">
-               <label  class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true"  style="font-size: 19px;margin-top: -1px;">&times;</span>
-                </label>
-                   {{ session()->get('error') }}
-              </div>
-            @endif
-        <form class="signForm mx-2" action="{{ route('buyer-forget-password-post') }}" method="POST" name="resetPasswordForm">
-    
-            @csrf
+<div class="row">
 
-            <div class="form-group row">
-                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"  name="email" value="{{ old('email') }}" autocomplete="email" autofocus>
-                <span class="input-label">Email Address</span>
-                @error('email')
-                    <span class="invalid-feedback" role="alert">
-                        {{ $message }}
-                    </span>
-                @enderror
-            </div>
-            
-
-            <div class="form-group row mb-0">
-                <div class="col-md-12">
-                   <button type="submit" class="btn btn-primary login resetPasswordBtn mx-auto">
-                        {{ __('Send Password Reset Link') }}
-                    </button>
-                </div>
-            </div>
-             <div class="col-md-12 text-center mt-5 noAccount">
-            Go Back to <a href="{{route('buyer-login')}}" class="text-primary">Login</a>
-          </div>
+<section class="signup-section pt-4 pb-4">
+   <div class="container h-100">
+    <div class="row align-items-center justify-content-center h-100">  
+      <div class="col-12">  
+        <form class="signup-form p-5">
+          <h1>Welcome!</h1>
+          <strong>Signup your account</strong>
+          <div class="mb-4">            
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email ID">            
+          </div> 
+          <button type="submit" class="btn btn-primary">Send Link</button>
+      
         </form>
+      </div>
     </div>
+  </div>
+</section>
+
 </div>
 @endsection
-
 @section('js')
+
 <script type="text/javascript">
- $(document).on("click", ".resetPasswordBtn", function () {
-    $('form[name=resetPasswordForm]').validate({          
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+    }
+});
+
+$(document).on("click", "#btnSignup", function() {
+
+    $('form[name=signupBuyerForm]').validate({
         rules: {
-          
-            email:{email:true,  required: true}
-           },      
+            name: {
+                required: true,
+                maxlength: 30
+            },
+
+            email: {
+                required: true,
+                email: true,
+                remote: {
+                    url: "{{route('buyer-sign-up-email-check')}}",
+
+                    type: "POST",
+
+                    data: {
+
+                        email: function() {
+                            return $('#buyerSignupForm :input[name="email"]').val();
+                        },
+
+                    }
+                }
+            },
+            mobile_no: {
+                required: true,
+                digits: true,
+                minlength: 6,
+                maxlength: 13,
+                remote: {
+                    url: "{{route('buyer-sign-up-mobile-check')}}",
+                    type: "post",
+                    data: {
+
+                        mobile_no: function() {
+                            return $('#buyerSignupForm :input[name="mobile_no"]').val();
+
+                        }
+
+                    }
+                }
+            },
+            password: {
+                required: true,
+                minlength: 5
+            },
+            password_confirmation: {
+                minlength: 5,
+                equalTo: "#password"
+            },
+            'city[]': {
+                required: true,
+            },
+
+        },
         messages: {
-            email:{
-                email:"Please enter a valid email address",
-                required:"Please enter email address"
-            }
+            // first_name: {
+            //     required: "Please specify your first name",
+            //     maxlength:"Name length should be maximum 30 characters long"
+            // },
+            name: {
+                required: "Please specify your name",
+                maxlength: "Name length should be maximum 30 characters long"
+            },
+            email: {
+                required: "We need your email address to contact you",
+                email: "Your email address must be in the format of name@domain.com",
+                remote: "Email already exist"
+            },
+            mobile_no: {
+                required: "We need your mobile number to contact you",
+                digits: "Your mobile number must be in digits",
+                minlength: "Your mobile number have minimum 6 digits",
+                maxlength: "Your mobile number have maximum 13 digits",
+                remote: "Mobile number already exist"
+            },
+            password: {
+                required: "Password field is required",
+                minlength: "Password must be atleast 5 characters long"
+
+            },
+            password_confirmation: {
+                required: "Confirm password field is required",
+                equalTo: "Confirm password must be same as password",
+
+            },
+            'city[]': {
+                required: "Select at least one city",
+
+            },
+
         },
         submitHandler: function(form) {
-      
             form.submit();
-    
         }
     });
 });
-
-    $(document).ready(function(){
-        $(".form-control").change( function () {
-          if($(this).val() != ""){
-            $(this).addClass("active");
-          }
-          else{
-            $(this).removeClass("active");
-          }
-        })
-    });
 </script>
 @endsection

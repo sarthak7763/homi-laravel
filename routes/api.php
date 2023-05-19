@@ -55,6 +55,18 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::post('clearallusernotifications', [PagesController::class, 'clearallusernotifications']);
 
+	Route::post('getpropertybookingdetails', [DashboardController::class, 'getpropertybookingdetails']);
+
+	Route::post('insertuserbookinginfo', [DashboardController::class, 'insertuserbookinginfo']);
+
+	Route::get('getuserbookings', [ProfileController::class, 'getuserbookings']);
+
+	Route::post('getbookingdetails', [ProfileController::class, 'getbookingdetails']);
+
+	Route::post('submitcancelbooking', [ProfileController::class, 'submitcancelbooking']);
+
+	Route::post('submitbookingrating', [ProfileController::class, 'submitbookingrating']);
+
 });
 
 //login and guest user routes

@@ -145,9 +145,169 @@
                         </div>                   
                     </div>
                 </div>
+
+
+                <div class="col-md-12">
+
+                    <div id="exTab2" class="container"> 
+                        <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a  href="#prlist" data-toggle="tab">Property List</a>
+                                </li>
+                                <li>
+                                    <a href="#orlist" data-toggle="tab">Orders</a>
+                                </li>
+                                </ul>
+
+                                    <div class="tab-content ">
+                                    <div class="tab-pane active" id="prlist">
+                                    
+                                    <div class="card">
+                        <div class="card-block">
+                            <div class="dt-responsive table-responsive">
+                                <table id="propertytable" class="table table table-styling table-bordered nowrap" style="width:100%">
+                                    <thead>
+                                    <tr class="table-primary">
+                                        <th>S.No</th>
+                                        <th>Property Pic</th>
+                                        <th>Title </th>
+                                        <th>Publish Status</th>
+                                        <th>Created Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                    <tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                    
+                                        
+                                </div>
+                                        <div class="tab-pane" id="orlist">
+                                  <h3>Notice the gap between the content and tab after applying a background color</h3>
+
+                                  <h3>Notice the gap between the content and tab after applying a background color</h3>
+
+                                  <h3>Notice the gap between the content and tab after applying a background color</h3>
+
+                                  <h3>Notice the gap between the content and tab after applying a background color</h3>
+
+                                  <h3>Notice the gap between the content and tab after applying a background color</h3>
+
+                                  <h3>Notice the gap between the content and tab after applying a background color</h3>
+
+                                        </div>
+                                    </div>
+                          </div>
+                    
+                </div>
             </div>
         </div>      
     </div>
 </div>
 
+@endsection
+
+
+@section('js')
+<script type="text/javascript">
+
+    // set a common class for both id
+    $('.datepicker').datepicker({
+      dateFormat: 'yy-mm-dd'
+    });
+
+    $('#property_type').on('change',function(){
+    var property_type=$(this).val();
+    var optionhtml='<option value="">Select price type</option>';
+    if(property_type==2)
+    {
+      optionhtml+='<option value="1">PerSq.Ft</option><option value="2">Fixed </option><option value="3">Persq.yard</option>';
+    }
+    else{
+      optionhtml+='<option value="4">Per night</option>';
+    }
+
+    $('#property_price_type').html(optionhtml);
+
+     $.ajax({
+        type: "POST",
+        data:{_token: "{{ csrf_token() }}",property_type:property_type}, 
+        url: "{{ route('admin-ajax-get-category-list') }}",
+        dataType:'json',
+        beforeSend: function(){
+            $("#loading").show();
+        },
+        complete: function(){
+            $("#loading").hide();
+        },
+        success:function(result){
+            if(result.code==200) {
+                $('#property_category').html(result.categoryhtml);
+            }
+            else {
+                alert('error');
+            }
+        }
+    });
+
+  });
+
+function table_property_ajax(){
+      var i = 1;
+      var table = $('#propertytable').DataTable({
+        processing: true,
+           serverSide: false,
+            "bDestroy": true,
+        ajax: {
+            url: "{{ route('admin-property-list-seller-wise') }}",
+            type: 'GET',
+             data: function (d) {
+                d.owner_id = "{{$userInfo->id}}";
+            }
+        },
+        columns: [
+          //  {data: 'DT_RowIndex', orderable: false,
+                    //searchable: false},
+                       {
+                    "render": function() {
+                        return i++;
+                    }
+                },
+
+            {data:"image","bSortable": false,
+                "mRender": function(data, type, full){
+                return $("<div/>").html(data).text();
+                }
+            },
+              {data:"title",
+                "mRender": function(data, type, full){
+                return $("<div/>").html(data).text();
+                }
+            },
+            {data:"status",
+                "mRender": function(data, type, full){
+                return $("<div/>").html(data).text();
+                }
+            },
+            {data: 'created_at'},
+            {'data':"action__","bSortable": false,
+                // "className": "action",
+                 "className": "btn_modify",
+                 "mRender": function(data, type, full){
+                    return $("<div/>").html(data).text();
+                    }
+                },           
+        ],
+    });
+
+}
+$(document).ready(function() {
+   table_property_ajax();
+});
+</script>
 @endsection
