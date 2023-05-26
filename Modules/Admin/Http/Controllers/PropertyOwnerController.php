@@ -260,7 +260,6 @@ class PropertyOwnerController extends Controller{
       $data=$request->all();
 
       $request->validate([
-        'id'=>'required',
         'email' => 'required|email:rfc,dns',
           'name'=>[
                   'required',
@@ -273,7 +272,6 @@ class PropertyOwnerController extends Controller{
           ],
       ],
       [
-        'id.required'=>'User not found.',
         'name.required' => 'Name field can’t be left blank.',
         'name.regex' => 'Please enter only alphabetic characters.',
         'email.required'=>'Email field can not be empty',
@@ -283,9 +281,14 @@ class PropertyOwnerController extends Controller{
         'mobile.max'=>'Password can not be more than 12 character',
       ]);
 
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/propertyOwner-list/')->with('error','Something went wrong.');
+      }
+
       $user = User::find($data['id']);
           if(is_null($user)){
-           return redirect('admin/user-list/')->with('error','Something went wrong.');
+           return redirect('admin/propertyOwner-list/')->with('error','Something went wrong.');
         }
 
         $fileNameToStore="";
@@ -415,14 +418,20 @@ class PropertyOwnerController extends Controller{
 
   public function updateUserStatus(Request $request){
     try{
+      $data=$request->all();
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/propertyOwner-list/')->with('error','Something went wrong.');
+      }
+
       $user=User::where('id', $request->id)->first();
       if($user->status == 1){
-        $data = [ "status"=>0];
-        User::where('id', $request->id)->update($data);
+        $updatedata = [ "status"=>0];
+        User::where('id', $request->id)->update($updatedata);
         $status=1;
       }else if($user->status == 0){
-        $data = [ "status"=>1];
-        User::where('id', $request->id)->update($data);
+        $updatedata = [ "status"=>1];
+        User::where('id', $request->id)->update($updatedata);
         $status=1;
       }else{
         $status=0;
@@ -436,14 +445,20 @@ class PropertyOwnerController extends Controller{
 
   public function updateUserEmailStatus(Request $request){
     try{
+      $data=$request->all();
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/propertyOwner-list/')->with('error','Something went wrong.');
+      }
+
       $user=User::where('id', $request->id)->first();
       if($user->email_verified == 1){
-        $data = [ "email_verified"=>0];
-        User::where('id', $request->id)->update($data);
+        $updatedata = [ "email_verified"=>0];
+        User::where('id', $request->id)->update($updatedata);
         $email_verified=1;
       }else if($user->email_verified == 0){
-        $data = [ "email_verified"=>1];
-        User::where('id', $request->id)->update($data);
+        $updatedata = [ "email_verified"=>1];
+        User::where('id', $request->id)->update($updatedata);
         $email_verified=1;
       }else{
         $email_verified=0;

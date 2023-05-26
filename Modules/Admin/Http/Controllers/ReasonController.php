@@ -8,24 +8,25 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-use App\Models\Reason;
+use App\Models\CancelReasons;
 use Illuminate\Support\Arr;
 use App\Helpers\Helper;
 use Hash,Validator,Exception,DataTables;
+use Illuminate\Validation\ValidationException;
 
 class ReasonController extends Controller{
   public function index(Request $request) {
     try{    
       if ($request->ajax()) {
-        $data = Reason::get();
+        $data = CancelReasons::get();
           return Datatables::of($data)
           ->addIndexColumn()
-          ->addColumn('name ', function ($data) {
-          return $data->name;
+          ->addColumn('name', function ($data) {
+          return $data->reason_name;
           })
         
           ->addColumn('status', function($data){
-              if($data->status==1){
+              if($data->reason_status==1){
                   $status='<span style="cursor:pointer;" class="badge badge-success badge_status_change" id="'.$data->id.'">Active</span>';
               }else{
                   $status='<span style="cursor:pointer;" class="badge badge-danger badge_status_change" id="'.$data->id.'">Inactive</span>';
@@ -49,8 +50,7 @@ class ReasonController extends Controller{
 
   public function add(){
     try{
-        $reasonList=reason::where([['status',1]])->get();
-        return view('admin::reason.add',compact('reasonList'));
+        return view('admin::reason.add');
     }
     catch(Exception $e)
     {
@@ -59,38 +59,62 @@ class ReasonController extends Controller{
   }
 
   public function save(Request $request){ 
-    $data = $request->all();
-    $validatedData = $request->validate([
-      'name' => 'required'
-      //'type' => 'required',
+    try {
+      $data=$request->all();
+
+      $validatedData = $request->validate([
+      'name' => 'required',
+      'status'=>'required'
       ],
       [
-        'name.required'=> 'Reason Name is Required'// custom message
-        //'type.required'=> 'Reason Type is Required' // custom message
-      ]
-    );
-    
-    $data = $request->all();
-    try {  
-      $reason = new Reason;
-      $reason->name=$data['name'];
-     // $reason->type=$data['type'];
-      $reason->type="Enquiry";
-      $reason->status=$data['status'];
-      $reason->save();
-      
-     toastr()->success('Reason saved successfully','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-      return redirect()->route('admin-reason-list')->with('success','Reason added successfully');
-    } 
-    catch (Exception $e){
-      return redirect()->back()->with('error', 'something wrong');
+        'name.required'=> 'Reason Name is Required',
+        'status.required'=>'Reason status is required'
+      ]);
+
+      $checkreasonname=CancelReasons::where('reason_name',$data['name'])->get()->first();
+      if($checkreasonname)
+      {
+        return redirect()->back()->with('error', 'Reason name already exists.');
+      }
+      else{
+        $reason = new CancelReasons;
+        $reason->reason_name=$data['name'];
+        $reason->reason_description=$data['description'];
+        $reason->reason_status=$data['status'];
+        $reason->save();
+        
+       toastr()->success('Reason saved successfully','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
+        return redirect()->route('admin-reason-list')->with('success','Reason added successfully');
+      }
+
+    }
+    catch (\Exception $e){
+      if($e instanceof ValidationException){
+          $listmessage=[];
+          foreach($e->errors() as $key=>$list)
+          {
+              $listmessage[$key]=$list[0];
+          }
+
+          if(count($listmessage) > 0)
+          {
+              return back()->with('valid_error',$listmessage);
+          }
+          else{
+              return back()->with('error','Something went wrong.');
+          }
+          
+      }
+      else{
+          return back()->with('error','Something went wrong.');
+      }
     }
   } 
   
   //DISPLAY EDIT DOCTOR FORM VIEW PAGE
   public function edit($id){
     try{
-      $reasonInfo =Reason::where('id',$id)->first();
+      $reasonInfo =CancelReasons::where('id',$id)->first();
       return view('admin::reason.edit', compact('reasonInfo'));
     }
     catch(Exception $e){
@@ -99,54 +123,101 @@ class ReasonController extends Controller{
   }
   
   public function update(Request $request){
-    $data = $request->all();
-    $state =Reason::where('id',$request->id)->first();
-    request()->validate([
-        'name' => 'required'
-       ]);
-   
     try {
-      $reasonData = [ "name"=>$data['name'],
-                      "type"=>"Enquiry",
-                      "status"=>$data['status']]; 
+      $data=$request->all();
 
-      Reason::where('id',$data['id'])->update($reasonData);
-        toastr()->success('Reason updated successfully','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-       return redirect()->route('admin-reason-list')->with('success','Reason info updated successfully');
+      $validatedData = $request->validate([
+      'name' => 'required',
+      'status'=>'required'
+      ],
+      [
+        'name.required'=> 'Reason Name is Required',
+        'status.required'=>'Reason status is required'
+      ]);
+
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/reason-list/')->with('error','Something went wrong.');
+      }
+
+      $reason = CancelReasons::find($data['id']);
+          if(is_null($reason)){
+           return redirect('admin/reason-list/')->with('error','Something went wrong.');
+        }
+
+        if($reason->reason_name==$data['name'])
+        {
+          $reason->reason_description=$data['description'];
+          $reason->reason_status=$data['status'];
+        }
+        else{
+          $checkreasonname=CancelReasons::where('reason_name',$data['name'])->get()->first();
+          if($checkreasonname)
+          {
+            return redirect()->back()->with('error', 'Reason name already exists.');
+          }
+          else{
+            $reason->reason_name=$data['name'];
+            $reason->reason_description=$data['description'];
+            $reason->reason_status=$data['status'];
+          }
+        }
+
+        try{
+            $reason->save();
+            toastr()->success('Reason updated successfully','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
+            return redirect()->route('admin-reason-list')->with('success','Reason updated successfully');      
+
+          }catch(\Exception $e){
+            return back()->with('error',$e->getMessage());
+          }
     }
     catch (\Exception $e){
-        return redirect()->back()->with('error', 'something wrong');
+      if($e instanceof ValidationException){
+          $listmessage=[];
+          foreach($e->errors() as $key=>$list)
+          {
+              $listmessage[$key]=$list[0];
+          }
+
+          if(count($listmessage) > 0)
+          {
+              return back()->with('valid_error',$listmessage);
+          }
+          else{
+              return back()->with('error','Something went wrong.');
+          }
+          
+      }
+      else{
+          return back()->with('error',$e->getMessage());
+      }
     }
   }
   
   public function updateReasonStatus(Request $request){
     try{
-      $user=Reason::where('id', $request->id)->first();
-      if($user->status == 1)
+      $data=$request->all();
+      if(!array_key_exists("id",$data))
       {
-        $data = [ "status"=>0];
-        Reason::where('id', $request->id)->update($data);
+        return redirect('admin/reason-list/')->with('error','Something went wrong.');
+      }
+
+      $reason=CancelReasons::where('id', $request->id)->first();
+      if($reason->reason_status == 1)
+      {
+        $updatedata = [ "reason_status"=>0];
+        CancelReasons::where('id', $request->id)->update($updatedata);
       }else
       {
-        $data = [ "status"=>1];
-        Reason::where('id', $request->id)->update($data);
+        $updatedata = [ "reason_status"=>1];
+        CancelReasons::where('id', $request->id)->update($updatedata);
       }
 
       return response()->json(["success" => "1"]);
     }
     catch(Exception $e){  
       return redirect()->back()->with('error', 'something wrong');     
-    }  
-  }
-
-  public function editDeleteStatus(Request $request){
-    try{
-      $data = ["delete_status"=>1];
-      Reason::where('id', $request->id)->update($data);
-      return response()->json(["success" => "1"]);
-    }
-    catch(Exception $e){
-      return redirect()->back()->with('error', 'something wrong');
     }  
   }
 

@@ -20,23 +20,32 @@ class PropertyController extends Controller {
 
                 return Datatables::of($data)
                     ->addIndexColumn()
-                    ->addColumn('image', function($row){
-                        if($row->property_image!="")
-                        {
-                            $imageurl=url('/').'/images/property/thumbnail/'.$row->property_image;
-                        }
-                        else{
-                            $imageurl=url('/').'/no_image/property.jpg';
-                        }
-
-                        $route_view=route('admin-property-details',$row->id);
-                        $image = '<img class="img-circle" src="'.$imageurl.'" height="50" width="50" id="thumbnil">';
-                        return $image;
-                    })
                     ->addColumn('title', function($row){
 
-                        $title_start = '<a title="'.$row->title.'" href="'.route('admin-property-details',$row->slug).'">'.substr($row->title, 0, 15).'...</a><br>';
-                        return $title_start;
+                        $title = '<a title="'.$row->title.'" href="'.route('admin-property-details',$row->slug).'">'.substr($row->title, 0, 15).'...</a><br>';
+                        return $title;
+                    })
+                    ->addColumn('type', function($row){
+                        $property_type = $row->property_type;
+                        if($property_type==1){
+                            $type='<span class="badge badge-warning" style="cursor: pointer;">Rent</span>';
+                        }
+                        else{
+                             $type='<span class="badge badge-danger" style="cursor: pointer;">Sell</span>';
+                        }
+                        
+                        return $type;
+                    })
+                    ->addColumn('category', function($row){
+                        $checkpropertycategory=Category::where('id',$row->property_category)->get()->first();
+                        if($checkpropertycategory)
+                        {
+                            $category=$checkpropertycategory->name;
+                        }
+                        else{
+                            $category="N.A.";
+                        }
+                        return $category;
                     }) 
                     ->addColumn('status', function($row){
                         $status = $row->property_status;
@@ -440,7 +449,6 @@ class PropertyController extends Controller {
             $data=$request->all();
 
             $request->validate([
-                'property_id'=>'required',
                 'add_by'=>'required',
                 'title'=>'required',
                 'property_type'=>[
@@ -466,7 +474,6 @@ class PropertyController extends Controller {
                 'property_price_type'=>'required',
                 ],
               [
-                'property_id.required'=>'Property ID is required.',
                 'add_by.required' => 'Owner is required.',
                 'title.required'=>'Title field can’t be left blank',
                 'property_type.required' => 'Property type is required.',
@@ -511,6 +518,11 @@ class PropertyController extends Controller {
                 'property_price.required'=>'Property address field can’t be left blank',
                 'property_price_type.required'=>'Property price type is required.',
               ]);
+
+              if(!array_key_exists("property_id",$data))
+              {
+                return redirect('admin/property-list/')->with('error','Something went wrong.');
+              }
 
             $propertyupdate=Property::find($data['property_id']);
 

@@ -1,103 +1,7 @@
 <?php 
-use App\Models\{User,IntrestedCity,SystemSetting,CmsPage,Property,FavProperty};
+use App\Models\{User,IntrestedCity,SystemSetting,CmsPage,Property,FavProperty,Userbooking};
 use Auth as Auth;
 use Illuminate\Support\Facades\Session;
-
-function daysLeftToExpireProperty($timer_date,$timer_time){
-    $days=0;
-    $hours=0;
-    $minutes=0;
-    $seconds=0;
-    $seconds = strtotime($timer_date."".$timer_time) - time();
-    if($seconds>0){
-    $days = floor($seconds / 86400);
-    $seconds %= 86400;
-
-    $hours = floor($seconds / 3600);
-    $seconds %= 3600;
-
-    $minutes = floor($seconds / 60);
-    $seconds %= 60;
-    }
-
-    if($days>0){
-        if($days==1){
-             return "Timer Expires After ".$days." day ".$hours." hours and ".$minutes." minutes";
-        }else{
-            if($hours==0){
-                return "Timer Expires After ".$days." days and ".$minutes." minutes";
-            }else{
-                return "Timer Expires After ".$days." days ".$hours." hours and ".$minutes." minutes"; 
-            }
-           
-        }
-       
-    }
-    else if($days==0 && $hours>0){
-        if($hours==1){
-             return "Timer Expires After ".$hours." hour and ".$minutes." minutes";
-        }else{
-            return "Timer Expires After ".$hours." hours and ".$minutes." minutes";
-        }
-       
-    }
-    else if($days==0 && $hours==0 && $minutes>0){
-        if($minutes==1){
-             return "Timer Expires After ".$minutes." minute";
-        }else{
-            return "Timer Expires After ".$minutes." minutes";
-        }
-       
-    }
-    
-    
-    
-    // else if($hours>0){
-    //     if($hours==1){
-    //         return "Timer Expire After $hours hour";
-    //     }else{
-    //      return "Timer Expire After $hours hours";
-    //     }
-    // }else if($minutes>0){
-    //     if($minutes==1){
-    //          return "Timer Expire After $minutes minute";
-    //     }
-    //     else{
-    //         return "Timer Expire After $minutes minutes";
-    //     }    
-        
-  //  }
-    else{
-         return "Timer Off";
-    }
-
-    //
-
-    if($days>0){
-        if($days==1){
-             return "Timer Expire After $days day";
-        }else{
-             return "Timer Expire After $days days";
-        }
-       
-    }else if($hours>0){
-        if($hours==1){
-            return "Timer Expire After $hours hour";
-        }else{
-         return "Timer Expire After $hours hours";
-        }
-    }else if($minutes>0){
-        if($minutes==1){
-             return "Timer Expire After $minutes minute";
-        }
-        else{
-            return "Timer Expire After $minutes minutes";
-        }    
-        
-    }else{
-         return "Timer Off";
-    }
-}
 
 
 function getMobileFormat($mobile_num){
@@ -295,9 +199,6 @@ function sendPushNotification($title,$description,$registrationIds,$payload,$dev
         return $adminInfo;
     }
 
-
-
-
     function getLogo()
     {
         $logo=SystemSetting::where([['option_slug','website-logo'],['setting_type','sitelogo'],['status',1]])->first();
@@ -310,10 +211,16 @@ function sendPushNotification($title,$description,$registrationIds,$payload,$dev
         return $favicon->option_value;
     }
 
-    function getFooterContent()
+    function getbookingtaxprice()
     {
-        $footerData=SystemSetting::where([['option_slug','footer-description'],['setting_type','footer_content'],['status',1]])->first();
-        return $footerData->option_value;
+        $taxprice=SystemSetting::where([['option_slug','booking-tax'],['setting_type','siteappsettings'],['status',1]])->first();
+        return $taxprice->option_value;
+    }
+
+    function getdistanceradiusvalue()
+    {
+        $radiusvalue=SystemSetting::where([['option_slug','distance-radius'],['setting_type','siteappsettings'],['status',1]])->first();
+        return $radiusvalue->option_value;
     }
 
     function getFooterSocialLink()
@@ -325,15 +232,18 @@ function sendPushNotification($title,$description,$registrationIds,$payload,$dev
         return $data;
     }
 
+    function gethomicontactinformation()
+    {
+        $contactinfoData=SystemSetting::where([['setting_type','homicontactinfo'],['status',1]])->get();
+        foreach($contactinfoData as $li){
+            $data[$li->option_slug]=$li->option_value;
+        }
+        return $data;
+    }
+
     function getFooterCmsPageMenu(){
         $cms=CmsPage::select('page_name','page_slug')->where('status',1)->get()->toArray();
         return $cms; 
-
-    }
-
-      function getEmailSignature(){
-        $email_signature =SystemSetting::select('option_value')->where([['setting_type','email_signature'],['status',1]])->first();
-        return $email_signature; 
 
     }
 
@@ -346,14 +256,6 @@ function sendPushNotification($title,$description,$registrationIds,$payload,$dev
             return 0;
         }
       }
-
-    
-
-    function getPropertyCityList($state){
-       $cityList =  Property::groupBy("city")->with('getPropertyCity')->where('state',$state)->get();
-        return $cityList; 
-
-    }
 
     /////////////////////////////////////////////////////////
  function error_500(){
@@ -503,6 +405,48 @@ function AddElementtoarray($mainArray,$searchkey,$searchvalue)
      
     return $mainArray;
 
+}
+
+function generatebookingid()
+{
+    $currentdate=date('Y-m-d');
+    $lastiddata=Userbooking::orderBy('id','DESC')->get()->first();
+    if($lastiddata)
+    {
+        $lastbookingid=$lastiddata->id;
+        $finalbookingid=$lastbookingid+1;
+        $newbookingid=str_pad($finalbookingid,4,"0",STR_PAD_LEFT);
+    }
+    else{
+        $newbookingid=0001;
+    }
+
+    $generatebookingid='HM'.date('dmy',strtotime($currentdate)).'-'.$newbookingid;
+    return $generatebookingid;
+}
+
+function generateinvoiceid()
+{
+
+    if (date('m') >= 4) {
+        $financial_year = date('Y') + 1;
+    } else {
+        $financial_year = date('Y');
+    }
+
+    $lastiddata=Userbooking::orderBy('id','DESC')->get()->first();
+    if($lastiddata)
+    {
+        $lastbookingid=$lastiddata->id;
+        $finalbookingid=$lastbookingid+1;
+        $newbookingid=str_pad($finalbookingid,4,"0",STR_PAD_LEFT);
+    }
+    else{
+        $newbookingid=0001;
+    }
+
+    $generateinvoiceid='HOMI'.$financial_year.'UI'.$newbookingid;
+    return $generateinvoiceid;
 }
 
 

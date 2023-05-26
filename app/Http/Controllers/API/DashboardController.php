@@ -415,6 +415,7 @@ class DashboardController extends BaseController
 
 public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$property_category)
 {
+	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
 	{
 		if($lat!="" && $lng!="")
@@ -430,7 +431,7 @@ public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$proper
             ->WHERE('tbl_pr.property_type',$property_type)
             ->WHERE('tbl_pr.property_category',$property_category)
             ->orderBy('distance')
-            ->having('distance', '<=', 15)
+            ->having('distance', '<=', $radiusvalue)
             ->limit(10)
             ->get();
 		}
@@ -460,7 +461,7 @@ public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$proper
             ->WHERE('tbl_pr.property_status','1')
             ->WHERE('tbl_pr.property_type',$property_type)
             ->orderBy('distance')
-            ->having('distance', '<=', 15)
+            ->having('distance', '<=', $radiusvalue)
             ->limit(10)
            	->get();
 		}
@@ -549,6 +550,7 @@ public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$proper
 
 public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,$property_category)
 {
+	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
 	{
 		if($lat!="" && $lng!="")
@@ -564,7 +566,7 @@ public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,
             ->WHERE('tbl_pr.property_type',$property_type)
             ->WHERE('tbl_pr.property_category',$property_category)
             ->orderBy('publish_date','DESC')
-            ->having('distance', '<=', 15)
+            ->having('distance', '<=', $radiusvalue)
             ->limit(10)
             ->get();
 		}
@@ -592,7 +594,7 @@ public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,
             ->WHERE('tbl_pr.property_status','1')
             ->WHERE('tbl_pr.property_type',$property_type)
             ->orderBy('publish_date','DESC')
-            ->having('distance', '<=', 15)
+            ->having('distance', '<=', $radiusvalue)
             ->limit(10)
             ->get();
 		}
@@ -789,6 +791,7 @@ public function getnearbypropertieslist(Request $request)
 
 public function get_nearby_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by)
 {
+	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
 	{
 		if($lat!="" && $lng!="")
@@ -867,7 +870,7 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
 
     if($lat!="" && $lng!="")
     {
-    	$nearbypropertyquery=$nearbypropertyquery->having('distance', '<=', 15);
+    	$nearbypropertyquery=$nearbypropertyquery->having('distance', '<=', $radiusvalue);
     }
 
     $perPage = 10;
@@ -1068,7 +1071,7 @@ public function getrecentlyaddeddpropertylist(Request $request)
 
 public function get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by)
 {
-
+	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
 	{
 		if($lat!="" && $lng!="")
@@ -1141,7 +1144,7 @@ public function get_recentlyadded_properties_list($lat,$lng,$property_type,$prop
 
     if($lat!="" && $lng!="")
     {
-    	$recentlypropertyquery=$recentlypropertyquery->having('distance', '<=', 15);
+    	$recentlypropertyquery=$recentlypropertyquery->having('distance', '<=', $radiusvalue);
     }
 
     $perPage = 10;
@@ -1725,6 +1728,7 @@ public function getproperty_details_api($property_id,$userid)
 
     public function get_nearby_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng)
     {
+    	$radiusvalue=getdistanceradiusvalue();
     	if($lat!="" && $lng!="")
 		{
 			$filterpropertyquery = DB::table("tbl_property as tbl_pr")
@@ -1863,7 +1867,7 @@ public function getproperty_details_api($property_id,$userid)
 
 	    if($lat!="" && $lng!="")
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', 15);
+	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', $radiusvalue);
 	    }
 
 	    $perPage = 10;
@@ -1948,6 +1952,7 @@ public function getproperty_details_api($property_id,$userid)
 
     public function get_recently_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng)
     {
+    	$radiusvalue=getdistanceradiusvalue();
     	if($lat!="" && $lng!="")
 		{
 			$filterpropertyquery = DB::table("tbl_property as tbl_pr")
@@ -2079,7 +2084,7 @@ public function getproperty_details_api($property_id,$userid)
 
 	    if($lat!="" && $lng!="")
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', 15);
+	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', $radiusvalue);
 	    }
 
 	    $perPage = 10;
@@ -2279,6 +2284,7 @@ public function getsearchpropertylist(Request $request)
 
 public function get_search_properties_list($property_type,$property_category,$userid,$page,$sort_by,$search,$lat,$lng)
 {
+	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
 	{
 		if($lat!="" && $lng!="")
@@ -2360,7 +2366,7 @@ public function get_search_properties_list($property_type,$property_category,$us
 
     if($lat!="" && $lng!="")
     {
-    	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', 15);
+    	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', $radiusvalue);
     }
 
     $perPage = 10;
@@ -2491,7 +2497,7 @@ public function searchrentingproperty(Request $request)
 
 	        if(isset($request->check_in_date) && $request->check_in_date!="")
 	        {
-	        	$check_in_date=$request->check_in_date;
+	        	$check_in_date=date('Y-m-d',strtotime($request->check_in_date));
 	        }
 	        else{
 	        	$check_in_date="";
@@ -2499,7 +2505,7 @@ public function searchrentingproperty(Request $request)
 
 	        if(isset($request->check_out_date) && $request->check_out_date!="")
 	        {
-	        	$check_out_date=$request->check_out_date;
+	        	$check_out_date=date('Y-m-d',strtotime($request->check_out_date));
 	        }
 	        else{
 	        	$check_out_date="";
@@ -2621,6 +2627,7 @@ public function searchrentingproperty(Request $request)
 
 public function get_search_property_renting_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count)
 {
+	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
 	{
 		if($lat!="" && $lng!="")
@@ -2702,7 +2709,7 @@ public function get_search_property_renting_list($lat,$lng,$property_type,$prope
 
     if($lat!="" && $lng!="")
     {
-    	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', 15);
+    	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', $radiusvalue);
     }
 
     $perPage = 10;
@@ -2856,8 +2863,8 @@ public function getpropertybookingdetails(Request $request)
 			        $user_location=$request->location;
 	        		$user_latitude=$request->lat;
 	        		$user_longitude=$request->lng;
-	        		$user_checkin_date=$request->check_in_date;
-	        		$user_checkout_date=$request->check_out_date;
+	        		$user_checkin_date=date('Y-m-d',strtotime($request->check_in_date));
+	        		$user_checkout_date=date('Y-m-d',strtotime($request->check_out_date));
 	        		$user_adults_count=$request->adult_count;
 	        		$user_children_count=$request->children_count;
 
@@ -2886,7 +2893,7 @@ public function getpropertybookingdetails(Request $request)
 			}
 
 	        $booking_price=$checkpropertyarray['property_price']*$daysdiff;
-	        $booking_tax="56";
+	        $booking_tax=getbookingtaxprice();
 	        $total_booking_price=$booking_price+$booking_tax;
 
 	        $propertyarray=array(
@@ -3013,8 +3020,8 @@ public function insertuserbookinginfo(Request $request)
 			        $user_location=$request->location;
 	        		$user_latitude=$request->lat;
 	        		$user_longitude=$request->lng;
-	        		$user_checkin_date=$request->check_in_date;
-	        		$user_checkout_date=$request->check_out_date;
+	        		$user_checkin_date=date('Y-m-d',strtotime($request->check_in_date));
+	        		$user_checkout_date=date('Y-m-d',strtotime($request->check_out_date));
 	        		$user_adults_count=$request->adult_count;
 	        		$user_children_count=$request->children_count;
 
@@ -3025,10 +3032,15 @@ public function insertuserbookinginfo(Request $request)
 	        $checkpropertyarray=$checkproperty->toArray();
 
 	        $booking_price=$checkpropertyarray['property_price']*$daysdiff;
-	        $booking_tax="56";
+	        $booking_tax=getbookingtaxprice();
 	        $total_booking_price=$booking_price+$booking_tax;
+	        $booking_id=generatebookingid();
+
+	        $invoice_id=generateinvoiceid();
 
 	        $usertempbooking=new Usertempbooking;
+	        $usertempbooking->booking_id=$booking_id;
+	        $usertempbooking->invoice_id=$invoice_id;
 	        $usertempbooking->user_id=$user->id;
 	        $usertempbooking->property_id=$property_id;
 	        $usertempbooking->user_name=$booking_user_name;

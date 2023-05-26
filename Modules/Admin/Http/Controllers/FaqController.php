@@ -9,6 +9,7 @@ use App\Models\{Faq,User};
 use Illuminate\Support\Arr;
 use App\Helpers\Helper;
 use Hash,Validator,Exception,DataTables,Toastr,Auth;
+use Illuminate\Validation\ValidationException;
 
 class FaqController extends Controller{
   
@@ -37,7 +38,7 @@ class FaqController extends Controller{
         ->addColumn('action__', function($data){
             $route=route('admin-faq-edit',$data->id);
 
-            $action='<a href="'.$route.'" title="Edit" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a><a href="'.$route.'" title="Delete" data-id="'.$data->id.'" class="btn btn-danger delete_status btn-sm"><i class="fa fa-trash"></i></a>';
+            $action='<a href="'.$route.'" title="Edit" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i></a>';
             return $action;
         })    
         ->make(true);
@@ -55,24 +56,51 @@ class FaqController extends Controller{
       }
   }
   public function save(Request $request){
-    $data = $request->all();
-    request()->validate([
+    try {
+      $data=$request->all();
+
+        $request->validate([
         'question' => 'required|unique:faqs,question',
         'answer'=>'required',
-    ]);
-    $data = $request->all();
-    try{ 
-      $faq = new Faq;
-      $faq->answer=$data['answer'];
-      $faq->question=$data['question'];
-      $faq->status=$data['status'];
-      $faq->add_by=Auth::user()->id;
-      $faq->save();
-              
-      toastr()->success('FAQ saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-       return redirect()->route('admin-faq-list')->with('success','FAQ saved successfully!');
-    } catch (Exception $e){
-       return redirect()->back()->with('error', 'something wrong');
+        'status'=>'required'
+      ]);
+
+      $checkfaqquestion=Faq::where('question',$data['question'])->get()->first();
+      if($checkfaqquestion)
+      {
+        return back()->with('error','FAQ Question already exists.');
+      }
+      else{
+        $faq = new Faq;
+        $faq->answer=$data['answer'];
+        $faq->question=$data['question'];
+        $faq->status=$data['status'];
+        $faq->save();
+                
+        toastr()->success('FAQ saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
+         return redirect()->route('admin-faq-list')->with('success','FAQ saved successfully!');
+      }
+    }
+    catch (\Exception $e){
+      if($e instanceof ValidationException){
+          $listmessage=[];
+          foreach($e->errors() as $key=>$list)
+          {
+              $listmessage[$key]=$list[0];
+          }
+
+          if(count($listmessage) > 0)
+          {
+              return back()->with('valid_error',$listmessage);
+          }
+          else{
+              return back()->with('error','Something went wrong.');
+          }
+          
+      }
+      else{
+          return back()->with('error','Something went wrong.');
+      }
     }
   } 
   //DISPLAY EDIT DOCTOR FORM VIEW PAGE
@@ -84,35 +112,98 @@ class FaqController extends Controller{
       return redirect()->back()->with('error', 'something wrong');            
     }
   }
+
   public function update(Request $request){
-    $data = $request->all();
-    $faq =Faq::where('id',$request->id)->first();
-    request()->validate([
-        'answer' => 'required',
-        'question' => 'required|unique:faqs,question,'.$request->id,
-       ]);
     try {
-        $faqData = [ "question"=>$data['question'],
-                      "answer"=>$data['answer'],
-                      "status"=>$data['status']
-        ]; 
-        Faq::where('id',$data['id'])->update($faqData);
-         toastr()->success('Faq updated successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-       return redirect()->route('admin-faq-list')->with('success','faq updated successfully');
-    }catch (\Exception $e){
-        return redirect()->back()->with('error', 'something wrong');
+      $data=$request->all();
+
+      $validatedData = $request->validate([
+      'question'=>'required',
+      'answer'=>'required',
+      'status'=>'required'
+      ],
+      [
+        'question.required'=> 'Question is Required',
+        'answer.required'=> 'Answer is Required',
+        'status.required'=>'Faq status is required'
+      ]);
+
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/faq-list/')->with('error','Something went wrong.');
+      }
+
+      $faq = Faq::find($data['id']);
+          if(is_null($faq)){
+           return redirect('admin/faq-list/')->with('error','Something went wrong.');
+        }
+
+        if($faq->question==$data['question'])
+        {
+          $faq->answer=$data['answer'];
+          $faq->status=$data['status'];
+        }
+        else{
+          $checkfaqquestion=Faq::where('question',$data['question'])->get()->first();
+          if($checkfaqquestion)
+          {
+            return back()->with('error','FAQ Question already exists.');
+          }
+          else{
+            $faq->question=$data['question'];
+            $faq->answer=$data['answer'];
+            $faq->status=$data['status'];
+          }
+        }
+
+        try{
+            $faq->save();
+            toastr()->success('Faq updated successfully','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
+            return redirect()->route('admin-faq-list')->with('success','Faq updated successfully');      
+
+          }catch(\Exception $e){
+            return back()->with('error',$e->getMessage());
+          }
+    }
+    catch (\Exception $e){
+      if($e instanceof ValidationException){
+          $listmessage=[];
+          foreach($e->errors() as $key=>$list)
+          {
+              $listmessage[$key]=$list[0];
+          }
+
+          if(count($listmessage) > 0)
+          {
+              return back()->with('valid_error',$listmessage);
+          }
+          else{
+              return back()->with('error','Something went wrong.');
+          }
+          
+      }
+      else{
+          return back()->with('error',$e->getMessage());
+      }
     }
   }
   
   public function statusUpdateFaq(Request $request){
     try{
+
+      $data=$request->all();
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/faq-list/')->with('error','Something went wrong.');
+      }
+
       $faq=Faq::where('id', $request->id)->first();
       if($faq->status == 1){
-        $data = [ "status"=>0];
-        Faq::where('id', $request->id)->update($data);
+        $updatedata = [ "status"=>0];
+        Faq::where('id', $request->id)->update($updatedata);
       }else{
-        $data = [ "status"=>1];
-        Faq::where('id', $request->id)->update($data);
+        $updatedata = [ "status"=>1];
+        Faq::where('id', $request->id)->update($updatedata);
       }
 
       return response()->json(["success" => "1"]);
@@ -123,6 +214,13 @@ class FaqController extends Controller{
   }
   public function deleteFaq(Request $request){
     try{
+
+        $data=$request->all();
+        if(!array_key_exists("id",$data))
+        {
+          return redirect('admin/faq-list/')->with('error','Something went wrong.');
+        }
+      
         Faq::where('id', $request->id)->delete();
       return response()->json(["success" => "1"]);
     }catch(Exception $e){

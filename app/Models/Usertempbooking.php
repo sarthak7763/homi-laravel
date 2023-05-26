@@ -10,6 +10,8 @@ class Usertempbooking extends Model
     use HasFactory;
     protected $table="user_temp_booking";
       protected $fillable = [
+        'booking_id',
+        'invoice_id',
         'user_id',
         'property_id',
         'user_name',
@@ -25,6 +27,11 @@ class Usertempbooking extends Model
         'user_adult_count',
         'user_children_count',
         'booking_status',
+        'payment_mode',
+        'payment_status',
+        'cancel_reason_id',
+        'cancel_reason',
+        'cancel_date'
     ];
 
    

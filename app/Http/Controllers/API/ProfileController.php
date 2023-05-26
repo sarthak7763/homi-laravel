@@ -11,6 +11,8 @@ use App\Models\Userbuyinglocationsearch;
 use App\Models\FavProperty;
 use App\Models\Property;
 use App\Models\Userbooking;
+use App\Models\CancelReasons;
+use App\Models\UserBookingRatings;
 use Validator;
 use Hash;
 use DB;
@@ -601,7 +603,9 @@ class ProfileController extends BaseController
 		        if($type==0)
 		        {
 		        	$current_date=date('Y-m-d');
-		        	if($list['user_checkin_date'] > $current_date){
+		        	$new_check_in_date=date('Y-m-d', strtotime("-1 day", strtotime($list['user_checkin_date'])));
+
+		        	if($new_check_in_date > $current_date){
 
 					    $cancel_booking=1;
 
@@ -625,8 +629,8 @@ class ProfileController extends BaseController
 					'property_description'=>$checkpropertyarray['property_description'],
 					'property_area'=>$checkpropertyarray['property_area'],
 					'rating'=>5,
-					'check_in_date'=>$list['user_checkin_date'],
-					'check_out_date'=>$list['user_checkout_date'],
+					'check_in_date'=>date('d M,Y',strtotime($list['user_checkin_date'])),
+					'check_out_date'=>date('d M,Y',strtotime($list['user_checkout_date'])),
 					'booking_status'=>$booking_status,
 					'cancel_booking'=>$cancel_booking
 				);
@@ -671,19 +675,59 @@ class ProfileController extends BaseController
 
 						if($checkbooking->booking_status==0)
 				        {
-				        	$booking_status="Ongoing";
+				        	$booking_status_label="Ongoing";
 				        }
 				        elseif($checkbooking->booking_status==1)
 				        {
-				        	$booking_status="Complete";
+				        	$booking_status_label="Complete";
 				        }
 				        elseif($checkbooking->booking_status==2)
 				        {
-				        	$booking_status="Cancel";
+				        	$booking_status_label="Cancel";
 				        }
 				        else{
-				        	$booking_status="N.A.";
+				        	$booking_status_label="N.A.";
 				        }
+
+						if($checkbooking->booking_status==0)
+				        {
+				        	$current_date=date('Y-m-d');
+				        	$new_check_in_date=date('Y-m-d', strtotime("-1 day", strtotime($list['user_checkin_date'])));
+				        	
+				        	if($new_check_in_date > $current_date){
+
+							    $cancel_booking=1;
+
+							}else{
+							    $cancel_booking=0;
+							}
+				        }
+				        else{
+				        	$cancel_booking=0;
+				        }
+
+				        if($checkbooking->cancel_reason_id!="")
+				        {
+				        	if($checkbooking->cancel_reason_id!="0")
+				        	{
+				        		$checkcancelreason=CancelReasons::where('id',$checkbooking->cancel_reason_id)->get()->first();
+				        		if($checkcancelreason)
+				        		{
+				        			$cancel_reason=$checkcancelreason->reason_name;
+				        		}
+				        		else{
+				        			$cancel_reason="N.A.";
+				        		}
+				        	}
+				        	else{
+				        		$cancel_reason=$checkbooking->cancel_reason;
+				        	}
+				        }
+				        else{
+				        	$cancel_reason="N.A.";
+				        }
+
+
 
 					   $booking_det=array(
 			        	'booking_id'=>$checkbooking->id,
@@ -697,9 +741,10 @@ class ProfileController extends BaseController
 						'property_description'=>$checkpropertyarray['property_description'],
 						'property_area'=>$checkpropertyarray['property_area'],
 						'rating'=>5,
-						'check_in_date'=>$checkbooking->user_checkin_date,
-						'check_out_date'=>$checkbooking->user_checkout_date,
-						'booking_status'=>$booking_status,
+						'check_in_date'=>date('d M,Y',strtotime($checkbooking->user_checkin_date)),
+						'check_out_date'=>date('d M,Y',strtotime($checkbooking->user_checkout_date)),
+						'booking_status'=>$checkbooking->booking_status,
+						'booking_status_label'=>$booking_status_label,
 						'booking_property_price'=>$checkbooking->booking_property_price,
 						'booking_tax_price'=>$checkbooking->booking_tax_price,
 						'booking_price'=>$checkbooking->booking_price,
@@ -709,7 +754,10 @@ class ProfileController extends BaseController
 						'user_gender'=>$checkbooking->user_gender,
 						'user_number'=>$checkbooking->user_number,
 						'user_adult_count'=>$checkbooking->user_adult_count,
-						'user_children_count'=>$checkbooking->user_children_count
+						'user_children_count'=>$checkbooking->user_children_count,
+						'cancel_booking'=>$cancel_booking,
+						'cancel_reason'=>$cancel_reason,
+						'cancel_date'=>$checkbooking->cancel_date
 					);
 
 
@@ -741,7 +789,70 @@ class ProfileController extends BaseController
 	        $user=auth()->user();
 	        if($user)
 	        {
-	        	
+	        	$validator = Validator::make($request->all(), [
+				            'cancel_reason' => 'required',
+				            'booking_id'=>'required'
+				        ]);
+
+		        if($validator->fails()){
+		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+		        }
+
+
+
+			    $cancel_reason_id=$request->cancel_reason;
+			    $booking_id=$request->booking_id;
+
+			    $checkbooking=Userbooking::where('id',$booking_id)->where('user_id',$user->id)->get()->first();
+			    if($checkbooking)
+			    {
+			    	if($checkbooking->booking_status==0)
+			    	{
+			    		$current_date=date('Y-m-d');
+				        $new_check_in_date=date('Y-m-d', strtotime("-1 day", strtotime($list['user_checkin_date'])));
+
+				        if($new_check_in_date > $current_date)
+				        {
+				        	$cancel_date=date('Y-m-d');
+					        if($cancel_reason_id!=0)
+						    {
+						    	$checkcancelreason=CancelReasons::where('id',$cancel_reason_id)->get()->first();
+						    	if($checkcancelreason)
+						    	{
+						    		$updatearray=array('cancel_reason_id'=>$cancel_reason_id,'cancel_reason'=>$cancel_reason_id,'cancel_date'=>$cancel_date);
+						    	}
+						    	else{
+						    		return $this::sendError('Unauthorised.', ['error'=>'Invalid Cancel Reason.']);
+						    	}
+						    }
+						    else{
+						    	$cancel_other_reason=$request->cancel_other_reason;
+
+						    	$updatearray=array('cancel_reason_id'=>$cancel_reason_id,'cancel_reason'=>$cancel_other_reason,'cancel_date'=>$cancel_date);
+
+						    }
+
+						    DB::table('user_booking')
+				            ->where('id', $booking_id)
+				            ->where('user_id', $user_id)
+				            ->update($updatearray);
+
+				            $success=[];
+		            		return $this::sendResponse($success, 'Booking cancelled successfully.');
+
+						}else
+						{
+							return $this::sendError('Unauthorised.', ['error'=>'Booking already cancelled.']);
+						}
+			    	}
+			    	else{
+			    		return $this::sendError('Unauthorised.', ['error'=>'Booking already cancelled.']);
+			    	}
+			    }
+			    else{
+			    	return $this::sendError('Unauthorised.', ['error'=>'Something went wrong.']);
+			    }
+			    
 	        }
 	        else{
 	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
@@ -758,58 +869,45 @@ class ProfileController extends BaseController
 	        $user=auth()->user();
 	        if($user)
 	        {
-	        	
-	        }
-	        else{
-	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
-	        }
-	    }
-	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
-               }
-    }
+	        	$validator = Validator::make($request->all(), [
+				            'rating' => 'required',
+				            'booking_id'=>'required'
+				        ]);
 
-    public function getuserongoingbookinglist(Request $request)
-    {
-    	try{
-	        $user=auth()->user();
-	        if($user)
-	        {
-	        	
-	        }
-	        else{
-	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
-	        }
-	    }
-	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
-               }
-    }
+		        if($validator->fails()){
+		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+		        }
 
-    public function getusercompletebookinglist(Request $request)
-    {
-    	try{
-	        $user=auth()->user();
-	        if($user)
-	        {
-	        	
-	        }
-	        else{
-	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 
-	        }
-	    }
-	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
-               }
-    }
 
-    public function getusercancelbookinglist(Request $request)
-    {
-    	try{
-	        $user=auth()->user();
-	        if($user)
-	        {
-	        	
+
+			    $rating=$request->rating;
+			    $booking_id=$request->booking_id;
+			    $checkbooking=Userbooking::where('id',$booking_id)->where('user_id',$user->id)->get()->first();
+			    if($checkbooking)
+			    {
+			    	$property_id=$checkbooking->property_id;
+			    	$checkuserpropertyratings=UserBookingRatings::where('user_id',$user->id)->where('booking_id',$booking_id)->where('property_id',$property_id)->get()->first();
+			    	if($checkuserpropertyratings)
+			    	{
+			    		return $this::sendError('Unauthorised.', ['error'=>'Ratings already submitted.']);
+			    	}
+			    	else{
+			    		$userbookingratings=new UserBookingRatings;
+			    		$userbookingratings->user_id=$user->id;
+			    		$userbookingratings->booking_id=$booking_id,
+			    		$userbookingratings->property_id=$property_id;
+			    		$userbookingratings->rating=$request->rating;
+			    		$userbookingratings->status=1;
+			    		$userbookingratings->save();
+
+			    		$success=[];
+		            	return $this::sendResponse($success, 'Ratings submitted successfully.');
+
+			    	}
+			    }
+			    else{
+			    	return $this::sendError('Unauthorised.', ['error'=>'Something went wrong.']);
+			    }
 	        }
 	        else{
 	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']); 

@@ -55,6 +55,8 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::post('clearallusernotifications', [PagesController::class, 'clearallusernotifications']);
 
+	Route::get('getcancelbookingreasons', [PagesController::class, 'getcancelbookingreasons']);
+
 	Route::post('getpropertybookingdetails', [DashboardController::class, 'getpropertybookingdetails']);
 
 	Route::post('insertuserbookinginfo', [DashboardController::class, 'insertuserbookinginfo']);

@@ -27,7 +27,7 @@ class SubAdminController extends Controller {
                         if ($request->has('start_date') && $request->has('end_date')) {
                             $query->whereDate('created_at', '>=', $request->start_date)->whereDate('created_at', '<=', $request->end_date);
                         }
-                    })->where('delete_status',0)->get();
+                    })->get();
             return view('admin::sub-admins.index', compact('subadmin', 'requestData'));
         } catch (Exception $ex) {
               toastr()->error('Either something went wrong or invalid access!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);

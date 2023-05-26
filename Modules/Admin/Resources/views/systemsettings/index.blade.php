@@ -13,24 +13,6 @@
                             <div class="page-header-title">
                                 <div class="d-inline mt-4">
                                     <h4 class="mb-1">System Setting</h4>
-                                   
-                                     @if(Auth::user()->hasRole('Admin'))
-                                      {{--<a href="{{route('admin-add-system-setting')}}" class="btn btn-primary btn-round">Add New Option</a>--}}
-
-
-                                        <a href="{{route('admin-site-logo')}}"  class="btn btn-primary btn-round pull-right">
-                                            Edit Logo/Favicon
-                                        </a>
-                            
-
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                      {{--  @if(auth()->user()->can('admin-add-system-setting'))
-                                          <a href="{{route('admin-add-system-setting')}}" class="btn btn-primary btn-round">Add New Option</a>
-                                        @endif  --}}
-                                        <a href="{{route('admin-site-logo')}}"  class="btn btn-primary btn-round">
-                                            Edit Logo/Favicon
-                                        </a>
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -75,426 +57,12 @@
                                         </div>
                                     </div>
                                 @endif
-                          
-
-                           
-                                <div class="card">
-                                    <div class="card-block">
-                                     <strong>Email Signature</strong>
-
-                                       {{--<form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                        {{ csrf_field() }}
-                                       
-                                        @foreach($systemSettingData as $key => $value) 
-                                        @if($value->setting_type == 'email_signature')
-                                        @if($value->status == 1) 
-                                        <a onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@0')}}">
-                                            <span class="badge badge-success">Active</span>
-                                        </a> 
-                                        @else 
-                                        <a  onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@1')}}">
-                                            <span class="badge badge-danger">Deactive</span>
-                                        </a> 
-                                        @endif
-                                        @php break; @endphp
-                                        @endif 
-                                        @endforeach  
-                                    </form>--}}
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <table id="" class="table table-responsive-lg table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Option Name</th>
-                                                        <th>Option Value</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php $i=1; @endphp
-                                                    @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "email_signature")
-                                                <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="email_signature">
-                                                <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                  <input type="hidden" name="option_update_name[]" value="Email Signature">
-                                           
-                                                <tr>
-                                                    <td>{{$i}}</td>
-                                                    <td>{{$value->option_name}}</td>
-                                                    <td>
-                                                        <textarea name="value[]"   id="email_signature"  class="form-control">{{ $value->option_value }}</textarea> 
-                                                    </td>
-                                                </tr>
-
-                                                @php $i++; @endphp
-                                                @endif 
-                                                @endforeach  
-                                                </tbody>
-                                            </table>
-                                            <div class="card-footer">
-                                                 @if(Auth::user()->hasRole('Admin'))
-                                                 <button class="btn btn-primary" type="submit">Update</button>
-                                                @elseif(Auth::user()->hasRole('sub-admin'))
-                                                    @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                                      <button class="btn btn-primary" type="submit">Update</button>
-                                                    @endif
-                                                @endif
-                                            </div> 
-                                        </form>
-                                    </div>
-                                </div>
-
-
-                              
-                               {{-- <div class="card-block">
-                                    <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                        {{ csrf_field() }}
-                                        <strong>SMTP Details</strong>
-
-                                        @foreach($systemSettingData as $key => $value) 
-                                        @if($value->setting_type == 'smtp')
-                                        @if($value->status == 1) 
-                                        <a onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@0')}}">
-                                            <span class="badge badge-success">Active</span>
-                                        </a> 
-                                        @else 
-                                        <a  onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@1')}}">
-                                            <span class="badge badge-danger">Deactive</span>
-                                        </a> 
-                                        @endif
-                                        @php break; @endphp
-                                        @endif 
-                                        @endforeach  
-                                    </form>
-                                </div>
-                                <div class="card-body">
-                                    <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                        {{ csrf_field() }}
-                                        <table id="" class="table table-responsive-lg table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Option Name</th>
-                                                    <th>Option Value</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php $i=1; @endphp
-                                                @php $smtp=0; @endphp
-                                                @foreach($systemSettingData as $key => $value)
-                                                @if($value->setting_type == "smtp")
-                                            <input type="hidden" name="id[]" value="{{$value->id}}">
-                                            <input type="hidden" name="setting_type[]" value="smtp">
-                                            <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                             <input type="hidden" name="option_update_name[]" value="SMTP">
-                                            <tr>
-                                                <td>{{$i}}</td>
-                                                <td>{{$value->option_name}}</td>
-                                                <td><input type="text" value="{{$value->option_value}}" name="value[]" class="form-control"></td>
-                                            </tr>
-
-                                            @php $i++; @endphp
-                                            @php $smtp=1; @endphp
-                                            @endif 
-                                            @endforeach  
-                                            </tbody>
-                                        </table>
-                                        <div class="card-footer">
-                                        @if($smtp==1)
-                                         @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                    @endif
-
-                                           
-                                        </div> 
-                                    </form>
-                                </div> --}}
                             
-                                {{--  
-                                <div class="card">
-                                    <div class="card-header">
-                                        <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <strong>Stripe Payment Gateway</strong>
-                                            @foreach($systemSettingData as $key => $value) 
-                                            @if($value->setting_type == 'stripe')
-                                            @if($value->status == 1) 
-                                            <a onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@0')}}">
-                                                <span class="badge badge-success">Active</span>
-                                            </a> 
-                                            @else 
-                                            <a  onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@1')}}">
-                                                <span class="badge badge-danger">Deactive</span>
-                                            </a> 
-                                            @endif
-                                            @php break; @endphp
-                                            @endif 
-                                            @endforeach  
-                                        </form>
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <table id="" class="table table-responsive-lg table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Option Name</th>
-                                                        <th>Option Value</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php $i=1; @endphp
-                                                     @php $stripe=0; @endphp
-                                                    @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "stripe")
-                                                <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="stripe">
-                                                <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                  <input type="hidden" name="option_update_name[]" value="Stript Payment gateway">
-                                           
-                                                <tr>
-                                                    <td>{{$i}}</td>
-                                                    <td>{{$value->option_name}}</td>
-                                                    <td>
-                                                        <?php if ($value->option_value == "Live" || $value->option_value == "Test") { ?>
-                                                            <select name="value[]" class="form-control">
-                                                                <option value="Live" <?php echo ($value->option_value == "Live") ? 'selected="selected"' : ""; ?>>Live</option>
-                                                                <option value="Test" <?php echo ($value->option_value == "Test") ? 'selected="selected"' : ""; ?>>Test</option>
-                                                            </select>
-                                                        <?php } else { ?>
-                                                            <input type="text" value="{{$value->option_value}}" name="value[]" class="form-control">
-                                                        <?php } ?>
-                                                    </td>
-                                                </tr>
-
-                                                @php $i++; @endphp
-                                                 @php $stripe=1; @endphp
-                                                @endif 
-                                                @endforeach  
-                                                </tbody>
-                                            </table>
-                                            <div class="card-footer">
-                                            @if($stripe==1)
-                                                @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                    @endif
-                                            </div> 
-                                        </form>
-                                    </div>
-                                </div>
-                                
-                                <!-- Currency -->
-                                <div class="card">
-                                    <div class="card-header">
-                                        <strong>Default Currency</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <table id="" class="table table-responsive-lg table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Option Name</th>
-                                                        <th>Option Value</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php $i=1; @endphp
-                                                     @php $currency=0; @endphp
-                                                    @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "currency")
-                                                <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="currency">
-                                                <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                <input type="hidden" name="option_update_name[]" value="Currency">
-                                           
-                                                <tr>
-                                                    <td>{{$i}}</td>
-                                                    <td>{{$value->option_name}}</td>
-                                                    <td>
-                                                        <select name="value[]" class="form-control">
-                                                            <option value="GBP" <?php echo ($value->option_value == "GBP") ? 'selected="selected"' : ""; ?>>GBP</option>
-                                                            <option value="USD" <?php echo ($value->option_value == "USD") ? 'selected="selected"' : ""; ?>>USD</option>
-                                                        </select>
-                                                    </td>
-                                                </tr>
-
-                                                @php $i++; @endphp
-                                                  @php $currency=1; @endphp
-                                                @endif 
-                                                @endforeach  
-                                                </tbody>
-                                            </table>
-                                            <div class="card-footer">
-                                            @if($currency==1)
-                                                @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                    @endif
-                                            </div> 
-                                        </form>
-                                    </div>
-                                </div>
-
-                                <!-- CUSTOMER SUPPORT -->
-                               <div class="card">
-                                    <div class="card-header">
-                                        <strong>Customer Support</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <table id="" class="table table-responsive-lg table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Option Name</th>
-                                                        <th>Option Value</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php $i=1; 
-                                                    $customersupport=0; @endphp
-                                                    @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "customersupport")
-                                                <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="customersupport">
-                                                <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                  <input type="hidden" name="option_update_name[]" value="Customer Support">
-                                           
-                                                <tr>
-                                                    <td>{{$i}}</td>
-                                                    <td>{{$value->option_name}}</td>
-                                                    <td>
-                                                        <input type="text" id="" name="value[]"   id="email_content" class="form-control" value="{{ $value->option_value }}">
-                                                    </td>
-                                                </tr>
-
-                                                @php $i++; 
-                                                $customersupport=1;
-                                                @endphp
-                                                @endif 
-                                                @endforeach  
-                                                </tbody>
-                                            </table>
-                                            <div class="card-footer">
-                                          
-                                                @if($customersupport==1)
-                                               
-                                                   @if(Auth::user()->hasRole('Admin'))
-                                                     <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                     @endif
-                                            </div> 
-                                        </form>
-                                    </div>
-                                </div>
-
-                                   <!-- HEADER CONTENT -->
-
-                               <div class="card">
-                                    <div class="card-header">
-                                        <strong>Header Content</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <table id="" class="table table-responsive-lg table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Option Name</th>
-                                                        <th>Option Value</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php $i=1; 
-                                                     $header_content=0;
-                                                    @endphp
-                                                    @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "header_content")
-                                                <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="header_content">
-                                                <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                  <input type="hidden" name="option_update_name[]" value="Header Content">
-                                           
-                                                <tr>
-                                                    <td>{{$i}}</td>
-                                                    <td>{{$value->option_name}}</td>
-                                                    <td>
-                                                        <input type="text" id="" name="value[]" class="form-control" value="{{ $value->option_value }}">
-                                                    </td>
-                                                </tr>
-
-                                                @php $i++; 
-                                                $header_content=1;
-                                                @endphp
-                                                @endif 
-                                                @endforeach  
-                                                </tbody>
-                                            </table>
-                                            <div class="card-footer">
-                                            @if($header_content==1)
-                                                 @if(Auth::user()->hasRole('Admin'))
-                                             <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                            @elseif(Auth::user()->hasRole('sub-admin'))
-                                                @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                                  <button class="btn btn-primary" type="submit">Update</button>
-                                                @endif
-                                            @endif
-                                        @endif
-                                            </div> 
-                                        </form>
-                                    </div>
-                                </div>
-                                --}}
                                 
                                     <!-- FOOTER SOCIAL MEDIA -->
                                <div class="card">
                                    <div class="card-block">
-                                       <strong>Footer Social Media</strong>
-                                       
-                                  {{-- <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                        {{ csrf_field() }}
-
-                                        @foreach($systemSettingData as $key => $value) 
-                                        @if($value->setting_type == 'footersocialmedia')
-                                        @if($value->status == 1) 
-                                        <a onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@0')}}">
-                                            <span class="badge badge-success">Active</span>
-                                        </a> 
-                                        @else 
-                                        <a  onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@1')}}">
-                                            <span class="badge badge-danger">Deactive</span>
-                                        </a> 
-                                        @endif
-                                        @php break; @endphp
-                                        @endif 
-                                        @endforeach  
-                                    </form>  --}}  
+                                       <strong>Footer Social Media</strong> 
                                      </div>
                                     <div class="card-body">
                                         <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
@@ -515,7 +83,6 @@
                                                 <input type="hidden" name="id[]" value="{{$value->id}}">
                                                 <input type="hidden" name="setting_type[]" value="footersocialmedia">
                                                 <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                <input type="hidden" name="option_update_name[]" value="Footer Social Media">
                                                 <tr>
                                                     <td>{{$i}}</td>
                                                     <td>{{$value->option_name}}</td>
@@ -531,45 +98,19 @@
                                                 </tbody>
                                             </table>
                                             <div class="card-footer">
-                                            @if($footersocialmedia==1)
-                                                 @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                    @endif
+                                                @if($footersocialmedia==1)
+                                            <button class="btn btn-primary" type="submit">Update</button>
+                                            @endif
                                             </div> 
                                         </form>
                                     </div>
                                 </div>
 
-                                   <!-- FOOTER CONTENT -->
-                                  
+                                  <!-- Booking and Data Settings -->
                                <div class="card">
-                                    <div class="card-block">
-                                     <strong>Footer Content</strong>
-
-                                       {{--<form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                        {{ csrf_field() }}
-                                       
-                                        @foreach($systemSettingData as $key => $value) 
-                                        @if($value->setting_type == 'footer_content')
-                                        @if($value->status == 1) 
-                                        <a onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@0')}}">
-                                            <span class="badge badge-success">Active</span>
-                                        </a> 
-                                        @else 
-                                        <a  onclick="" class="actions float-right" href="{{route('admin-option-status', $value->setting_type.'@1')}}">
-                                            <span class="badge badge-danger">Deactive</span>
-                                        </a> 
-                                        @endif
-                                        @php break; @endphp
-                                        @endif 
-                                        @endforeach  
-                                    </form>--}}
-                                    </div>
+                                   <div class="card-block">
+                                       <strong>Booking and Data Settings</strong> 
+                                     </div>
                                     <div class="card-body">
                                         <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
                                             {{ csrf_field() }}
@@ -582,99 +123,42 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @php $i=1; @endphp
+                                                    @php $i=1;
+                                                    $siteappsettings=0; @endphp
                                                     @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "footer_content")
+                                                    @if($value->setting_type == "siteappsettings")
                                                 <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="footer_content">
-                                                <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                  <input type="hidden" name="option_update_name[]" value="Footer Content">
-                                           
-                                                <tr>
-                                                    <td>{{$i}}</td>
-                                                    <td>{{$value->option_name}}</td>
-                                                    <td>
-                                                        <textarea name="value[]" class="form-control">{{ $value->option_value }}</textarea> 
-                                                    </td>
-                                                </tr>
-
-                                                @php $i++; @endphp
-                                                @endif 
-                                                @endforeach  
-                                                </tbody>
-                                            </table>
-                                            <div class="card-footer">
-                                                 @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                            </div> 
-                                        </form>
-                                    </div>
-                                </div>
-
-                                   <!-- LOGO -->
-                              {{-- <div class="card">
-                                    <div class="card-header">
-                                        <strong>Site Logo</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
-                                            {{ csrf_field() }}
-                                            <table id="" class="table table-responsive-lg table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Option Name</th>
-                                                        <th>Option Value</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php $i=1; 
-                                                    $sitelogo=0;@endphp
-                                                    @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "sitelogo")
-                                                <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="sitelogo">
+                                                <input type="hidden" name="setting_type[]" value="siteappsettings">
                                                 <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
                                                 <tr>
                                                     <td>{{$i}}</td>
                                                     <td>{{$value->option_name}}</td>
                                                     <td>
-                                                        <input type="file" id="logoBrowse" name="value[]" class="form-control"  data-max-height="1024"   data-max-width="1024"   data-images-only="true" value="{{ $value->option_value }}">
+                                                        <input type="text"  name="value[]" class="form-control" value="{{ $value->option_value }}">
                                                     </td>
-                                                    <td><img src="{{asset('storage'.$value->option_value)}}" width="50px"></td>
                                                 </tr>
 
-                                                @php $i++; 
-                                                $sitelogo=1; @endphp
+                                                @php $i++;
+                                                 $siteappsettings=1; @endphp
                                                 @endif 
                                                 @endforeach  
                                                 </tbody>
                                             </table>
                                             <div class="card-footer">
-                                            @if($sitelogo==1)
-                                                  @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                    @endif
+                                                @if($siteappsettings==1)
+                                            <button class="btn btn-primary" type="submit">Update</button>
+                                            @endif
                                             </div> 
                                         </form>
                                     </div>
                                 </div>
 
-                                   <!-- LOGO -->
+
+                                  <!-- Homi contact Information -->
                                <div class="card">
-                                    <div class="card-header">
-                                        <strong>Site fav Icon</strong>
-                                    </div>
+                                   <div class="card-block">
+                                       <strong>Homi Contact Information (Invoice)</strong> 
+                                     </div>
                                     <div class="card-body">
                                         <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
                                             {{ csrf_field() }}
@@ -687,48 +171,42 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @php $i=1; 
-                                                    $sitefavicon=0; @endphp
+                                                    @php $i=1;
+                                                    $homicontactinfo=0; @endphp
                                                     @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "sitefavicon")
+                                                    @if($value->setting_type == "homicontactinfo")
                                                 <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="sitefavicon">
+                                                <input type="hidden" name="setting_type[]" value="homicontactinfo">
                                                 <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
                                                 <tr>
                                                     <td>{{$i}}</td>
                                                     <td>{{$value->option_name}}</td>
                                                     <td>
-                                                        <input type="file" id="favicon" name="value[]" class="form-control" value="{{ $value->option_value }}">
+                                                        <input type="text"  name="value[]" class="form-control" value="{{ $value->option_value }}">
                                                     </td>
-                                                    <td><img src="{{asset('storage'.$value->option_value)}}" width="50px"></td>
                                                 </tr>
 
-                                                @php $i++; 
-                                                $sitefavicon=1;@endphp
+                                                @php $i++;
+                                                 $homicontactinfo=1; @endphp
                                                 @endif 
                                                 @endforeach  
                                                 </tbody>
                                             </table>
                                             <div class="card-footer">
-                                            @if($sitefavicon==1)
-                                                  @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                    @endif
+                                                @if($homicontactinfo==1)
+                                            <button class="btn btn-primary" type="submit">Update</button>
+                                            @endif
                                             </div> 
                                         </form>
                                     </div>
                                 </div>
-                               
-                                <!-- Google Service keys -->
-                                <div class="card">
-                                    <div class="card-header">
-                                        <strong>Google Service keys</strong>
-                                    </div>
+
+
+                                 <!-- Homi contact Information -->
+                               <div class="card">
+                                   <div class="card-block">
+                                       <strong>Homi Contact Information (Enquiry)</strong> 
+                                     </div>
                                     <div class="card-body">
                                         <form action="{{route('admin-edit-system-setting-post')}}" method="POST" enctype="multipart/form-data">
                                             {{ csrf_field() }}
@@ -741,43 +219,36 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @php $i=1;  
-                                                    $googleservicekeys=0;@endphp
+                                                    @php $i=1;
+                                                    $contactusinfo=0; @endphp
                                                     @foreach($systemSettingData as $key => $value)
-                                                    @if($value->setting_type == "googleservicekeys")
+                                                    @if($value->setting_type == "contactusinfo")
                                                 <input type="hidden" name="id[]" value="{{$value->id}}">
-                                                <input type="hidden" name="setting_type[]" value="googleservicekeys">
+                                                <input type="hidden" name="setting_type[]" value="contactusinfo">
                                                 <input type="hidden" name="slug[]" value="{{$value->option_slug}}">
-                                                  <input type="hidden" name="option_update_name[]" value="Google API Keys">
-                                           
                                                 <tr>
                                                     <td>{{$i}}</td>
                                                     <td>{{$value->option_name}}</td>
                                                     <td>
-                                                        <input type="text" name="value[]" class="form-control" value="{{ $value->option_value }}">
+                                                        <input type="text"  name="value[]" class="form-control" value="{{ $value->option_value }}">
                                                     </td>
                                                 </tr>
 
-                                                @php $i++; 
-                                                 $googleservicekeys=1; @endphp
+                                                @php $i++;
+                                                 $contactusinfo=1; @endphp
                                                 @endif 
                                                 @endforeach  
                                                 </tbody>
                                             </table>
                                             <div class="card-footer">
-                                            @if($googleservicekeys==1)
-                                                @if(Auth::user()->hasRole('Admin'))
-                                     <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                    @elseif(Auth::user()->hasRole('sub-admin'))
-                                        @if(auth()->user()->can('admin-edit-system-setting-post'))
-                                          <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                                        @endif
-                                    @endif
-                                     @endif
+                                                @if($contactusinfo==1)
+                                            <button class="btn btn-primary" type="submit">Update</button>
+                                            @endif
                                             </div> 
                                         </form>
                                     </div>
-                                </div>--}}
+                                </div>
+
                             </div>
                         </div>
                     </div>

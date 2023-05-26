@@ -7,10 +7,11 @@ use App\Http\Controllers\API\BaseController as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CmsPage;
-use App\Models\Contactsettings;
 use App\Models\Contactenquiry;
 use App\Models\Notifications;
 use App\Models\UserNotification;
+use App\Models\CancelReasons;
+use App\Models\SystemSetting;
 use Validator;
 use Hash;
 
@@ -57,17 +58,16 @@ class PagesController extends BaseController
     {
     	try{
 	        $user=auth()->user();
-	        if($user)
-	        {
-	        	$contactsettingsdata=Contactsettings::where('status','1')->get()->first();
+
+	        $contactsettingsdata=SystemSetting::where('setting_type','contactusinfo')->where('status','1')->get();
 	        	if($contactsettingsdata)
 	        	{
 	        		$contactsettingsdataarray=$contactsettingsdata->toArray();
 	        		if($contactsettingsdataarray)
 	        		{
 	        			$contactsettingslist=array(
-	        					'contact_email'=>$contactsettingsdataarray['contact_email'],
-	        					'contact_number'=>$contactsettingsdataarray['contact_number']
+	        					'contact_email'=>$contactsettingsdataarray[0]['option_value'],
+	        					'contact_number'=>$contactsettingsdataarray[1]['option_value']
 	        				);
 	        		}
 	        		else{
@@ -80,31 +80,7 @@ class PagesController extends BaseController
 
 	        	$success['contactsettingslist'] =  $contactsettingslist;
                 return $this::sendResponse($success, 'Contact Settings List.');
-		        
-	        }
-	        else{
-	        	$contactsettingsdata=Contactsettings::where('status','1')->get()->first();
-	        	if($contactsettingsdata)
-	        	{
-	        		$contactsettingsdataarray=$contactsettingsdata->toArray();
-	        		if($contactsettingsdataarray)
-	        		{
-	        			$contactsettingslist=array(
-	        					'contact_email'=>$contactsettingsdataarray['contact_email'],
-	        					'contact_number'=>$contactsettingsdataarray['contact_number']
-	        				);
-	        		}
-	        		else{
-	        			$contactsettingslist=[];
-	        		}
-	        	}
-	        	else{
-	        		$contactsettingslist=[];
-	        	}
 
-	        	$success['contactsettingslist'] =  $contactsettingslist;
-                return $this::sendResponse($success, 'Contact Settings List.');
-	        }  
     	}
     	catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong']);    
@@ -345,6 +321,62 @@ class PagesController extends BaseController
 	    }
 	    catch(\Exception $e){
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong']);    
+               }
+    }
+
+    public function getcancelbookingreasons(Request $request)
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	$cancelreasonslist=CancelReasons::where('reason_status',1)->get();
+	        	if($cancelreasonslist)
+	        	{
+	        		$cancelreasonslistarray=$cancelreasonslist->toArray();
+	        		if($cancelreasonslistarray)
+	        		{
+	        			$cancel_reasons_arr=[];
+	        			foreach($cancelreasonslistarray as $list)
+	        			{
+	        				$cancel_reasons_arr[]=array(
+        						'reason_id'=>$list['id'],
+        						'name'=>$list['reason_name'],
+        						'description'=>$list['reason_description']
+	        				);
+	        			}
+	        		}
+	        		else{
+	        			$cancel_reasons_arr=[];
+	        		}
+	        	}
+	        	else{
+	        		$cancel_reasons_arr=[];
+	        	}
+
+		       $cancel_reasons_all[]=array(
+	        		'reason_id'=>0,
+	        		'name'=>'Other',
+	        		'description'=>'Other'
+	        	);
+
+	        	if(count($cancel_reasons_arr) > 0)
+	        	{
+	        		$final_cancel_reasons_arr=array_merge($cancel_reasons_arr,$cancel_reasons_all);
+	        	}
+	        	else{
+	        		$final_cancel_reasons_arr=$cancel_reasons_all;
+	        	}
+
+	        	$success['cancel_reasons']=$final_cancel_reasons_arr;
+               	return $this::sendResponse($success, 'Cancel Booking Reasons List.');
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']);
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
                }
     }
 

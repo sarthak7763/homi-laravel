@@ -133,8 +133,9 @@
                                     <thead>
                                     <tr class="table-primary">
                                         <th>S.No</th>
-                                        <th>Property Pic</th>
                                         <th>Title </th>
+                                        <th>Type</th>
+                                        <th>Category</th>
                                         <th>Publish Status</th>
                                         <th>Created Date</th>
                                         <th>Action</th>
@@ -238,13 +239,18 @@ function table_ajax(){
                         return i++;
                     }
                 },
-
-            {data:"image","bSortable": false,
+              {data:"title",
                 "mRender": function(data, type, full){
                 return $("<div/>").html(data).text();
                 }
             },
-              {data:"title",
+            {data:"type",
+                "mRender": function(data, type, full){
+                return $("<div/>").html(data).text();
+                }
+            },
+
+            {data:"category",
                 "mRender": function(data, type, full){
                 return $("<div/>").html(data).text();
                 }

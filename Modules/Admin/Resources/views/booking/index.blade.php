@@ -1,5 +1,5 @@
 @extends('admin::layouts.master')
-@section('title', 'Enquiry List')
+@section('title', 'Booking List')
 @section('content')
 
 <div class="pcoded-content">
@@ -13,7 +13,7 @@
                         <div class="col-lg-8">
                             <div class="page-header-title">
                                 <div class="d-inline">
-                                    <h4>Enquiry List</h4>
+                                    <h4>Booking List</h4>
                                     <span></span>
                                 </div>
                             </div>
@@ -24,7 +24,7 @@
                                      <li class="breadcrumb-item">
                                         <a href="{{route('admin-dashboard')}}"> <i class="feather icon-home"></i> </a>
                                     </li>
-                                    <li class="breadcrumb-item"><a href="{{route('admin-enquiry-list')}}">Enquiry List</a> </li>
+                                    <li class="breadcrumb-item"><a href="{{route('admin-booking-list')}}">Booking List</a> </li>
                                 </ul>
                             </div>
                         </div>
@@ -64,9 +64,12 @@
                                             <thead>
                                             <tr class="table-primary">
                                                 <th>S.No</th>
-                                                <th>Name</th>
-                                                <th>Email</th>
-                                                <th>Status</th>
+                                                <th>Booking ID </th>
+                                                <th>Property Title</th>
+                                                <th>Booking Amount</th>
+                                                <th>Payment Mode</th>
+                                                <th>Payment Status</th>
+                                                <th>Booking Status</th>
                                                 <th>Created Date</th>
                                                 <th>Action</th>
                                             </tr>
@@ -104,7 +107,7 @@ $('.datepicker').datepicker({
            //  pageLength:20,
            // render: true,
             ajax: {
-                url: "{{ route('admin-enquiry-list') }}",
+                url: "{{ route('admin-booking-list') }}",
                  type: 'GET'
             },
             columns: [
@@ -113,17 +116,32 @@ $('.datepicker').datepicker({
                         return i++;
                     }
                 },
-                   {data:"name",
+                   {data:"booking_id",
                     "mRender": function(data, type, full){
                     return $("<div/>").html(data).text();
                     }
                 },
-                {data:"email",
+                {data:"property_title",
                     "mRender": function(data, type, full){
                     return $("<div/>").html(data).text();
                     }
                 },
-                {data:"status",
+                {data:"booking_amount",
+                    "mRender": function(data, type, full){
+                    return $("<div/>").html(data).text();
+                    }
+                },
+                {data:"payment_mode",
+                    "mRender": function(data, type, full){
+                    return $("<div/>").html(data).text();
+                    }
+                },
+                {data:"payment_status",
+                    "mRender": function(data, type, full){
+                    return $("<div/>").html(data).text();
+                    }
+                },
+                {data:"booking_status",
                     "mRender": function(data, type, full){
                     return $("<div/>").html(data).text();
                     }
@@ -150,67 +168,6 @@ $('.datepicker').datepicker({
         table_ajax();
            
         });
-
-    $(document).on('click', '.badge_enquiry_status_change', function(e)
-    { 
-            var status_class = $(this).attr('class');
-            var id = $(this).attr('id');
-            var change_btn = $(this);
-            var url = "{{ route('admin-enquiry-status-update') }}";
-            
-            if(status_class == "badge badge-danger badge_enquiry_status_change")
-            {
-                var newClass = "badge badge-success badge_enquiry_status_change";
-                var status = 'Read';
-            }else
-            {
-                var newClass = "badge badge-danger badge_enquiry_status_change";
-                var status = 'Unread';
-            }
-
-           var title ='Are you sure to '+status+' this Enquiry ?';
-            e.preventDefault();      
-            swal({
-              title: title,
-              icon: "warning",
-              buttons: [
-                'No, cancel it!',
-                'Yes, I am sure!'
-              ],
-              dangerMode: true,
-            }).then(function(isConfirm) {
-              if(isConfirm){
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {_token: "{{ csrf_token() }}",id:id},
-                    dataType: "json",
-                    beforeSend: function(){
-                        $("#loading").show();
-                    },
-                    complete: function(){
-                        $("#loading").hide();
-                    },
-                    success: function (data){
-                        if(data.success==1){
-                            change_btn.html(status);
-                            change_btn.removeClass(status_class).addClass(newClass);
-                            if(status=="Read"){
-                             toastr.success("Read status active successfully");
-                            }else{
-                                  toastr.error("Read status inactive successfully");
-                            }
-                            
-                        }
-                       
-                    }         
-                })
-            } 
-            // else {
-            //     swal("Cancelled", "Read status not change", "error");
-            // }
-            });         
-    }); 
 
 
     $(document).on('click', '.badge_delete_change', function(e)

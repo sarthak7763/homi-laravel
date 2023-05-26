@@ -12,7 +12,7 @@
                         <div class="col-lg-8">
                             <div class="page-header-title">
                                 <div class="d-inline">
-                                    <h4>Feedback Reason List</h4>
+                                    <h4>Cancel Reason List</h4>
                                     <span></span>
                                 </div>
                             </div>
@@ -35,17 +35,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
-                               <!--  <div class="card-header">
-                                  <h5>Hello Card</h5>
-                                    <span>lorem ipsum dolor sit amet, consectetur adipisicing elit</span>
-                                    <div class="card-header-right">
-                                        <ul class="list-unstyled card-option">
-                                            <li><i class="feather icon-maximize full-card"></i></li>
-                                            <li><i class="feather icon-minus minimize-card"></i></li>
-                                            <li><i class="feather icon-trash-2 close-card"></i></li>
-                                        </ul>
-                                    </div>
-                                </div>  -->
+                               
                                 @if ($message = Session::get('success'))
                                 <div class="row">
                                     <div class="col-md-12">
@@ -78,8 +68,6 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name </th>
-                                      <!--   <th>Type </th>  -->
-                                        <!--  <th>Country</th> -->
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -113,8 +101,6 @@
             columns: [
             {data: 'DT_RowIndex'},
             {data: 'name'},
-            //{data: 'type'},
-            // {data: 'country'},
             {data:"status",
             "mRender": function(data, type, full){
                 return $("<div/>").html(data).text();

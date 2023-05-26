@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\{Storage,File,Password};
 use Illuminate\Support\Arr;
 use Illuminate\Mail\Message;
 use App\Helpers\Helper;
-use App\Models\Contactenquiry;
+use App\Models\Property;
+use App\Models\Userbooking;
 use App\Models\User;
+use App\Models\CancelReasons;
 use Spatie\Permission\Models\{Role,Permission};
 use PDF;
 
@@ -17,29 +19,50 @@ use PDF;
 use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 
 
-class EnquiryController extends Controller{
+class BookingController extends Controller{
  
  
  public function index(Request $request) {
     try{ 
       if($request->ajax()) {   
-        $data =  Contactenquiry::latest();
+        $data =  Userbooking::latest();
         return Datatables::of($data)
           ->addIndexColumn()
-            ->addColumn('name', function($row){
-                return $row->name;
+            ->addColumn('booking_id', function($row){
+                return $row->booking_id;
             }) 
-             ->addColumn('email', function($row){
-                return $row->email;
+             ->addColumn('property_title', function($row){
+                $property_id=$row->property_id;
+                $checkproperty=Property::where('id',$property_id)->get()->first();
+                if($checkproperty)
+                {
+                  $property_title=$checkproperty->title;
+                }
+                else{
+                  $property_title="N.A.";
+                }
+                return $property_title;
             })
-          ->addColumn('status', function($row){
-              $status = $row->status;
-              if($status==1){
-                  $booking_status_html='<span class="badge badge-success badge_enquiry_status_change" style="cursor: pointer;" id="'.$row->id.'">Read</span>';
-              }elseif($status==0){
-                   $booking_status_html='<span class="badge badge-danger badge_enquiry_status_change" style="cursor: pointer;" id="'.$row->id.'">Unread</span>';
+            ->addColumn('booking_amount', function($row){
+              return $row->booking_price;
+              
+          })
+          ->addColumn('payment_mode', function($row){
+            return $row->payment_mode;
+            
+        })
+        ->addColumn('payment_status', function($row){
+          return $row->payment_status;
+          
+      })
+          ->addColumn('booking_status', function($row){
+              $booking_status = $row->booking_status;
+              if($booking_status==1){
+                  $booking_status_html='<span class="badge badge-success" style="cursor: pointer;">Complete</span>';
+              }elseif($booking_status==0){
+                   $booking_status_html='<span class="badge badge-danger" style="cursor: pointer;">Ongoing</span>';
               }else {
-                 $booking_status_html='<span class="badge badge-danger" id="'.$row->id.'">N.A.</span>';
+                 $booking_status_html='<span class="badge badge-danger">Cancel</span>';
               }
               return $booking_status_html;
           }) 
@@ -48,14 +71,15 @@ class EnquiryController extends Controller{
               return $created_date;   
           })
           ->addColumn('action__', function($row){
-              $route_view=route('admin-enquiry-details',$row->id);
-              $action='<a href="'.$route_view.'" title="Edit" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>';
+              $route_view=route('admin-booking-details',$row->id);
+              $route_invoice_view=route('admin-booking-invoice',$row->id);
+              $action='<a href="'.$route_view.'" title="Edit" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a><a href="'.$route_invoice_view.'" title="View Invoice" class="btn btn-info btn-sm"><img src="'.url('/').'/assets_admin/assets/file-invoice-solid.png" style="height:auto;width:50%;"></a>';
               return $action;
           })  
             ->make(true);
           }  
 
-      return view('admin::enquiry.index');  
+      return view('admin::booking.index');  
     }
     catch (\Exception $e) 
     {
@@ -63,44 +87,55 @@ class EnquiryController extends Controller{
     }
   }
 
-  public function updateEnquiryStatus(Request $request){
-    try{
-      $data=$request->all();
-      if(!array_key_exists("id",$data))
-      {
-        return redirect('admin/enquiry-list/')->with('error','Something went wrong.');
-      }
-
-      $contactenquiry=Contactenquiry::where('id', $request->id)->first();
-      if($contactenquiry->status == 1){
-        $updatedata = [ "status"=>0];
-        Contactenquiry::where('id', $request->id)->update($updatedata);
-        $status=1;
-      }else if($contactenquiry->status == 0){
-        $updatedata = [ "status"=>1];
-        Contactenquiry::where('id', $request->id)->update($updatedata);
-        $status=1;
-      }else{
-        $status=0;
-      }
-        return response()->json(["success" => $status]);
-    }
-    catch(Exception $e){  
-      return redirect()->back()->with('error', 'something wrong');     
-    }  
-  }
-
   public function show($id){
     try{
-      $enquiryinfo =Contactenquiry::where('id',$id)->first();
-      return view('admin::enquiry.show', compact('enquiryinfo'));
+      $bookinginfo =Userbooking::where('id',$id)->first();
+      $property_id=$bookinginfo->property_id;
+      $checkproperty=Property::where('id',$property_id)->get()->first();
+      if($checkproperty)
+      {
+        $bookinginfo->property_title=$checkproperty->title;
+      }
+      else{
+        $bookinginfo->property_title="N.A.";
+      }
+
+      $booking_user_id=$bookinginfo->user_id;
+      $checkbookinguser=User::where('id',$booking_user_id)->get()->first();
+      if($checkbookinguser)
+      {
+        $bookinginfo->booking_user_name=$checkbookinguser->name;
+      }
+      else{
+        $bookinginfo->booking_user_name="N.A.";
+      }
+
+      $cancel_reason_id=$bookinginfo->cancel_reason_id;
+      if($cancel_reason_id!=0)
+      {
+      	$checkcancelreason=CancelReasons::where('id',$cancel_reason_id)->get()->first();
+	      if($checkcancelreason)
+	      {
+	        $bookinginfo->cancel_reason_desc=$checkcancelreason->reason_name;
+	      }
+	      else{
+	        $bookinginfo->cancel_reason_desc="N.A.";
+	      }
+      }
+      else{
+      	$bookinginfo->cancel_reason_desc=$bookinginfo->cancel_reason;
+      }
+
+      
+      
+      return view('admin::booking.show', compact('bookinginfo'));
     }
     catch(Exception $e){
       return redirect()->back()->with('error', 'something wrong');            
     }
   }
    
-  public function deleteInquiry(Request $request){
+  public function deleteBooking(Request $request){
     try{
       $data = ["status"=>2];
       $catInfo=Category::where('id', $request->id)->first();  

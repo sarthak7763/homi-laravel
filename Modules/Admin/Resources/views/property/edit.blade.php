@@ -272,7 +272,7 @@ label.error{
                               <div class="col-md-6">
                                   <div class="form-group">
                                       <label class="font-weight-bold">Property Owners<span style="color:red;">*</span></label>
-                                      <select class="form-control" id="add_by" name="add_by">
+                                      <select class="form-control livesearch" id="add_by" name="add_by">
                                       <option value="">Select Owner</option>
                                       @foreach($PropOwnerList as $k=>$property)
                                       @if($property->id==$propertyInfo->add_by)
@@ -647,6 +647,11 @@ label.error{
 
 <!-- <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key={{env('GOOGLE_API_KEY')}}"></script> -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZWubYF4RSrhWvk_cDI17x4oeUaZm7lf8&libraries=places&callback=initMap"></script>
+
+
+<script type="text/javascript">
+    $('.livesearch').select2({});
+</script>
 
 <script type="text/javascript">
 

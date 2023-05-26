@@ -3,6 +3,13 @@
 
 @section('content')
 
+<style type="text/css">
+    label.error {
+    color: red;
+    font-size: 13px;
+}
+</style>
+
  @php 
   $name_error="";
   $type_error="";

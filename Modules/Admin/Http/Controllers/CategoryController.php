@@ -183,7 +183,6 @@ class CategoryController extends Controller{
      
 
       $request->validate([
-          'id'=>'required',
           'name'=>[
                   'required',
                 ],
@@ -193,11 +192,15 @@ class CategoryController extends Controller{
                 ],
       ],
       [
-        'id.required'=>'Category not found.',
         'name.required' => 'Name field can’t be left blank.',
         'type.required'=>'Please select category type.',
         'type.in'=>'Please select valid category type.',
       ]);
+
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/category-list/')->with('error','Something went wrong.');
+      }
 
       $category = Category::find($data['id']);
           if(is_null($category)){
@@ -269,14 +272,20 @@ class CategoryController extends Controller{
 
   public function updateCategoryStatus(Request $request){
     try{
+      $data=$request->all();
+      if(!array_key_exists("id",$data))
+      {
+        return redirect('admin/category-list/')->with('error','Something went wrong.');
+      }
+
       $category=Category::where('id', $request->id)->first();
       if($category->status == 1){
-        $data = [ "status"=>0];
-        Category::where('id', $request->id)->update($data);
+        $updatedata = [ "status"=>0];
+        Category::where('id', $request->id)->update($updatedata);
         $status=1;
       }else if($category->status == 0){
-        $data = [ "status"=>1];
-        Category::where('id', $request->id)->update($data);
+        $updatedata = [ "status"=>1];
+        Category::where('id', $request->id)->update($updatedata);
         $status=1;
       }else{
         $status=0;
