@@ -6,6 +6,8 @@
 <script type="text/javascript" src="{{asset('/assets_front/js/intlTelInput.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('/assets_front/js/script.js')}}"></script>
 
+<script type="text/javascript" src="{{ asset('assets_front/js/jquery.validate.js')}}"></script>
+
    </script> 
 
 <script>

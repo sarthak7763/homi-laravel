@@ -20,13 +20,15 @@ Route::get('emails/otp_email',[HomeController::class,'getotpmailtemplate']);
 
 Route::get('emails/welcome_email',[HomeController::class,'getwelcomemailtemplate']); 
 
-Route::get('sendotpemail',[HomeController::class,'sendotpemail']); 
+Route::get('sendotpemail',[HomeController::class,'sendotpemail']);
+
+Route::get('checksettime',[HomeController::class,'checksettime']); 
 
 
 Route::get('/', function () {
 
-      if (Auth::user() && !auth()->user()->roles->isEmpty() && Auth::user()->roles[0]->id == 1) {
-        return redirect()->route('admin-dashboard');
+    if (Auth::user() && !auth()->user()->roles->isEmpty() && Auth::user()->roles[0]->id == 1) {
+        return redirect()->route('admin-profile');
     }elseif(Auth::user() && !auth()->user()->roles->isEmpty() && Auth::user()->roles[0]->id == 2){
     	
     	  return redirect()->route('buyer-dashboard');

@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Password_reset;
-use App\Models\{User};
+use App\Models\{User,Tempuser};
 use App\Helpers\Helper;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -17,12 +17,15 @@ use Illuminate\Support\Facades\Password;
 use Hash,Auth,Validator,Exception,DataTables,Mail,Str,Notification,Session;
 use Illuminate\Mail\Message; 
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class BuyerController extends Controller {
 
 	public function buyerlogin(Request $request) { 
       try{
-      return view('buyer::auth.login');
+
+        
+        return view('buyer::auth.login');
     }
     catch(Exception $e){  
       return redirect()->back()->with('error', 'something wrong');     
@@ -41,6 +44,24 @@ class BuyerController extends Controller {
     }
   }
 
+  //BUYER REGISTER SIGN UP VIEW PAGE
+  public function BuyerVerifyEmail(Request $request){
+
+    try{ 
+      if(session()->has('email'))
+      {
+        return view('buyer::auth.verify');
+      }
+      else{
+        return redirect('dealer/register/')->with('error', 'something wrong'); 
+      }
+      
+    }
+    catch(Exception $e){  
+      return redirect()->back()->with('error', 'something wrong');     
+    }
+  }
+
   public function buyerForgotPassword(){
     try{
       return view('buyer::auth.passwords.email');
@@ -52,49 +73,151 @@ class BuyerController extends Controller {
 
   //BUYER SIGN UP REGISTER POST 
   public function sellerSignupPost(Request $request){
-  
-    try {
-      $data=$request->all();
-      $seller_email= $request['email'];  
-      $exist_user=User::where('email',$seller_email)->where('user_type','3')->where('status','1')->get()->toArray();
-     
-      if(count($exist_user) > 0)
-      {
-        return redirect()->back()->with('error', 'User email already exists');
+    
+    try{
+          $data=$request->all();
+          $request->validate([
+            'email'=>'required|email:rfc,dns',
+            'name'=>[
+                  'required',
+                  'regex:/^[\pL\s]+$/u',
+              ],
+            'password' => [
+                    'required',
+                    'min:8',
+                    'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+                    'max:25'
+              ],
+            'confirm_password' => 'required|same:password',     
+          ],
+          [
+            'name.required' => 'Name field can’t be left blank.',
+            'name.regex' => 'Please enter only alphabetic characters.',
+            'email.required'=>'Email field can not be empty',
+            'email.email'=>'Please enter a valid email address',
+            'password.required'=>'Password field can’t be left blank',
+            'password.min'=>'Password can not be less than 8 character.',
+            'password.max'=>'Password can not be more than 25 character',
+            'password.regex'=>'Password should contain a Capital Letter, small letter, number and special characters',
+            'confirm_password.required'=>'Confirm Password field can’t be left blank',
+            'confirm_password.same'=>'Password and confirm password doesn’t match',
+          ]);
 
+          $checkuseremail=User::where('email',$data['email'])->where('user_type','3')->get()->first();
+          if($checkuseremail)
+          {
+              return back()->with('error','Email already exists. Please try with another one.');
+          }
 
-      }else{
-        $data['password']= Hash::make($data['password']);
+          try{
+                $data['password']= Hash::make($data['password']);
+                $email_token="1234";
+                $user = new Tempuser;
+                $user->name=$data['name'];
+                $user->email=$data['email'];
+                $user->password=$data['password'];
+                $user->user_type=3;
+                $user->email_verified=0;
+                $user->email_verification_token = $email_token;
+                $user->save();
+                if($user)
+                {
+                    $details = [
+                      'name' =>$data['name'],
+                      'email'=>$data['email'],
+                      'otp' =>$email_token
+                    ];
+   
+                    // \Mail::to($data['email'])->send(new \App\Mail\EmailVerification($details));
 
-        $email_token=Str::random(32);
-        $user = new User;
-        $user->name = $data['name']; 
-        $user->user_type = 3; 
-        $user->email_verified = 0; 
-        $user->email=$data['email'];
-        $user->password=$data['password'];
-        $user->email_verification_token = $email_token;
-  
-      
-        $user->save();
-        return redirect()->route('buyer-login')->with('success', 'Success! Dealer Register successfully !!');;
-      
-      }
+                    Session::put('email', $data['email']);
 
-      
-      // request()->validate([
-      //   'name'=>'required',
-      //   'email' => 'required|email|unique:users,email',
-      //   'password' => 'required|min:6|same:password_confirmation',
-      //   'password_confirmation' => 'required|same:password',
-      // ]);
-     
-     
+                  return redirect()->route('buyer.verify.email')->with('success',"Account created successfully. OTP has been send to your registered email.");
+                }
+                else{
+                  return back()->with('error','Something went wrong4.'); 
+                }
+            }
+            catch(\Exception $e){
+                  return back()->with('error','Something went wrong3.');    
+               }
     }
     catch (\Exception $e){
-     print_r($e->getMessage()); die;
-      return redirect()->back()->with('error', $e->getMessage());
+          if($e instanceof ValidationException){
+            $listmessage=[];
+            foreach($e->errors() as $key=>$list)
+            {
+                $listmessage[$key]=$list[0];
+            }
+
+            if(count($listmessage) > 0)
+            {
+                return back()->with('valid_error',$listmessage);
+            }
+            else{
+                return back()->with('error','Something went wrong2.');
+            }
+            
+        }
+        else{
+            return back()->with('error',$e->getMessage());
+        }
+      } 
+  }
+  public function sellerLoginPost(Request $request)
+  {
+    try
+    {
+       $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+   
+        $credentials = $request->only('email', 'password');
+       
+        if (Auth::attempt($credentials)) {
+          
+            return redirect()->intended('dealer/dashboard')
+                        ->withSuccess('You have Successfully loggedin');
+        }
+       
+        return redirect("dealer/login")->withSuccess('Oppes! You have entered invalid credentials');
+    
+    //   $data=$request->all();
+    //   $l_email=$request->email;
+    //   $check_login=User::where('email',$l_email)->where('status','1')->get()->toArray();
+    //   $l_password= $check_login['password'];
+
+     
+    //  if(count($check_login) > 0)
+    //   {
+    //     if($request->password == $l_password)
+    //     {
+    //       echo "password matched!";
+    //       return redirect('dealer/dashboard');
+          
+    //    }else{
+    //       echo "password doesnt match!";
+    //       }
+          
+    //   }else{
+    //     echo "Incorrect username and password!";
+
+    //     return redirect('dealer/login');
+
+    //   }
+
+     }
+    catch(\Exception $e)
+    {
+      return back()->with('error',$e->getMessage());
     }
+   
+  }
+
+  public function sellerverifyemailotp(Request $request)
+  {
+
   }
 
  

@@ -22,28 +22,118 @@
     overflow: hidden;
     padding-left: 15px;
 }
+
+label#password-error {
+    position: absolute;
+    bottom: -25px;
+}
+
+label#confirm_password-error {
+    position: absolute;
+    bottom: -25px;
+}
+
+span.messages strong{
+    color: red;
+}
 </style>
 @endsection
 @section('content')
+
+@php 
+  $name_error="";
+  $email_error="";
+  $password_error="";
+  $confirm_password_error="";
+@endphp
+
+@if (session()->has('valid_error'))
+    @php $validationmessage=session()->get('valid_error'); @endphp
+
+    @if($validationmessage!="" && isset($validationmessage['name']))
+      @php $name_error=$validationmessage['name']; @endphp
+      @else
+      @php $name_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['email']))
+      @php $email_error=$validationmessage['email']; @endphp
+      @else
+      @php $email_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['password']))
+      @php $password_error=$validationmessage['password']; @endphp
+      @else
+      @php $password_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['confirm_password']))
+      @php $confirm_password_error=$validationmessage['confirm_password']; @endphp
+      @else
+      @php $confirm_password_error=""; @endphp
+      @endif
+
+@endif
+
 <div class="row">
+
+    @if($message = Session::get('success'))
+                    <div class="row">
+                        <div class="col-md-12">
+                          <div class="alert alert-success alert-dismissible fade show" role="alert">
+                             <label  class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"  style="font-size: 19px;margin-top: -1px;">&times;</span>
+                              </label>
+                                {{ $message }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                @if($message = Session::get('error'))
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                             <label type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true" style="font-size: 19px;margin-top: -1px;">&times;</span>
+                              </label>
+                                
+                                {{ $message }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
     <section class="signup-section pt-4 pb-4">
         <div class="container h-100">
             <div class="row align-items-center justify-content-center h-100">
                 <div class="col-12">
-                    <form action="{{ route('buyer.post.register')}}" method="POST" class="signup-form p-5">@csrf
+                    <form name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.register')}}" method="POST" class="signup-form p-5">
+                        @csrf
                         <h1>Welcome!</h1>
                         <strong>Signup your account</strong>
                         <div class="mb-4">
                             <input type="text" name="name" class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter your name here">
+                            @if($name_error!="")
+                              <span class="messages">
+                                  <strong>{{ $name_error }}</strong>
+                              </span>
+                          @endif
                                
                         </div>
                         <div class="mb-4">
                             <input type="email" name="email" class="form-control" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID">
+
+                        @if($email_error!="")
+                          <span class="messages">
+                              <strong>{{ $email_error }}</strong>
+                          </span>
+                        @endif
                         </div>
+
                         <div class="mb-4 input-group">
-                            <input type="password"name="password" class="form-control" id="password" placeholder="Password">
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                             <span toggle="#password" class="input-group-text togglePassword" id="">
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -63,11 +153,18 @@
                                         fill="white" />
                                 </svg>
                             </span>
+
+                        @if($password_error!="")
+                          <span class="messages">
+                              <strong>{{ $password_error }}</strong>
+                          </span>
+                        @endif
+
                         </div>
 
 
                         <div class="mb-4 input-group">
-                            <input type="password" name="password" class="form-control" id="confirm_password" placeholder="Password">
+                            <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Password">
                             <span toggle="#confirm_password" class="input-group-text togglePassword2" id="">
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -88,12 +185,18 @@
                                 </svg>
 
                             </span>
+
+                        @if($confirm_password_error!="")
+                          <span class="messages">
+                              <strong>{{ $confirm_password_error }}</strong>
+                          </span>
+                        @endif
                         </div>
 
 
 
                         <div class="mb-4 form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
                             <label class="form-check-label" for="exampleCheck1">I Accept <a href="#">Terms and
                                     Conditions</a></label>
                         </div>
@@ -122,89 +225,49 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
     }
 });
-
-$(document).on("click", "#btnSignup", function() {
     
-    $('form[name=signupBuyerForm]').validate({
+    $('#signupBuyerForm').validate({
         rules: {
             name: {
                 required: true,
-                maxlength: 30
             },
-
-            // email: {
-            //     required: true,
-            //     email: true,
-            //     remote: {
-            //         url: "{{route('buyer-sign-up-email-check')}}",
-
-            //         type: "POST",
-
-            //         data: {
-
-            //             email: function() {
-            //                 return $('#buyerSignupForm :input[name="email"]').val();
-            //             },
-
-            //         }
-            //     }
-            // },
-            // mobile_no: {
-            //     required: true,
-            //     digits: true,
-            //     minlength: 6,
-            //     maxlength: 13,
-            //     remote: {
-            //         url: "{{route('buyer-sign-up-mobile-check')}}",
-            //         type: "post",
-            //         data: {
-
-            //             mobile_no: function() {
-            //                 return $('#buyerSignupForm :input[name="mobile_no"]').val();
-
-            //             }
-
-            //         }
-            //     }
-            // },
+            email: {
+                required: true,
+                email: true,
+             },
+            mobile_no: {
+                required: true,
+                digits: true,
+            },
             password: {
                 required: true,
-                minlength: 5
+                minlength: 8
             },
-            password_confirmation: {
-                minlength: 5,
+            confirm_password: {
+                minlength: 8,
                 equalTo: "#password"
             },
            
 
         },
         messages: {
-            // first_name: {
-            //     required: "Please specify your first name",
-            //     maxlength:"Name length should be maximum 30 characters long"
-            // },
             name: {
-                required: "Please specify your name",
-                maxlength: "Name length should be maximum 30 characters long"
+                required: "Please enter name",
             },
             email: {
-                required: "We need your email address to contact you",
+                required: "Please enter conatct email",
                 email: "Your email address must be in the format of name@domain.com",
-                remote: "Email already exist"
             },
             mobile_no: {
-                required: "We need your mobile number to contact you",
+                required: "Please enter contact number",
                 digits: "Your mobile number must be in digits",
-                minlength: "Your mobile number have minimum 6 digits",
-                maxlength: "Your mobile number have maximum 13 digits",
-                remote: "Mobile number already exist"
             },
             password: {
                 required: "Password field is required",
                 minlength: "Password must be atleast 5 characters long"
 
             },
-            password_confirmation: {
+            confirm_password: {
                 required: "Confirm password field is required",
                 equalTo: "Confirm password must be same as password",
 
@@ -212,10 +275,25 @@ $(document).on("click", "#btnSignup", function() {
             
 
         },
-        submitHandler: function(form) {
-            form.submit();
+        submitHandler: function(form) 
+            {
+                 
+                $("#loading").show();
+                $("#btnSignup").hide();
+                 form.submit();
+            },
+             invalidHandler: function(){
+                  $("#btnSignup").show();
+                  $("#loading").hide();
         }
     });
-});
+
+    $("#btnSignup").on('click',function(){
+        $("#signupBuyerForm").submit();
+        return false;
+    });
+
 </script>
+
+
 @endsection

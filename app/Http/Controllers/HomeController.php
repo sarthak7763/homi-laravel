@@ -9,6 +9,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Mail;
 use App\Mail\EmailVerification;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -66,6 +67,14 @@ class HomeController extends Controller
         $email="sarthak.agarwal@emails.emizentech.com";
 
         \Mail::to($email)->send(new \App\Mail\EmailVerification());
+    }
+
+    public function checksettime(Request $request)
+    {
+        date_default_timezone_set('America/Los_Angeles');
+        $now = Carbon::now();
+            
+        dd($now);
     }
 
     

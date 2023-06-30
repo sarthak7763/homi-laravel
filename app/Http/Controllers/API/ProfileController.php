@@ -894,7 +894,7 @@ class ProfileController extends BaseController
 			    	else{
 			    		$userbookingratings=new UserBookingRatings;
 			    		$userbookingratings->user_id=$user->id;
-			    		$userbookingratings->booking_id=$booking_id,
+			    		$userbookingratings->booking_id=$booking_id;
 			    		$userbookingratings->property_id=$property_id;
 			    		$userbookingratings->rating=$request->rating;
 			    		$userbookingratings->status=1;
