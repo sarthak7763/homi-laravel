@@ -177,7 +177,7 @@ class BuyerController extends Controller {
        
         if (Auth::attempt($credentials)) {
           
-            return redirect()->intended('dealer/dashboard')
+            return redirect()->intended('dealer/my-profile')
                         ->withSuccess('You have Successfully loggedin');
         }
        

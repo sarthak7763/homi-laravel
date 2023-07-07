@@ -439,7 +439,7 @@ class ProfileController extends BaseController
 
 	        						if($checkpropertyarray['property_image']!="")
 							        {
-							        	$property_image=url('/').'/property/'.$checkpropertyarray['property_image'];
+							        	$property_image=url('/').'/images/property/thumbnail/'.$checkpropertyarray['property_image'];
 							        }
 							        else{
 							        	$property_image=url('/').'/no_image/user.jpg';

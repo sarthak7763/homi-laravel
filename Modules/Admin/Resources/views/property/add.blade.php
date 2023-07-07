@@ -576,7 +576,7 @@ label.error{
               <div class="col-md-12">
                   <div class="form-group">
                       <label class="font-weight-bold">Meta Description<!-- <span style="color:red;">*</span> --></label>
-                      <textarea class="ck-editor" value="" name="meta_description" id="meta_description"></textarea>
+                      <textarea class="ck-editor" value="" name="meta_description" id="meta_description" rows="5" cols="20"></textarea>
                       @if($meta_description_error!="")
                           <span class="messages">
                               <strong>{{ $meta_description_error }}</strong>
@@ -588,7 +588,7 @@ label.error{
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="font-weight-bold">Property Description</label>
-                        <textarea  class="ck-editor" name="property_description" id="property_description"></textarea>
+                        <textarea  class="ck-editor" name="property_description" id="property_description" rows="5" cols="20"></textarea>
                         @if($property_description_error!="")
                             <span class="messages">
                                 <strong>{{ $property_description_error }}</strong>
@@ -688,16 +688,16 @@ for(var i=0;i<total_file;i++)
 </script>
 <script>
 
-CKEDITOR.replace( 'property_description' );
-CKEDITOR.replace( 'meta_description' );
+// CKEDITOR.replace( 'property_description' );
+// CKEDITOR.replace( 'meta_description' );
 
-function clearData(){
-    for ( instance in CKEDITOR.instances ){
-        CKEDITOR.instances[instance].updateElement();
-    }
-    CKEDITOR.instances[instance].setData('');
+// function clearData(){
+//     for ( instance in CKEDITOR.instances ){
+//         CKEDITOR.instances[instance].updateElement();
+//     }
+//     CKEDITOR.instances[instance].setData('');
  
-}
+// }
 
 $(document).ready(function(){
     $(".js-example-placeholder-multiple").select2({

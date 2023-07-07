@@ -21,19 +21,17 @@
 </head>
 <body>
 
-<div id="loading" style="display: none;background-color:#0405067a; position:fixed;z-index:1000;top: 0px;left: 0px;height:100%;width:100%;">
-    <img src="{{asset('assets_admin/loader.gif')}}" style="height: 125px;">
-</div>
 
-<div id="loaderDiv" style="background-color:#0405067a; position:fixed;z-index:99999999;top: 0px;left: 0px;height:100%;width:100%;">
-    <img src="{{asset('assets_admin/loader.gif')}}" style="height: 125px;">
-</div>
 
     <div class="wrapper h-100">
          
         <!--HEADER START -->
         @include('buyer::includes.header')
         <!--HEADER END -->
+
+         <!--SIDEBAR START -->
+         @include('buyer::includes.sidebar')
+        <!--SIDEBAR END -->
       
         <!-- Main-body start -->
         @yield('content')
@@ -41,7 +39,8 @@
         @include('buyer::includes.footer')
     </div>
     <!-- Script start -->
-    @include('buyer::includes.script')
+    
+
     
 @toastr_js
 @toastr_render

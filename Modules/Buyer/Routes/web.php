@@ -36,5 +36,6 @@ Route::group(['middleware' => 'Isseller'], function ()
 {
 
     Route::get('/dealer/dashboard', 'DashboardController@index')->name('buyer.dashboard');
+    Route::get('/dealer/my-profile', 'MyprofileController@index')->name('buyer.my-profile');
 
 });
