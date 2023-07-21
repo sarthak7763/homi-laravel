@@ -65,6 +65,8 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::post('getbookingdetails', [ProfileController::class, 'getbookingdetails']);
 
+	Route::get('getcancelreasonslist', [ProfileController::class, 'getcancelreasonslist']);
+
 	Route::post('submitcancelbooking', [ProfileController::class, 'submitcancelbooking']);
 
 	Route::post('submitbookingrating', [ProfileController::class, 'submitbookingrating']);

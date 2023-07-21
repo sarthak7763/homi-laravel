@@ -1963,7 +1963,7 @@ public function getproperty_details_api($property_id,$userid)
 	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', $radiusvalue);
 	    }
 
-	    $perPage = 10;
+	    $perPage = 4;
 	    $total = $filterpropertyquery->count();
 	    $last_page=ceil($total / $perPage);
 
@@ -2180,7 +2180,7 @@ public function getproperty_details_api($property_id,$userid)
 	    	$filterpropertyquery=$filterpropertyquery->having('distance', '<=', $radiusvalue);
 	    }
 
-	    $perPage = 10;
+	    $perPage = 4;
 	    $total = $filterpropertyquery->count();
 	    $last_page=ceil($total / $perPage);
 
@@ -2462,7 +2462,7 @@ public function get_search_properties_list($property_type,$property_category,$us
     	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', $radiusvalue);
     }
 
-    $perPage = 10;
+    $perPage = 4;
     $total = $searchpropertyquery->count();
     $last_page=ceil($total / $perPage);
 
@@ -2805,7 +2805,7 @@ public function get_search_property_renting_list($lat,$lng,$property_type,$prope
     	$searchpropertyquery=$searchpropertyquery->having('distance', '<=', $radiusvalue);
     }
 
-    $perPage = 10;
+    $perPage = 4;
     $total = $searchpropertyquery->count();
     $last_page=ceil($total / $perPage);
 
@@ -2908,29 +2908,15 @@ public function getpropertybookingdetails(Request $request)
 	        if($user)
 	        {
 	        	$property_type=1;
-	        	$getuserrentinglocation=Userrentinglocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
-	        	if($getuserrentinglocation)
-	        	{
-	        		$user_category=$getuserrentinglocation->user_category;
-	        		$user_location=$getuserrentinglocation->user_location;
-	        		$user_latitude=$getuserrentinglocation->user_latitude;
-	        		$user_longitude=$getuserrentinglocation->user_longitude;
-	        		$user_checkin_date=$getuserrentinglocation->user_checkin_date;
-	        		$user_checkout_date=$getuserrentinglocation->user_checkout_date;
-	        		$user_adults_count=$getuserrentinglocation->user_adults_count;
-	        		$user_children_count=$getuserrentinglocation->user_children_count;
-	        	}
-	        	else{
-		        	$validator = Validator::make($request->all(), [
-			            'location' => 'required',
-			            'lat'=>'required',
-			            'lng'=>'required',
-			            'category'=>'required',
-			            'check_in_date'=>'required',
-			            'check_out_date'=>'required',
-			            'adult_count'=>'required',
-			            'children_count'=>'required'
-			        ]);
+		        $validator = Validator::make($request->all(), [
+		            'location' => 'required',
+		            'lat'=>'required',
+		            'lng'=>'required',
+		            'category'=>'required',
+		            'check_in_date'=>'required',
+		            'check_out_date'=>'required',
+		            'adult_count'=>'required'
+		        ]);
 
 			        if($validator->fails()){
 			            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
@@ -2960,8 +2946,6 @@ public function getpropertybookingdetails(Request $request)
 	        		$user_checkout_date=date('Y-m-d',strtotime($request->check_out_date));
 	        		$user_adults_count=$request->adult_count;
 	        		$user_children_count=$request->children_count;
-
-	        	}
 
 	        	$daysdiff=getdaysdiff($user_checkin_date,$user_checkout_date);
 
@@ -3065,60 +3049,44 @@ public function insertuserbookinginfo(Request $request)
 	        if($user)
 	        {
 	        	$property_type=1;
-	        	$getuserrentinglocation=Userrentinglocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
-	        	if($getuserrentinglocation)
+	        	$validator = Validator::make($request->all(), [
+		            'location' => 'required',
+		            'lat'=>'required',
+		            'lng'=>'required',
+		            'category'=>'required',
+		            'check_in_date'=>'required',
+		            'check_out_date'=>'required',
+		            'adult_count'=>'required',
+		        ]);
+
+		        if($validator->fails()){
+		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+		        }
+
+			if(isset($request->category) && $request->category!="")
+	        {
+	        	$user_category=$request->category;
+	        	if($user_category!=0)
 	        	{
-	        		$user_category=$getuserrentinglocation->user_category;
-	        		$user_location=$getuserrentinglocation->user_location;
-	        		$user_latitude=$getuserrentinglocation->user_latitude;
-	        		$user_longitude=$getuserrentinglocation->user_longitude;
-	        		$user_checkin_date=$getuserrentinglocation->user_checkin_date;
-	        		$user_checkout_date=$getuserrentinglocation->user_checkout_date;
-	        		$user_adults_count=$getuserrentinglocation->user_adults_count;
-	        		$user_children_count=$getuserrentinglocation->user_children_count;
+	        		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$user_category)->get()->first();
+
+	        		if(!$checkpropertycategory)
+	        		{
+	        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	        		}
 	        	}
-	        	else{
-		        	$validator = Validator::make($request->all(), [
-			            'location' => 'required',
-			            'lat'=>'required',
-			            'lng'=>'required',
-			            'category'=>'required',
-			            'check_in_date'=>'required',
-			            'check_out_date'=>'required',
-			            'adult_count'=>'required',
-			            'children_count'=>'required'
-			        ]);
+	        }
+	        else{
+	        	$user_category=0;
+	        }
 
-			        if($validator->fails()){
-			            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
-			        }
-
-					if(isset($request->category) && $request->category!="")
-			        {
-			        	$user_category=$request->category;
-			        	if($user_category!=0)
-			        	{
-			        		$checkpropertycategory=Category::where('category_type',$property_type)->where('id',$user_category)->get()->first();
-
-			        		if(!$checkpropertycategory)
-			        		{
-			        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
-			        		}
-			        	}
-			        }
-			        else{
-			        	$user_category=0;
-			        }
-
-			        $user_location=$request->location;
-	        		$user_latitude=$request->lat;
-	        		$user_longitude=$request->lng;
-	        		$user_checkin_date=date('Y-m-d',strtotime($request->check_in_date));
-	        		$user_checkout_date=date('Y-m-d',strtotime($request->check_out_date));
-	        		$user_adults_count=$request->adult_count;
-	        		$user_children_count=$request->children_count;
-
-	        	}
+	        $user_location=$request->location;
+			$user_latitude=$request->lat;
+			$user_longitude=$request->lng;
+			$user_checkin_date=date('Y-m-d',strtotime($request->check_in_date));
+			$user_checkout_date=date('Y-m-d',strtotime($request->check_out_date));
+			$user_adults_count=$request->adult_count;
+			$user_children_count=$request->children_count;
 
 	        $daysdiff=getdaysdiff($user_checkin_date,$user_checkout_date);
 

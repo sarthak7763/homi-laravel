@@ -65,8 +65,9 @@ class HomeController extends Controller
     public function sendotpemail()
     {
         $email="sarthak.agarwal@emails.emizentech.com";
+        $details=array('name'=>'Sarthak','otp'=>'1234');
 
-        \Mail::to($email)->send(new \App\Mail\EmailVerification());
+        \Mail::to($email)->send(new \App\Mail\EmailVerification($details));
     }
 
     public function checksettime(Request $request)

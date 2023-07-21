@@ -139,7 +139,7 @@ class ProfileController extends BaseController
 		        	$userdet->profile_pic=url('/').'/no_image/user.jpg';
 		        }
 
-		        $userlocationsearchresult=Userlocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
+		        $userlocationsearchresult=Userbuyinglocationsearch::where('user_id',$user->id)->where('status',1)->get()->first();
 		        if($userlocationsearchresult)
 		        {
 		        	$userlocationsearchresultarray=$userlocationsearchresult->toArray();
@@ -631,8 +631,12 @@ class ProfileController extends BaseController
 					'rating'=>5,
 					'check_in_date'=>date('d M,Y',strtotime($list['user_checkin_date'])),
 					'check_out_date'=>date('d M,Y',strtotime($list['user_checkout_date'])),
+					'adult_count'=>$list['user_adult_count'],
+					'children_count'=>$list['user_children_count'],
 					'booking_status'=>$booking_status,
-					'cancel_booking'=>$cancel_booking
+					'cancel_booking'=>$cancel_booking,
+					'booking_tax_price'=>$list['booking_tax_price'],
+					'booking_total_price'=>$list['booking_price'],
 				);
     		}
     	}
@@ -783,6 +787,48 @@ class ProfileController extends BaseController
                }
     }
 
+    public function getcancelreasonslist()
+    {
+    	try{
+	        $user=auth()->user();
+	        if($user)
+	        {
+	        	$cancel_reaonslist=CancelReasons::where('reason_status',1)->get();
+	        	if($cancel_reaonslist)
+	        	{
+	        		$cancel_reaonslistarray=$cancel_reaonslist->toArray();
+	        		if($cancel_reaonslistarray)
+	        		{
+	        			$cancel_reaons=[];
+	        			foreach($cancel_reaonslistarray as $list)
+	        			{
+	        				$cancel_reaons[]=array(
+	        					'id'=>$list['id'],
+	        					'name'=>$list['reason_name']
+	        				);
+	        			}
+	        		}
+	        		else{
+	        			$cancel_reaons=[];
+	        		}
+	        	}
+	        	else{
+	        		$cancel_reaons=[];
+	        	}
+
+	        	$success['cancel_reaons'] =  $cancel_reaons;
+		        return $this::sendResponse($success, 'Cancel Reasons List.');
+	        }
+	        else{
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']);
+	        }
+	    }
+	    catch(\Exception $e){
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+               }
+
+    }
+
     public function submitcancelbooking(Request $request)
     {
     	try{
@@ -790,8 +836,8 @@ class ProfileController extends BaseController
 	        if($user)
 	        {
 	        	$validator = Validator::make($request->all(), [
-				            'cancel_reason' => 'required',
-				            'booking_id'=>'required'
+	        				'booking_id'=>'required',
+				            'cancel_reason' => 'required',     
 				        ]);
 
 		        if($validator->fails()){
@@ -800,7 +846,7 @@ class ProfileController extends BaseController
 
 
 
-			    $cancel_reason_id=$request->cancel_reason;
+			    $cancel_reason=$request->cancel_reason;
 			    $booking_id=$request->booking_id;
 
 			    $checkbooking=Userbooking::where('id',$booking_id)->where('user_id',$user->id)->get()->first();
@@ -809,32 +855,25 @@ class ProfileController extends BaseController
 			    	if($checkbooking->booking_status==0)
 			    	{
 			    		$current_date=date('Y-m-d');
-				        $new_check_in_date=date('Y-m-d', strtotime("-1 day", strtotime($list['user_checkin_date'])));
+				        $new_check_in_date=date('Y-m-d', strtotime("-1 day", strtotime($checkbooking->user_checkin_date)));
 
 				        if($new_check_in_date > $current_date)
 				        {
 				        	$cancel_date=date('Y-m-d');
-					        if($cancel_reason_id!=0)
-						    {
-						    	$checkcancelreason=CancelReasons::where('id',$cancel_reason_id)->get()->first();
-						    	if($checkcancelreason)
-						    	{
-						    		$updatearray=array('cancel_reason_id'=>$cancel_reason_id,'cancel_reason'=>$cancel_reason_id,'cancel_date'=>$cancel_date);
-						    	}
-						    	else{
-						    		return $this::sendError('Unauthorised.', ['error'=>'Invalid Cancel Reason.']);
-						    	}
-						    }
-						    else{
-						    	$cancel_other_reason=$request->cancel_other_reason;
-
-						    	$updatearray=array('cancel_reason_id'=>$cancel_reason_id,'cancel_reason'=>$cancel_other_reason,'cancel_date'=>$cancel_date);
-
-						    }
+					        
+				        	$checkcancelreason=CancelReasons::where('reason_name',$cancel_reason)->get()->first();
+				        	if($checkcancelreason)
+				        	{
+				        		$cancel_reason_id=$checkcancelreason->id;
+				        		$updatearray=array('cancel_reason_id'=>$cancel_reason_id,'cancel_reason'=>$cancel_reason_id,'cancel_date'=>$cancel_date,'booking_status'=>2);
+				        	}
+				        	else{
+				        		$updatearray=array('cancel_reason_id'=>0,'cancel_reason'=>$cancel_reason,'cancel_date'=>$cancel_date,'booking_status'=>2);
+				        	}
 
 						    DB::table('user_booking')
 				            ->where('id', $booking_id)
-				            ->where('user_id', $user_id)
+				            ->where('user_id', $user->id)
 				            ->update($updatearray);
 
 				            $success=[];
@@ -842,7 +881,7 @@ class ProfileController extends BaseController
 
 						}else
 						{
-							return $this::sendError('Unauthorised.', ['error'=>'Booking already cancelled.']);
+							return $this::sendError('Unauthorised.', ['error'=>'You cannot cancel the booking.']);
 						}
 			    	}
 			    	else{
@@ -859,7 +898,7 @@ class ProfileController extends BaseController
 	        }
 	    }
 	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
                }
     }
 
@@ -870,8 +909,8 @@ class ProfileController extends BaseController
 	        if($user)
 	        {
 	        	$validator = Validator::make($request->all(), [
+	        				'booking_id'=>'required',
 				            'rating' => 'required',
-				            'booking_id'=>'required'
 				        ]);
 
 		        if($validator->fails()){
