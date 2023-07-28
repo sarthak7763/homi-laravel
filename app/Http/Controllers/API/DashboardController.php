@@ -1679,7 +1679,7 @@ public function getproperty_details_api($property_id,$userid)
 
 	    if(isset($request->publish_date) && $request->publish_date!="")
 	    {
-	    	$publish_date=$request->publish_date;
+	    	$publish_date=date('Y-m-d',strtotime($request->publish_date));
 	    }
 	    else{
 	    	$publish_date="";
