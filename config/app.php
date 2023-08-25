@@ -240,6 +240,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'GoogleTranslate' => Stichoza\GoogleTranslate\GoogleTranslate::class
 
     ],
 

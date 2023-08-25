@@ -121,8 +121,8 @@
                                 <label class="font-weight-bold">Type<span style="color:red;">*</span></label>
                                 <select class="form-control" name="type" id="type">
                                   <option value="">Select Type</option>
-                                  <option value="1">Booking</option>
-                                  <option value="2">Renting</option>
+                                  <option value="2">Buying</option>
+                                  <option value="1">Renting</option>
                                 </select>
                                 @if($type_error!="")
                                 @php $style="display:block;"; @endphp

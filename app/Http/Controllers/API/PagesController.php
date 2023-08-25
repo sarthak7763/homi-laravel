@@ -114,7 +114,7 @@ class PagesController extends BaseController
                   $contactenquiry->name=$name;
                   $contactenquiry->email = $email;
                   $contactenquiry->message = $message;
-                  $contactenquiry->status=1;
+                  $contactenquiry->status=0;
                   $contactenquiry->save();
 
                   $success=[];

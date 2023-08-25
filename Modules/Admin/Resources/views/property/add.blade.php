@@ -303,8 +303,8 @@ label.error{
                                     <select class="form-control" name="property_type" id="property_type">
                                    <option value="">Select Project Type</option>
                                   
-                                   <option value="1">Rent</option>
-                                   <option value="2">Sell</option>
+                                   <option value="1">Renting</option>
+                                   <option value="2">Buying</option>
                                    
                                     </select>
                                      @if($property_type_error!="")
@@ -332,7 +332,7 @@ label.error{
                                            
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="font-weight-bold">Maximum Guests Allowed<span style="color:red;">*</span></label>
+                                    <label class="font-weight-bold">Maximum Guests Allowed</label>
                                     <input type="text" class="form-control" name="guest_count" id="guest_count" value="" placeholder="Enter No. of guests allowed ">
                                     @if($guest_count_error!="")
                                         <span class="messages">
@@ -355,7 +355,7 @@ label.error{
 
                            <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">Built In Year<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">Built In Year</label>
                                   <input type="text" name="built_in_year" class="form-control datepicker" value="" placeholder="Enter Built In Year"  id="built_in_year" >
                                   @if($built_in_year_error!="")
                                       <span class="messages">
@@ -367,7 +367,7 @@ label.error{
 
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">No. of Kitchen<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Kitchen</label>
                                   <input type="text" class="form-control" name="no_of_kitchen" id="no_of_kitchen" value="" placeholder="Enter no. of kitchen">
                                   @if($kitchen_count_error!="")
                                       <span class="messages">
@@ -392,7 +392,7 @@ label.error{
                                 
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">No. of Pool<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Pool</label>
                                   <input type="text" name="no_of_pool" class="form-control"   value="" id="no_of_pool" placeholder="Enter No. of Pool">
                                   @if($pool_count_error!="")
                                       <span class="messages">
@@ -403,7 +403,7 @@ label.error{
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">No. of Garden<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Garden</label>
                                   <input type="text" name="no_of_garden" class="form-control" value="" id="no_of_garden" placeholder="Enter No. of garden ">
                                   @if($garden_count_error!="")
                                       <span class="messages">
@@ -414,7 +414,7 @@ label.error{
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">No. of Balcony<span style="color:red;">*</span></label>
+                                  <label class="font-weight-bold">No. of Balcony</label>
                                   <input type="text" class="form-control" value="" name="no_of_balcony" id="no_of_balcony" placeholder="Enter No. of balcony">
                                   @if($balcony_count_error!="")
                                       <span class="messages">
@@ -425,7 +425,7 @@ label.error{
                           </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="font-weight-bold">Property Area <span>(Sq. Ft.)</span><span style="color:red;">*</span></label>
+                                <label class="font-weight-bold">Property Area <span>(Sq. Ft.)</span></label>
                                     <input type="text" class="form-control"  value="" name="property_area" id="property_area" placeholder="Enter property area">
                                          
                                
@@ -510,7 +510,7 @@ label.error{
 
                           <div class="col-md-6">
                           <div class="form-group">
-                              <label class="font-weight-bold">Price type<span style="color:red;">*</span></label>
+                              <label class="font-weight-bold">Price type</label>
                               <select name="property_price_type" class="form-control" id="property_price_type">
                                   <option value="">Select price type</option>
                               </select>
@@ -787,18 +787,13 @@ $.ajaxSetup({
               required: true,
             },
             guest_count:{
-                required: true,
                 digits: true,
             },
             no_of_bedroom:{
                 required: true,
                 digits: true,
             },
-            built_in_year:{
-                required: true,
-            },
             no_of_kitchen:{
-                required: true,
                 digits: true,
             },
             no_of_bathroom:{
@@ -806,15 +801,12 @@ $.ajaxSetup({
                 digits: true,
             },
             no_of_pool:{
-                required: true,
                 digits: true,
             },
             no_of_garden:{
-                required: true,
                 digits: true,
             },
             no_of_balcony:{
-                required: true,
                 digits: true,
             },
             no_of_floors:{
@@ -822,7 +814,6 @@ $.ajaxSetup({
               digits: true,
             },
             property_area:{
-                required: true,
                 digits: true,
             },
             property_condition:{
@@ -840,9 +831,6 @@ $.ajaxSetup({
                 required: true,
             },
             property_price:{
-                required: true,
-            },
-            property_price_type:{
                 required: true,
             },
         },

@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use App\Helpers\Helper;
 use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Notification,Image;
 use Illuminate\Validation\ValidationException;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class PropertyController extends Controller {
 
@@ -28,10 +29,10 @@ class PropertyController extends Controller {
                     ->addColumn('type', function($row){
                         $property_type = $row->property_type;
                         if($property_type==1){
-                            $type='<span class="badge badge-warning" style="cursor: pointer;">Rent</span>';
+                            $type='<span class="badge badge-warning" style="cursor: pointer;">Renting</span>';
                         }
                         else{
-                             $type='<span class="badge badge-danger" style="cursor: pointer;">Sell</span>';
+                             $type='<span class="badge badge-danger" style="cursor: pointer;">Buying</span>';
                         }
                         
                         return $type;
@@ -246,22 +247,20 @@ class PropertyController extends Controller {
                   Rule::in('1','2'),
                 ],
                 'property_category'=>'required',
-                'guest_count'=>'required|numeric',
+                'guest_count'=>'numeric',
                 'no_of_bedroom'=>'required|numeric',
-                'built_in_year'=>'required',
-                'no_of_kitchen'=>'required|numeric',
+                'no_of_kitchen'=>'numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_pool'=>'required|numeric',
-                'no_of_garden'=>'required|numeric',
-                'no_of_balcony'=>'required|numeric',
+                'no_of_pool'=>'numeric',
+                'no_of_garden'=>'numeric',
+                'no_of_balcony'=>'numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
-                'property_area'=>'required|numeric',
+                'property_area'=>'numeric',
                 'property_number'=>'required',
                 'property_email' => 'required|email',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
-                'property_price_type'=>'required',
 			    ],
 		      [
 		        'add_by.required' => 'Owner is required.',
@@ -369,9 +368,46 @@ class PropertyController extends Controller {
             {
             	return redirect()->back()->with('error', 'Property title already exists.');
             }
+
+
+          $title_pt=GoogleTranslate::trans($data['title'],'pt');
+          $property_address_pt="";
+
+          if($data['meta_title']!="")
+          {
+            $meta_title_pt=GoogleTranslate::trans($data['meta_title'],'pt');
+          }
+          else{
+            $meta_title_pt="";
+          }
+
+          if($data['meta_keywords']!="")
+          {
+            $meta_keywords_pt=GoogleTranslate::trans($data['meta_keywords'],'pt');
+          }
+          else{
+            $meta_keywords_pt="";
+          }
+
+          if($data['meta_description']!="")
+          {
+            $meta_description_pt=GoogleTranslate::trans($data['meta_description'],'pt');
+          }
+          else{
+            $meta_description_pt="";
+          }
+
+          if($data['property_description']!="")
+          {
+            $property_description_pt=GoogleTranslate::trans($data['property_description'],'pt');
+          }
+          else{
+            $property_description_pt="";
+          }
         
             $property = new Property;
             $property->title=$data['title'];
+            $property->title_pt=$title_pt;
             $property->property_type=$data['property_type'];
             $property->add_by=$data['add_by'];
             $property->guest_count=$data['guest_count'];
@@ -385,6 +421,7 @@ class PropertyController extends Controller {
             $property->property_area=$data['property_area'];
             $property->property_number=$data['property_number'];
             $property->property_address=$data['property_address'];
+            $property->property_address_pt=$property_address_pt;
             $property->property_latitude=$data['property_latitude'];
             $property->property_longitude=$data['property_longitude'];
             $property->property_email=$data['property_email'];
@@ -393,9 +430,13 @@ class PropertyController extends Controller {
             $property->property_category=$data['property_category'];
             $property->property_condition=$data['property_condition'];
             $property->meta_title=$data['meta_title'];
+            $property->meta_title_pt=$meta_title_pt;
             $property->meta_keywords=$data['meta_keywords'];
+            $property->meta_keywords_pt=$meta_keywords_pt;
             $property->meta_description=$data['meta_description'];
+            $property->meta_description_pt=$meta_description_pt;
             $property->property_description=$data['property_description'];
+            $property->property_description_pt=$property_description_pt;
             $property->built_in_year=$data['built_in_year'];
             $property->property_image=$fileNameToStore;
             $property->property_status=1;
@@ -456,22 +497,20 @@ class PropertyController extends Controller {
                   Rule::in('1','2'),
                 ],
                 'property_category'=>'required',
-                'guest_count'=>'required|numeric',
+                'guest_count'=>'numeric',
                 'no_of_bedroom'=>'required|numeric',
-                'built_in_year'=>'required',
-                'no_of_kitchen'=>'required|numeric',
+                'no_of_kitchen'=>'numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_pool'=>'required|numeric',
-                'no_of_garden'=>'required|numeric',
-                'no_of_balcony'=>'required|numeric',
+                'no_of_pool'=>'numeric',
+                'no_of_garden'=>'numeric',
+                'no_of_balcony'=>'numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
-                'property_area'=>'required|numeric',
+                'property_area'=>'numeric',
                 'property_number'=>'required',
                 'property_email' => 'required|email',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
-                'property_price_type'=>'required',
                 ],
               [
                 'add_by.required' => 'Owner is required.',
@@ -622,7 +661,6 @@ class PropertyController extends Controller {
                     $propertyupdate->property_description=$data['property_description'];
                     $propertyupdate->built_in_year=$data['built_in_year'];
                     $propertyupdate->property_image=$fileNameToStore;
-                    $propertyupdate->save();
                 }
                 else{
                     $propertyupdate->property_type=$data['property_type'];
@@ -650,7 +688,6 @@ class PropertyController extends Controller {
                     $propertyupdate->meta_description=$data['meta_description'];
                     $propertyupdate->property_description=$data['property_description'];
                     $propertyupdate->built_in_year=$data['built_in_year'];
-                    $propertyupdate->save();
                 }
             }
             else{
@@ -689,7 +726,6 @@ class PropertyController extends Controller {
                     $propertyupdate->property_description=$data['property_description'];
                     $propertyupdate->built_in_year=$data['built_in_year'];
                     $propertyupdate->property_image=$fileNameToStore;
-                    $propertyupdate->save();
                     }
                     else{
                         $propertyupdate->title=$data['title'];
@@ -718,10 +754,55 @@ class PropertyController extends Controller {
                     $propertyupdate->meta_description=$data['meta_description'];
                     $propertyupdate->property_description=$data['property_description'];
                     $propertyupdate->built_in_year=$data['built_in_year'];
-                    $propertyupdate->save();
                     }
                 }
             }
+
+
+            $title_pt=GoogleTranslate::trans($data['title'],'pt');
+            $property_address_pt="";
+
+              if($data['meta_title']!="")
+              {
+                $meta_title_pt=GoogleTranslate::trans($data['meta_title'],'pt');
+              }
+              else{
+                $meta_title_pt="";
+              }
+
+              if($data['meta_keywords']!="")
+              {
+                $meta_keywords_pt=GoogleTranslate::trans($data['meta_keywords'],'pt');
+              }
+              else{
+                $meta_keywords_pt="";
+              }
+
+              if($data['meta_description']!="")
+              {
+                $meta_description_pt=GoogleTranslate::trans($data['meta_description'],'pt');
+              }
+              else{
+                $meta_description_pt="";
+              }
+
+              if($data['property_description']!="")
+              {
+                $property_description_pt=GoogleTranslate::trans($data['property_description'],'pt');
+              }
+              else{
+                $property_description_pt="";
+              }
+
+            $propertyupdate->title_pt=$title_pt;
+            $propertyupdate->property_address_pt=$property_address_pt;
+            $propertyupdate->meta_title_pt=$meta_title_pt;
+            $propertyupdate->meta_keywords_pt=$meta_keywords_pt;
+            $propertyupdate->meta_description_pt=$meta_description_pt;
+            $propertyupdate->property_description_pt=$property_description_pt;
+
+
+            $propertyupdate->save();
 
             toastr()->success('Property information updated successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
             return redirect()->route('admin-property-list')->with('success',"Property information updated successfully.");

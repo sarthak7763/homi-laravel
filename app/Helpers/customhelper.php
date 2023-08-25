@@ -1,5 +1,5 @@
 <?php 
-use App\Models\{User,IntrestedCity,SystemSetting,CmsPage,Property,FavProperty,Userbooking};
+use App\Models\{User,IntrestedCity,SystemSetting,CmsPage,Property,FavProperty,Userbooking,Category};
 use Auth as Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -447,6 +447,141 @@ function generateinvoiceid()
 
     $generateinvoiceid='HOMI'.$financial_year.'UI'.$newbookingid;
     return $generateinvoiceid;
+}
+
+function getcountrylist()
+{
+  $countrylist=DB::table('countries')->get();
+  if($countrylist)
+  {
+    $countrylistarray=$countrylist->toArray();
+    $country_list=[];
+    foreach($countrylistarray as $list)
+    {
+      $country_list[]=array(
+        'name'=>$list->name,
+        'phonecode'=>$list->phonecode,
+        'id'=>$list->id
+      );
+    }
+  }
+  else{
+    $country_list=[];
+  }
+
+    return $country_list;
+}
+
+function getcountrycode($countryid)
+{
+    $countrydet=DB::table('countries')->where('id',$countryid)->get()->first();
+    if($countrydet)
+    {
+        $country_code=$countrydet->phonecode;
+    }
+    else{
+        $country_code="";
+    }
+
+    return $country_code;
+}
+
+function getpropertydetbylang($lang,$id)
+{
+    $propertydet=Property::where('id',$id)->get()->first();
+    if($propertydet)
+    {
+        if($lang=="en")
+        {
+            $property_array=array(
+                'title'=>$propertydet->title,
+                'description'=>$propertydet->property_description
+            );
+        }
+        else{
+            if($propertydet->title_pt!="")
+            {
+                $property_title=$propertydet->title_pt;
+            }
+            else{
+                $property_title=$propertydet->title;
+            }
+
+            if($propertydet->property_description_pt!="")
+            {
+                $property_description=$propertydet->property_description_pt;
+            }
+            else{
+                $property_description=$propertydet->property_description;
+            }
+
+            $property_array=array(
+                'title'=>$property_title,
+                'description'=>$property_description
+            );
+        }
+    }
+    else{
+        $property_array=[];
+    }
+
+    return $property_array;
+
+}
+
+
+function getcategorynamebylang($lang,$id)
+{
+    $categorydet=Category::where('id',$id)->get()->first();
+    if($categorydet)
+    {
+        if($lang=="en")
+        {
+            $category_name=$categorydet->name;
+        }
+        else{
+            if($categorydet->name_pt!="")
+            {
+                $category_name=$categorydet->name_pt;
+            }
+            else{
+                $category_name=$categorydet->name;
+            }
+        }
+    }
+    else{
+        $category_name="";
+    }
+
+    return $category_name;
+
+}
+
+function getconditionnamebylang($lang,$id)
+{
+    $conditiondet=DB::table('property_condition')->where('id',$id)->get()->first();
+    if($conditiondet)
+    {
+        if($lang=="en")
+        {
+            $condition_name=$conditiondet->name;
+        }
+        else{
+            if($conditiondet->name_pt!="")
+            {
+                $condition_name=$conditiondet->name_pt;
+            }
+            else{
+                $condition_name=$conditiondet->name;
+            }
+        }
+    }
+    else{
+        $condition_name="";
+    }
+
+    return $condition_name;
+
 }
 
 

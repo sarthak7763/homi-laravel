@@ -24,6 +24,8 @@ Route::post('verify-otp', [AuthController::class, 'verifyemailotp']);
 Route::post('resend-otp', [AuthController::class, 'resendemailotp']);
 Route::post('login', [AuthController::class, 'login']);
 
+Route::get('submitcompletebooking', [AuthController::class, 'submitcompletebooking']);
+
 Route::post('forgotpassword', [ForgotController::class, 'forgotpassword']);
 Route::post('resend-forgot-otp', [ForgotController::class, 'resendotp']);
 
@@ -45,7 +47,7 @@ Route::middleware('auth:api')->group(function () {
 
 	Route::post('wishlistproperty', [DashboardController::class, 'wishlistproperty']);
 
-	Route::get('getuserfavpropertylist', [ProfileController::class, 'getuserfavpropertylist']);
+	Route::post('getuserfavpropertylist', [ProfileController::class, 'getuserfavpropertylist']);
 
 	Route::get('getusernotificationslistcount', [PagesController::class, 'getusernotificationslistcount']);
 

@@ -107,7 +107,7 @@
                                             <input type="hidden" value="{{$propertyInfo->slug}}" name="property_slug">
                                         </div>
                                         <div class="col-md-6">
-                                            <button type="submit" class="btn btn-primary" id="submit">Upload Image</button>
+                                            <button type="submit" class="btn btn-primary" id="submit">Save</button>
                                         </div>
                                     </div>
                                 </form>

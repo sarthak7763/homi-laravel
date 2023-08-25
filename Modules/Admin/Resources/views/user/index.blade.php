@@ -1,5 +1,5 @@
 @extends('admin::layouts.master')
-@section('title', 'Users List')
+@section('title', 'Manage buyers/Renters')
 @section('content')
 
 <div class="pcoded-content">
@@ -13,7 +13,7 @@
                         <div class="col-lg-8">
                             <div class="page-header-title">
                                 <div class="d-inline">
-                                    <h4>Users List</h4>
+                                    <h4>Manage buyers/Renters</h4>
                                     <span></span>
                                 </div>
                             </div>

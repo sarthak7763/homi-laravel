@@ -160,8 +160,19 @@
                         </div>
 
                         <div class="col-md-6">
-                           <div class="form-group">
+                           <div class="form-group country-select">
                                 <label class="font-weight-bold">Mobile</label>
+                                <select id="country_id" name="country_id" class=" form-control">
+                                  @foreach($country_list as $list)
+                                  @if($userInfo->country_id==$list['id'])
+                                  @php $selected="selected"; @endphp
+                                  @else
+                                  @php $selected=""; @endphp
+                                  @endif
+                                      <option {{$selected}} value="{{$list['id']}}">
+                                      {{$list['name']}} ({{$list['phonecode']}})</option>
+                                  @endforeach
+                              </select>
                                 <input type="text" class="form-control" value="{{$userInfo->mobile}}" name="mobile" id="mobile"  placeholder="Enter Mobile">
                                 @if($mobile_error!="")
                                 @php $style="display:block;"; @endphp

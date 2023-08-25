@@ -159,8 +159,14 @@
                         </div>
 
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group country-select">
                                 <label class="font-weight-bold">Mobile</label>
+                                <select id="country_id" name="country_id" class=" form-control">
+                                  @foreach($country_list as $list)
+                                      <option value="{{$list['id']}}">
+                                      {{$list['name']}} ({{$list['phonecode']}})</option>
+                                  @endforeach
+                                </select>
                                 <input type="text" class="form-control" value="{{old('mobile')}}" name="mobile" id="mobile"  placeholder="Enter Mobile">
                                 @if($mobile_error!="")
                                 @php $style="display:block;"; @endphp

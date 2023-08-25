@@ -9,6 +9,7 @@ use Spatie\Permission\Models\{Role,Permission};
 use App\Models\{User,Bid,Complaint,Enquiry,Property,PropertyOffer};
 use Mail,Hash,Auth,Validator,Exception,DataTables,Notification,DB,Str,Session;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Collection;
 
 class AdminController extends Controller{
   public function index(){
@@ -129,6 +130,7 @@ class AdminController extends Controller{
   public function profile() {
     try{
       $adminInfo=User::where('id',auth()->user()->id)->first();
+      $adminInfo->country_id=getcountrycode($adminInfo->country_id);
       return view('admin::profile',compact('adminInfo'));
     }
     catch (\Exception $e) { 
@@ -140,7 +142,8 @@ class AdminController extends Controller{
   public function profile_edit() {
     try{
       $adminInfo=User::where('id',auth()->user()->id)->first();
-      return view('admin::edit-profile',compact('adminInfo'));
+      $country_list=getcountrylist();
+      return view('admin::edit-profile',compact('adminInfo','country_list'));
     }
     catch (\Exception $e) { 
       toastr()->error('Either something went wrong or invalid access!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
@@ -159,8 +162,7 @@ class AdminController extends Controller{
                 ],
           'mobile' => [
               'nullable',
-              'numeric',
-              'digits_between:10,12'
+              'numeric'
           ],
       ],
       [
@@ -221,12 +223,14 @@ class AdminController extends Controller{
             {
               $admin->name = $data['name'];
               $admin->mobile = $data['mobile'];
+              $admin->country_id = $data['country_id'];
               $admin->profile_pic=$fileNameToStore;
 
             }
             else{
               $admin->name = $data['name'];
               $admin->mobile = $data['mobile'];
+              $admin->country_id = $data['country_id'];
             }
         }
         else{
@@ -241,6 +245,7 @@ class AdminController extends Controller{
               $admin->name = $data['name'];
               $admin->email=$data['email'];
               $admin->mobile = $data['mobile'];
+              $admin->country_id = $data['country_id'];
               $admin->profile_pic=$fileNameToStore;
 
             }
@@ -248,6 +253,7 @@ class AdminController extends Controller{
               $admin->name = $data['name'];
               $admin->email=$data['email'];
               $admin->mobile = $data['mobile'];
+              $admin->country_id = $data['country_id'];
             }
           }
         }

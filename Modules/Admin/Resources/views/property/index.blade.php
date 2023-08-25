@@ -73,8 +73,8 @@
                                         <label><strong>Property Type</strong></label>
                                         <select name="property_type" id='property_type' class="form-control">
                                             <option value="">Select Type</option>
-                                            <option value="1">Rent</option>
-                                            <option value="2">Sell</option>
+                                            <option value="1">Renting</option>
+                                            <option value="2">Buying</option>
                                         </select>
                                     </div>
                                 </div>

@@ -35,9 +35,9 @@ class EnquiryController extends Controller{
           ->addColumn('status', function($row){
               $status = $row->status;
               if($status==1){
-                  $booking_status_html='<span class="badge badge-success badge_enquiry_status_change" style="cursor: pointer;" id="'.$row->id.'">Read</span>';
+                  $booking_status_html='<span class="badge badge-success badge_enquiry_status_change" style="cursor: pointer;" id="'.$row->id.'">Resolved</span>';
               }elseif($status==0){
-                   $booking_status_html='<span class="badge badge-danger badge_enquiry_status_change" style="cursor: pointer;" id="'.$row->id.'">Unread</span>';
+                   $booking_status_html='<span class="badge badge-danger badge_enquiry_status_change" style="cursor: pointer;" id="'.$row->id.'">Unresolved</span>';
               }else {
                  $booking_status_html='<span class="badge badge-danger" id="'.$row->id.'">N.A.</span>';
               }

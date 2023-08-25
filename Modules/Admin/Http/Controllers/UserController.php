@@ -119,7 +119,8 @@ class UserController extends Controller{
 
   public function add() {
     try{
-      return view('admin::user.add');
+      $country_list=getcountrylist();
+      return view('admin::user.add',compact('country_list'));
     }
     catch (\Exception $e) {
       return redirect()->back()->with('error', 'something wrong');
@@ -204,6 +205,7 @@ class UserController extends Controller{
       $user->name=$data['name'];
       $user->email=$data['email'];
       $user->mobile=$data['mobile'];
+      $user->country_id = $data['country_id'];
       $user->password=$hashedPassword;
       $user->email_verified=1;
       $user->email_verification_token=$email_verification_token;
@@ -244,8 +246,9 @@ class UserController extends Controller{
 
   public function edit($id){
     try{
+      $country_list=getcountrylist();
       $userInfo =User::where('id',$id)->first();
-      return view('admin::user.edit', compact('userInfo'));
+      return view('admin::user.edit', compact('userInfo','country_list'));
     }
     catch(Exception $e){
       return redirect()->back()->with('error', 'something wrong');            
@@ -330,12 +333,14 @@ class UserController extends Controller{
             {
               $user->name = $data['name'];
               $user->mobile = $data['mobile'];
+              $user->country_id = $data['country_id'];
               $user->profile_pic=$fileNameToStore;
 
             }
             else{
               $user->name = $data['name'];
               $user->mobile = $data['mobile'];
+              $user->country_id = $data['country_id'];
             }
         }
         else{
@@ -350,6 +355,7 @@ class UserController extends Controller{
               $user->name = $data['name'];
               $user->email=$data['email'];
               $user->mobile = $data['mobile'];
+              $user->country_id = $data['country_id'];
               $user->profile_pic=$fileNameToStore;
 
             }
@@ -357,6 +363,7 @@ class UserController extends Controller{
               $user->name = $data['name'];
               $user->email=$data['email'];
               $user->mobile = $data['mobile'];
+              $user->country_id = $data['country_id'];
             }
           }
         }
@@ -403,6 +410,7 @@ class UserController extends Controller{
   public function show($id) {
     try {
       $userInfo=User::where('id',$id)->first();
+      $userInfo->country_id=getcountrycode($userInfo->country_id);
       return view('admin::user.show',compact('userInfo'));  
     }
     catch(Exception $e) {

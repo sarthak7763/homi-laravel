@@ -161,11 +161,11 @@ $('.datepicker').datepicker({
             if(status_class == "badge badge-danger badge_enquiry_status_change")
             {
                 var newClass = "badge badge-success badge_enquiry_status_change";
-                var status = 'Read';
+                var status = 'Resolved';
             }else
             {
                 var newClass = "badge badge-danger badge_enquiry_status_change";
-                var status = 'Unread';
+                var status = 'Unresolved';
             }
 
            var title ='Are you sure to '+status+' this Enquiry ?';

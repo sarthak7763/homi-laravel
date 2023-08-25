@@ -10,6 +10,7 @@ class PropertyCondition extends Model
         protected $table="property_condition";
         protected $fillable = [
         'name',
+        'name_pt',
         'status'
     ];
 

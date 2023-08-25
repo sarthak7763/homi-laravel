@@ -17,6 +17,7 @@ class Property extends Model
         protected $table="tbl_property";
         protected $fillable = [
         'title',
+        'title_pt',
         'slug',
         'add_by',
         'property_type',
@@ -33,6 +34,7 @@ class Property extends Model
         'property_area',
         'property_condition',
         'property_address',
+        'property_address_pt',
         'property_latitude',
         'property_longitude',
         'property_email',
@@ -41,8 +43,13 @@ class Property extends Model
         'property_price',
         'property_price_type',
         'meta_title',
+        'meta_title_pt',
         'meta_description',
+        'meta_description_pt',
         'meta_keywords',
+        'meta_keywords_pt',
+        'property_description',
+        'property_description_pt',
         'property_status',
         'delete_status'
     ];

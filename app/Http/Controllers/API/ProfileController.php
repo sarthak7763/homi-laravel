@@ -415,7 +415,35 @@ class ProfileController extends BaseController
 	        $user=auth()->user();
 	        if($user)
 	        {
-	        	$wishlistproperty=FavProperty::where('buyer_id',$user->id)->where('status',1)->get();
+
+	        	//property type 1: renting
+	        	//property type 2: buying
+				if(isset($request->type) && $request->type!="")
+		        {
+		        	$property_type=$request->type;
+		        }
+		        else{
+		        	$property_type="";
+		        }
+
+		        if(isset($request->lang_key) && $request->lang_key!="")
+		        {
+		        	$lang_key=$request->lang_key;
+		        }
+		        else{
+		        	$lang_key="en";
+		        }
+
+	        	if($property_type!="")
+	        	{
+	        		$wishlistproperty=FavProperty::leftJoin('tbl_property', 'fav_properties.property_id', '=', 'tbl_property.id')
+                	->select('fav_properties.*')->where('fav_properties.buyer_id',$user->id)->where('tbl_property.property_type',$property_type)->where('fav_properties.status','1')->get();
+	        	}
+	        	else{
+	        		$wishlistproperty=FavProperty::where('buyer_id',$user->id)->where('status',1)->get();
+	        	}
+	        	
+
 	        	if($wishlistproperty)
 	        	{
 	        		$wishlistpropertyarr=$wishlistproperty->toArray();
@@ -453,17 +481,19 @@ class ProfileController extends BaseController
 							        	$favourite=0;
 							        }
 
+							        $propertylangdata=getpropertydetbylang($lang_key,$checkpropertyarray['id']);
+
 	        						$fav_property[]=array(
 							        	'property_id'=>$checkpropertyarray['id'],
-										'title'=>$checkpropertyarray['title'],
+										'title'=>$propertylangdata['title'],
 										'property_address'=>$checkpropertyarray['property_address'],
 										'property_image'=>$property_image,
 										'property_price'=>$checkpropertyarray['property_price'],
-										'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+										'property_date'=>date('d M Y',strtotime($checkpropertyarray['publish_date'])),
 										'favourite'=>$favourite,
 										'rating'=>5,
 										'property_bedrooms'=>$checkpropertyarray['no_of_bedroom'],
-										'property_description'=>$checkpropertyarray['property_description'],
+										'property_description'=>$propertylangdata['description'],
 										'property_area'=>$checkpropertyarray['property_area'],
 										'property_type'=>$checkpropertyarray['property_type']
 									);
@@ -501,13 +531,22 @@ class ProfileController extends BaseController
 	        $user=auth()->user();
 	        if($user)
 	        {
-	        	$ongoingbookinglist=Userbooking::where('booking_status',0)->where('user_id',$user->id)->get();
+
+	        	if(isset($request->lang_key) && $request->lang_key!="")
+		        {
+		        	$lang_key=$request->lang_key;
+		        }
+		        else{
+		        	$lang_key="en";
+		        }
+
+	        	$ongoingbookinglist=Userbooking::where('booking_status',0)->where('user_id',$user->id)->orderBy('id','DESC')->get();
 	        	if($ongoingbookinglist)
 	        	{
 	        		$ongoingbookinglistarray=$ongoingbookinglist->toArray();
 	        		if($ongoingbookinglistarray)
 	        		{
-	        			$ongoing_bookings=$this->getpropertybookingslist($user->id,$ongoingbookinglistarray,$type=0);
+	        			$ongoing_bookings=$this->getpropertybookingslist($user->id,$ongoingbookinglistarray,$type=0,$lang_key);
 	        		}
 	        		else{
 	        			$ongoing_bookings=[];
@@ -517,13 +556,13 @@ class ProfileController extends BaseController
 	        		$ongoing_bookings=[];
 	        	}
 
-	        	$completebookinglist=Userbooking::where('booking_status',1)->where('user_id',$user->id)->get();
+	        	$completebookinglist=Userbooking::where('booking_status',1)->where('user_id',$user->id)->orderBy('id','DESC')->get();
 	        	if($completebookinglist)
 	        	{
 	        		$completebookinglistarray=$completebookinglist->toArray();
 	        		if($completebookinglistarray)
 	        		{
-	        			$complete_bookings=$this->getpropertybookingslist($user->id,$completebookinglistarray,$type=1);
+	        			$complete_bookings=$this->getpropertybookingslist($user->id,$completebookinglistarray,$type=1,$lang_key);
 	        		}
 	        		else{
 	        			$complete_bookings=[];
@@ -534,13 +573,13 @@ class ProfileController extends BaseController
 	        	}
 
 
-	        	$cancelbookinglist=Userbooking::where('booking_status',2)->where('user_id',$user->id)->get();
+	        	$cancelbookinglist=Userbooking::where('booking_status',2)->where('user_id',$user->id)->orderBy('id','DESC')->get();
 	        	if($cancelbookinglist)
 	        	{
 	        		$cancelbookinglistarray=$cancelbookinglist->toArray();
 	        		if($cancelbookinglistarray)
 	        		{
-	        			$cancel_bookings=$this->getpropertybookingslist($user->id,$cancelbookinglistarray,$type=2);
+	        			$cancel_bookings=$this->getpropertybookingslist($user->id,$cancelbookinglistarray,$type=2,$lang_key);
 	        		}
 	        		else{
 	        			$cancel_bookings=[];
@@ -564,7 +603,7 @@ class ProfileController extends BaseController
                }
     }
 
-    public function getpropertybookingslist($userid,$bookinglistarray,$type)
+    public function getpropertybookingslist($userid,$bookinglistarray,$type,$lang_key)
     {
     	$ongoing_bookings=[];
 
@@ -586,15 +625,33 @@ class ProfileController extends BaseController
 
 		        if($type==0)
 		        {
-		        	$booking_status="Ongoing";
+		        	if($lang_key=="en")
+		        	{
+		        		$booking_status="Ongoing";
+		        	}
+		        	else{
+		        		$booking_status="Em andamento";
+		        	}	
 		        }
 		        elseif($type==1)
 		        {
-		        	$booking_status="Complete";
+		        	if($lang_key=="en")
+		        	{
+		        		$booking_status="Complete";
+		        	}
+		        	else{
+		        		$booking_status="Completo";
+		        	}
 		        }
 		        elseif($type==2)
 		        {
-		        	$booking_status="Cancel";
+		        	if($lang_key=="en")
+		        	{
+		        		$booking_status="Cancel";
+		        	}
+		        	else{
+		        		$booking_status="Cancelar";
+		        	}
 		        }
 		        else{
 		        	$booking_status="N.A.";
@@ -617,16 +674,18 @@ class ProfileController extends BaseController
 		        	$cancel_booking=0;
 		        }
 
+		        $propertylangdata=getpropertydetbylang($lang_key,$list['property_id']);
+
 		        $ongoing_bookings[]=array(
 		        	'booking_id'=>$list['id'],
 		        	'property_id'=>$list['property_id'],
-					'title'=>$checkpropertyarray['title'],
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$checkpropertyarray['property_address'],
 					'property_image'=>$property_image,
 					'property_price'=>$list['booking_property_price'],
-					'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+					'property_date'=>date('d M Y',strtotime($checkpropertyarray['publish_date'])),
 					'property_bedrooms'=>$checkpropertyarray['no_of_bedroom'],
-					'property_description'=>$checkpropertyarray['property_description'],
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$checkpropertyarray['property_area'],
 					'rating'=>5,
 					'check_in_date'=>date('d M,Y',strtotime($list['user_checkin_date'])),
@@ -661,6 +720,15 @@ class ProfileController extends BaseController
 
 			    $booking_id=$request->booking_id;
 
+			    if(isset($request->lang_key) && $request->lang_key!="")
+		        {
+		        	$lang_key=$request->lang_key;
+		        }
+		        else{
+		        	$lang_key="en";
+		        }
+
+
 			    $checkbooking=Userbooking::where('id',$booking_id)->where('user_id',$user->id)->get()->first();
 			    if($checkbooking)
 			    {
@@ -679,15 +747,33 @@ class ProfileController extends BaseController
 
 						if($checkbooking->booking_status==0)
 				        {
-				        	$booking_status_label="Ongoing";
+				        	if($lang_key=="en")
+				        	{
+				        		$booking_status_label="Ongoing";
+				        	}
+				        	else{
+				        		$booking_status_label="Em andamento";
+				        	}
 				        }
 				        elseif($checkbooking->booking_status==1)
 				        {
-				        	$booking_status_label="Complete";
+				        	if($lang_key=="en")
+				        	{
+				        		$booking_status_label="Complete";
+				        	}
+				        	else{
+				        		$booking_status_label="Completo";
+				        	}
 				        }
 				        elseif($checkbooking->booking_status==2)
 				        {
-				        	$booking_status_label="Cancel";
+				        	if($lang_key=="en")
+				        	{
+				        		$booking_status_label="Cancel";
+				        	}
+				        	else{
+				        		$booking_status_label="Cancelar";
+				        	}
 				        }
 				        else{
 				        	$booking_status_label="N.A.";
@@ -731,18 +817,18 @@ class ProfileController extends BaseController
 				        	$cancel_reason="N.A.";
 				        }
 
-
+				        $propertylangdata=getpropertydetbylang($lang_key,$checkbooking->property_id);
 
 					   $booking_det=array(
 			        	'booking_id'=>$checkbooking->id,
 			        	'property_id'=>$checkbooking->property_id,
-						'title'=>$checkpropertyarray['title'],
+						'title'=>$propertylangdata['title'],
 						'property_address'=>$checkpropertyarray['property_address'],
 						'property_image'=>$property_image,
 						'property_price'=>$checkbooking->booking_property_price,
-						'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+						'property_date'=>date('d M Y',strtotime($checkpropertyarray['publish_date'])),
 						'property_bedrooms'=>$checkpropertyarray['no_of_bedroom'],
-						'property_description'=>$checkpropertyarray['property_description'],
+						'property_description'=>$propertylangdata['description'],
 						'property_area'=>$checkpropertyarray['property_area'],
 						'rating'=>5,
 						'check_in_date'=>date('d M,Y',strtotime($checkbooking->user_checkin_date)),
@@ -857,7 +943,7 @@ class ProfileController extends BaseController
 			    		$current_date=date('Y-m-d');
 				        $new_check_in_date=date('Y-m-d', strtotime("-1 day", strtotime($checkbooking->user_checkin_date)));
 
-				        if($new_check_in_date > $current_date)
+				        if($new_check_in_date >= $current_date)
 				        {
 				        	$cancel_date=date('Y-m-d');
 					        

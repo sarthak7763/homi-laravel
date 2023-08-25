@@ -178,7 +178,7 @@
                     </div> 
                     <div class="row">
                         <div class="col-md-12">
-                            <button type="submit" id="submitBuyers" class="btn btn-primary m-b-0">Save</button>
+                            <button type="submit" id="submitBuyers" class="btn btn-primary m-b-0">Update</button>
 
                             <a href="{{route('admin-propertyOwner-list')}}" class="btn btn-inverse m-b-0">Go Back</a>
                         </div>

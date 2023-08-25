@@ -116,8 +116,8 @@
                                 <label class="font-weight-bold">Type<span style="color:red;">*</span></label>
                                 <input type="hidden" name="id"  value="{{$catInfo->id}}">
                                 <select class="form-control" name="type" id="type">
-                                <option value="1" <?php if(( $catInfo->category_type)=='1'){echo "selected";} ?>>Booking</option>
-                                <option value="2" <?php if(( $catInfo->category_type)=='2'){echo "selected";} ?>>Renting</option>
+                                <option value="2" <?php if(( $catInfo->category_type)=='2'){echo "selected";} ?>>Buying</option>
+                                <option value="1" <?php if(( $catInfo->category_type)=='1'){echo "selected";} ?>>Renting</option>
                                 @if($type_error!="")
                                 @php $style="display:block;"; @endphp
                                 @else
@@ -201,7 +201,7 @@
                         <div class="col-md-12">
                             <button type="submit" id="submitBuyers" class="btn btn-primary m-b-0">Save</button>
 
-                            <a href="{{route('admin-user-list')}}" class="btn btn-inverse m-b-0">Go Back</a>
+                            <a href="{{route('admin-category-list')}}" class="btn btn-inverse m-b-0">Go Back</a>
                         </div>
                     </div>
                 </form>

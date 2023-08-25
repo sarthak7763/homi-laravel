@@ -139,12 +139,12 @@ table td, table th {font-size: 16px;padding: 10px 20px;line-height: 26px;height:
                                                     <th>
                                                         Mobile : 
                                                     </th>
-                                                    @if($adminInfo->mobile!="")
+                                                    @if($adminInfo->country_id!="")
                                                     <td>
-                                                        {{$adminInfo->mobile}}
+                                                        {{$adminInfo->country_id}}{{$adminInfo->mobile}}
                                                     </td>
                                                     @else
-                                                    <td>N.A.</td>
+                                                    <td>{{$adminInfo->mobile}}</td>
                                                     @endif
                                                 </tr>
                                                 </tbody>

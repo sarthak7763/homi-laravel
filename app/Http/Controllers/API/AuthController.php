@@ -11,6 +11,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,DB;
 use Laravel\Passport\RefreshToken;
 use Laravel\Passport\Token;
 use App\Mail\EmailVerification;
+use App\Models\Userbooking;
 
 class AuthController extends BaseController
 {
@@ -28,7 +29,7 @@ class AuthController extends BaseController
                 'password' => [
                     'required',
                     'min:8',
-                    'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+                    'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%*]).*$/',
                     'max:25'
                 ],
                 'confirm_password' => 'required|same:password',
@@ -288,7 +289,13 @@ class AuthController extends BaseController
             $password=$data['password'];
 
        try{
-        if (auth()->attempt($data)) {
+
+        $userdata= array(
+            'email' => $data['email'],
+            'password' => $data['password']
+        );
+
+        if (auth()->attempt($userdata)) {
 
             $user=auth()->user();
             //$user = Auth::user();
@@ -332,7 +339,7 @@ class AuthController extends BaseController
         }
     }
     catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong1.']);    
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
                }
 
         }
@@ -340,6 +347,28 @@ class AuthController extends BaseController
                   return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
                }
 
+    }
+
+
+    public function submitcompletebooking()
+    {
+        $userbookingdata=Userbooking::orderBy('id','DESC')->get();
+        if($userbookingdata)
+        {
+            $userbookingdataarray=$userbookingdata->toArray();
+            if($userbookingdataarray)
+            {
+                foreach($userbookingdataarray as $list)
+                {
+                    $checkout_date=$list['user_checkout_date'];
+                    $currentdate=date('Y-m-d');
+                    if($currentdate > $checkout_date)
+                    {
+                        Userbooking::where('id',$list['id'])->update(['booking_status' => 1]);
+                    }
+                }
+            }
+        }
     }
     
 

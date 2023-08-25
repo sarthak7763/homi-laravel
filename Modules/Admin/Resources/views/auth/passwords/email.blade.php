@@ -1,5 +1,5 @@
 @extends('admin::auth.auth_layout.authmaster')
-@section('title',"Offercity Admin Login")
+@section('title',"Homi Admin Login")
 @section('content')
           <!-- Authentication card start -->
                     @if (session('status'))
@@ -46,6 +46,7 @@
 
                                 
                                 <div class="form-group form-primary">
+                                    <label>Email</label>
                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                     @error('email')

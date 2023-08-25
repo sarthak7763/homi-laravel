@@ -10,6 +10,7 @@ use Illuminate\Mail\Message;
 use App\Helpers\Helper;
 use App\Models\Category;
 use Spatie\Permission\Models\{Role,Permission};
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 
 use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
@@ -30,10 +31,10 @@ class CategoryController extends Controller{
              ->addColumn('type', function($row){
                 if($row->category_type==1)
                 {
-                  $typename="Booking";
+                  $typename="Renting";
                 }
                 else{
-                  $typename="Renting";
+                  $typename="Buying";
                 }
                 return $typename;
             })
@@ -125,13 +126,52 @@ class CategoryController extends Controller{
         
       }
 
+      $name_pt=GoogleTranslate::trans($data['name'],'pt');
+      if($data['description']!="")
+      {
+        $description_pt=GoogleTranslate::trans($data['description'],'pt');
+      }
+      else{
+        $description_pt="";
+      }
+
+      if($data['meta_title']!="")
+      {
+        $meta_title_pt=GoogleTranslate::trans($data['meta_title'],'pt');
+      }
+      else{
+        $meta_title_pt="";
+      }
+
+      if($data['meta_description']!="")
+      {
+        $meta_description_pt=GoogleTranslate::trans($data['meta_description'],'pt');
+      }
+      else{
+        $meta_description_pt="";
+      }
+
+      if($data['meta_keywords']!="")
+      {
+        $meta_keywords_pt=GoogleTranslate::trans($data['meta_keywords'],'pt');
+      }
+      else{
+        $meta_keywords_pt="";
+      }
+      
+    
       $category = new Category;
       $category->name=$data['name'];
+      $category->name_pt=$name_pt;
       $category->description=$data['description'];
+      $category->description_pt=$description_pt;
       $category->category_type=$data['type'];
       $category->meta_title=$data['meta_title'];
+      $category->meta_title_pt=$meta_title_pt;
       $category->meta_description=$data['meta_description'];
+      $category->meta_description_pt=$meta_description_pt;
       $category->meta_keywords=$data['meta_keywords'];
+      $category->meta_keywords_pt=$meta_keywords_pt;
       $category->status=1;
      
       $category->save();
@@ -236,6 +276,45 @@ class CategoryController extends Controller{
             $category->meta_keywords=$data['meta_keywords'];
           }
         }
+
+          $name_pt=GoogleTranslate::trans($data['name'],'pt');
+          if($data['description']!="")
+          {
+            $description_pt=GoogleTranslate::trans($data['description'],'pt');
+          }
+          else{
+            $description_pt="";
+          }
+
+          if($data['meta_title']!="")
+          {
+            $meta_title_pt=GoogleTranslate::trans($data['meta_title'],'pt');
+          }
+          else{
+            $meta_title_pt="";
+          }
+
+          if($data['meta_description']!="")
+          {
+            $meta_description_pt=GoogleTranslate::trans($data['meta_description'],'pt');
+          }
+          else{
+            $meta_description_pt="";
+          }
+
+          if($data['meta_keywords']!="")
+          {
+            $meta_keywords_pt=GoogleTranslate::trans($data['meta_keywords'],'pt');
+          }
+          else{
+            $meta_keywords_pt="";
+          }
+
+          $category->name_pt=$name_pt;
+          $category->description_pt=$description_pt;
+          $category->meta_title_pt=$meta_title_pt;
+          $category->meta_description_pt=$meta_description_pt;
+          $category->meta_keywords_pt=$meta_keywords_pt;
 
 
         try{

@@ -106,9 +106,9 @@
                                         <dt class="col-4 col-sm-4">Status</dt>
                                         <dd class="col-8 col-sm-8"> 
                                             @if($enquiryinfo->status==0)
-                                            <span class="badge badge-warning" style="cursor: pointer;">Unread</span>
+                                            <span class="badge badge-warning" style="cursor: pointer;">Unresolved</span>
                                             @elseif($enquiryinfo->status==1)
-                                            <span class="badge badge-success" style="cursor: pointer;">Read</span>
+                                            <span class="badge badge-success" style="cursor: pointer;">Resolved</span>
                                             @else
                                             <span class="badge badge-danger" style="cursor: pointer;">N.A.</span>
                                             @endif 

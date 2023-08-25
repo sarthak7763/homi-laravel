@@ -217,18 +217,28 @@ class DashboardController extends BaseController
 	        	$property_type=1;
 	        }
 
+	        if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
+
 	        $categorylist=Category::where('category_type',$property_type)->where('status',1)->get();
         	if($categorylist)
         	{
         		$categorylistarray=$categorylist->toArray();
+
         		if($categorylistarray)
         		{
         			foreach($categorylistarray as $list)
         			{
         				$category_arr[]=array(
         					'id'=>$list['id'],
-        					'name'=>$list['name']
-        				);
+        					'name'=>getcategorynamebylang($lang_key,$list['id'])
+	        			);
         			}
         		}
         		else{
@@ -239,10 +249,20 @@ class DashboardController extends BaseController
         		$category_arr=[];
         	}
 
-        	$category_all[]=array(
-        		'id'=>0,
-        		'name'=>'All'
-        	);
+        	if($lang_key=="en")
+			{
+				$category_all[]=array(
+	        		'id'=>0,
+	        		'name'=>'All'
+        		);
+			}
+			else{
+				$category_all[]=array(
+	        		'id'=>0,
+	        		'name'=>'Todos'
+        		);
+			}
+        	
 
         	if(count($category_arr) > 0)
         	{
@@ -323,6 +343,14 @@ class DashboardController extends BaseController
 	        	$property_type=1;
 	        }
 
+	        if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
 	        if(isset($request->category) && $request->category!="")
 	        {
 	        	$property_category=$request->category;
@@ -366,14 +394,14 @@ class DashboardController extends BaseController
 
                 if($lat!="" && $lng!="")
                 {
-                	$nearbypropertylist=$this->gethomenearbyproperties($lat,$lng,$user->id,$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat,$lng,$user->id,$property_type,$property_category,$lang_key);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat,$lng,$user->id,$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat,$lng,$user->id,$property_type,$property_category,$lang_key);
                 }
                 else{
-                	$nearbypropertylist=$this->gethomenearbyproperties($lat="",$lng="",$user->id,$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat="",$lng="",$user->id,$property_type,$property_category,$lang_key);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat="",$lng="",$user->id,$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat="",$lng="",$user->id,$property_type,$property_category,$lang_key);
                 }
 
                 $success['nearby'] =  $nearbypropertylist;
@@ -388,15 +416,15 @@ class DashboardController extends BaseController
 
 		        if($lat!="" && $lng!="")
                 {
-                	$nearbypropertylist=$this->gethomenearbyproperties($lat,$lng,$userid="",$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat,$lng,$userid="",$property_type,$property_category,$lang_key);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat,$lng,$userid="",$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat,$lng,$userid="",$property_type,$property_category,$lang_key);
 
                 }
                 else{
-                	$nearbypropertylist=$this->gethomenearbyproperties($lat="",$lng="",$userid="",$property_type,$property_category);
+                	$nearbypropertylist=$this->gethomenearbyproperties($lat="",$lng="",$userid="",$property_type,$property_category,$lang_key);
 
-                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat="",$lng="",$userid="",$property_type,$property_category);
+                	$recently_added_properties=$this->gethomerecentlyaddedproperties($lat="",$lng="",$userid="",$property_type,$property_category,$lang_key);
 
                 }
 
@@ -413,7 +441,7 @@ class DashboardController extends BaseController
     }
 
 
-public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$property_category)
+public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$property_category,$lang_key)
 {
 	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
@@ -500,16 +528,17 @@ public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$proper
 	        	$favourite=0;
 	        }
 	        
+	        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
 
 	        if($property_type==1)
 	        {
-		        $nearbypropertylistarr[]=array(
+		        $nearbypropertylistarr[]=array(	
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'favourite'=>$favourite,
 					'rating'=>5
 				);
@@ -517,11 +546,11 @@ public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$proper
 	        else{
 		        	$nearbypropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'favourite'=>$favourite
 				);
 	        }
@@ -548,7 +577,7 @@ public function gethomenearbyproperties($lat,$lng,$userid,$property_type,$proper
 	return $nearbypropertylistarr;
 }
 
-public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,$property_category)
+public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,$property_category,$lang_key)
 {
 	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
@@ -634,19 +663,20 @@ public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,
 	        else{
 	        	$favourite=0;
 	        }
-	        
 
+	        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
+	        
 	        if($property_type==1)
 	        {
 		        $recentlyaddedpropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
@@ -655,13 +685,13 @@ public function gethomerecentlyaddedproperties($lat,$lng,$userid,$property_type,
 	        else{
 		        	$recentlyaddedpropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
@@ -701,6 +731,14 @@ public function getnearbypropertieslist(Request $request)
         }
         else{
         	$property_type=1;
+        }
+
+        if(isset($request->lang_key) && $request->lang_key!="")
+        {
+        	$lang_key=$request->lang_key;
+        }
+        else{
+        	$lang_key="en";
         }
 
         if(isset($request->recent_ids) && $request->recent_ids!="")
@@ -762,20 +800,20 @@ public function getnearbypropertieslist(Request $request)
 	        	//user login api
 	        	if($lat!="" && $lng!="")
 	        	{
-	        		$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by,$recent_ids);
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by,$recent_ids,$lang_key);
 	        	}
 	        	else{
-	        		$nearbypropertydata=$this->get_nearby_properties_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by,$recent_ids);
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by,$recent_ids,$lang_key);
 	        	}
 		    }
 		    else{
 		    	//guest login api
 		    	if($lat!="" && $lng!="")
 	        	{
-	        		$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by,$recent_ids);
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by,$recent_ids,$lang_key);
 	        	}
 	        	else{
-	        		$nearbypropertydata=$this->get_nearby_properties_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by,$recent_ids);
+	        		$nearbypropertydata=$this->get_nearby_properties_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by,$recent_ids,$lang_key);
 	        	}
 		    }
 
@@ -797,7 +835,7 @@ public function getnearbypropertieslist(Request $request)
 }
 
 
-public function get_nearby_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$recent_ids)
+public function get_nearby_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$recent_ids,$lang_key)
 {
 	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
@@ -908,33 +946,35 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
 	        	$favourite=0;
 	        }
 
+	        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
+
 	        if($property_type==1)
 	        {
 		        $nearbypropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'favourite'=>$favourite,
 					'rating'=>5,
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area
 				);
 	        }
 	        else{
 		        	$nearbypropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'favourite'=>$favourite,
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area
 				);
 	        }	        
@@ -942,7 +982,7 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
 
 		if($recent_ids!="")
 		{
-			$nearbypropertylistarr=$this->getpagerecentidsdata($nearbypropertylistarr,$recent_ids,$userid,$property_type);
+			$nearbypropertylistarr=$this->getpagerecentidsdata($nearbypropertylistarr,$recent_ids,$userid,$property_type,$lang_key);
 		}
 
 		if(count($nearbypropertylistarr) > 0)
@@ -965,7 +1005,7 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
     }
 }
 
-public function getpagerecentidsdata($nearbypropertylistarr,$recent_ids,$userid,$property_type)
+public function getpagerecentidsdata($nearbypropertylistarr,$recent_ids,$userid,$property_type,$lang_key)
 {
 	if($recent_ids!="")
 	{
@@ -994,33 +1034,35 @@ public function getpagerecentidsdata($nearbypropertylistarr,$recent_ids,$userid,
 	        	$favourite=0;
 	        }
 
+	        $propertylangdata=getpropertydetbylang($lang_key,$recentidproperty->id);
+
 	        if($property_type==1)
 	        {
 		        $recent_ids_list[]=array(
 		        	'property_id'=>$recentidproperty->id,
-					'title'=>$recentidproperty->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$recentidproperty->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$recentidproperty->property_price,
-					'property_date'=>date('d M Y',strtotime($recentidproperty->created_at)),
+					'property_date'=>date('d M Y',strtotime($recentidproperty->publish_date)),
 					'favourite'=>$favourite,
 					'rating'=>5,
 					'property_bedrooms'=>$recentidproperty->no_of_bedroom,
-					'property_description'=>$recentidproperty->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$recentidproperty->property_area
 				);
 	        }
 	        else{
 		        	$recent_ids_list[]=array(
 		        	'property_id'=>$recentidproperty->id,
-					'title'=>$recentidproperty->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$recentidproperty->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$recentidproperty->property_price,
-					'property_date'=>date('d M Y',strtotime($recentidproperty->created_at)),
+					'property_date'=>date('d M Y',strtotime($recentidproperty->publish_date)),
 					'favourite'=>$favourite,
 					'property_bedrooms'=>$recentidproperty->no_of_bedroom,
-					'property_description'=>$recentidproperty->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$recentidproperty->property_area
 				);
 	        }
@@ -1062,6 +1104,14 @@ public function getrecentlyaddeddpropertylist(Request $request)
 	        }
 	        else{
 	        	$property_type=1;
+	        }
+
+	        if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
 	        }
 
 		    if(isset($request->page) && $request->page!="")
@@ -1117,10 +1167,10 @@ public function getrecentlyaddeddpropertylist(Request $request)
 
 	        	if($lat!="" && $lng!="")
 	        	{
-	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by);
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by,$lang_key);
 	        	}
 	        	else{
-	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by);
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by,$lang_key);
 	        	}
 	        	   
 	        }
@@ -1128,10 +1178,10 @@ public function getrecentlyaddeddpropertylist(Request $request)
 	        	//guest login api
 	        	if($lat!="" && $lng!="")
 	        	{
-	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by);
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by,$lang_key);
 	        	}
 	        	else{
-	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by);
+	        		$recentlypropertydata=$this->get_recentlyadded_properties_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by,$lang_key);
 	        	}
 	        }
 
@@ -1152,7 +1202,7 @@ public function getrecentlyaddeddpropertylist(Request $request)
                }
 }
 
-public function get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by)
+public function get_recentlyadded_properties_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$lang_key)
 {
 	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
@@ -1258,17 +1308,19 @@ public function get_recentlyadded_properties_list($lat,$lng,$property_type,$prop
 	        	$favourite=0;
 	        }
 
+	        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
+
 	        if($property_type==1)
 	        {
 		        $recentlypropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
@@ -1277,13 +1329,13 @@ public function get_recentlyadded_properties_list($lat,$lng,$property_type,$prop
 	        else{
 		        $recentlypropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
@@ -1324,12 +1376,20 @@ public function getpropertydetails(Request $request)
 
 	        $property_id=$request->property_id;
 
+	        if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
 	        $user = auth()->guard("api")->user();
 	        if($user)
 	        {
 	        	//login user
 
-	        	$propertydata=$this->getproperty_details_api($property_id,$user->id);
+	        	$propertydata=$this->getproperty_details_api($property_id,$user->id,$lang_key);
 
 	        	if($propertydata['code']==200)
 	        	{
@@ -1343,7 +1403,7 @@ public function getpropertydetails(Request $request)
 	        else{
 	        	//guest user
 
-	        	$propertydata=$this->getproperty_details_api($property_id,$userid="");
+	        	$propertydata=$this->getproperty_details_api($property_id,$userid="",$lang_key);
 	        	if($propertydata['code']==200)
 	        	{
 	        		$success['property_data'] =  $propertydata['propertyarray'];
@@ -1361,7 +1421,7 @@ public function getpropertydetails(Request $request)
 }
 
 
-public function getproperty_details_api($property_id,$userid)
+public function getproperty_details_api($property_id,$userid,$lang_key)
 {
 	$checkproperty=Property::where('id',$property_id)->where('property_status','1')->get()->first();
 	if($checkproperty)
@@ -1405,7 +1465,8 @@ public function getproperty_details_api($property_id,$userid)
 			$checkpropertycategory=Category::where('category_type',$checkpropertyarray['property_type'])->where('id',$checkpropertyarray['property_category'])->get()->first();
 			if($checkpropertycategory)
 			{
-				$property_category=$checkpropertycategory->name;
+
+				$property_category=getcategorynamebylang($lang_key,$checkpropertyarray['property_category']);
 			}
 			else{
 				$property_category='-';
@@ -1414,7 +1475,7 @@ public function getproperty_details_api($property_id,$userid)
 			$checkpropertycondition=DB::table('property_condition')->where('id',$checkpropertyarray['property_condition'])->get()->first();
 			if($checkpropertycondition)
 			{
-				$property_condition=$checkpropertycondition->name;
+				$property_condition=getconditionnamebylang($lang_key,$checkpropertyarray['property_condition']);
 			}
 			else{
 				$property_condition='-';
@@ -1451,16 +1512,26 @@ public function getproperty_details_api($property_id,$userid)
 	        	$favourite=0;
 	        }
 
+	        if($checkpropertyarray['built_in_month']!="" || $checkpropertyarray['built_in_month']!="0")
+	        {
+	        	$built_in_year=$checkpropertyarray['built_in_month'].'/'.$checkpropertyarray['built_in_year'];
+	        }
+	        else{
+	        	$built_in_year=$checkpropertyarray['built_in_year'];
+	        }
+
+	        $propertylangdata=getpropertydetbylang($lang_key,$checkpropertyarray['id']);
+
 			$propertyarray=array(
 				'property_id'=>$checkpropertyarray['id'],
 				'property_gallery'=>$property_gallery,
 				'property_type'=>$checkpropertyarray['property_type'],
-				'title'=>$checkpropertyarray['title'],
+				'title'=>$propertylangdata['title'],
 				'property_address'=>$checkpropertyarray['property_address'],
 				'property_latitude'=>$checkpropertyarray['property_latitude'],
 				'property_longitude'=>$checkpropertyarray['property_longitude'],
 				'property_price'=>$checkpropertyarray['property_price'],
-				'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+				'property_date'=>date('d M Y',strtotime($checkpropertyarray['publish_date'])),
 				'property_category'=>$property_category,
 				'property_condition'=>$property_condition,
 				'guest_count'=>$checkpropertyarray['guest_count'],
@@ -1471,8 +1542,8 @@ public function getproperty_details_api($property_id,$userid)
 				'no_of_garden'=>$checkpropertyarray['no_of_garden'],
 				'no_of_balcony'=>$checkpropertyarray['no_of_balcony'],
 				'property_area'=>$checkpropertyarray['property_area'],
-				'built_in_year'=>$checkpropertyarray['built_in_year'],
-				'property_description'=>$checkpropertyarray['property_description'],
+				'built_in_year'=>$built_in_year,
+				'property_description'=>$propertylangdata['description'],
 				'favourite'=>$favourite
 			);
 
@@ -1612,6 +1683,15 @@ public function getproperty_details_api($property_id,$userid)
 	    	$page=1;
 	    }
 
+
+	    if(isset($request->lang_key) && $request->lang_key!="")
+        {
+        	$lang_key=$request->lang_key;
+        }
+        else{
+        	$lang_key="en";
+        }
+
 	 	//Buying:
 		// Lowest price : 1
 		// Highest Price: 2
@@ -1739,20 +1819,20 @@ public function getproperty_details_api($property_id,$userid)
         	{
         		if($lat!="" && $lng!="")
         		{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
         		}
         		else{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
         		}
         		
         	}
         	else{
         		if($lat!="" && $lng!="")
         		{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
         		}
         		else{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
         		}
         	}   
         }
@@ -1763,20 +1843,20 @@ public function getproperty_details_api($property_id,$userid)
         	{
         		if($lat!="" && $lng!="")
         		{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
         		}
         		else{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
         		}
         		
         	}
         	else{
         		if($lat!="" && $lng!="")
         		{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng);
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
         		}
         		else{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="");
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
         		}
         	}
         }
@@ -1819,7 +1899,7 @@ public function getproperty_details_api($property_id,$userid)
 
     }
 
-    public function get_nearby_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng)
+    public function get_nearby_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key)
     {
     	$radiusvalue=getdistanceradiusvalue();
     	if($lat!="" && $lng!="")
@@ -1918,8 +1998,7 @@ public function getproperty_details_api($property_id,$userid)
 
     	if(isset($built_year) && $built_year!="")
     	{
-    		$new_built_year=date('Y-m',strtotime($built_year));
-    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$new_built_year);
+    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$built_year);
     	}
 
     	if(isset($condition) && $condition!="")
@@ -1991,17 +2070,19 @@ public function getproperty_details_api($property_id,$userid)
 		        	$favourite=0;
 		        }
 
+		        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
+
 		        if($property_type==1)
 		        {
 			        $filterpropertylistarr[]=array(
 			        	'property_id'=>$list->id,
-						'title'=>$list->title,
+						'title'=>$propertylangdata['title'],
 						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
 						'property_price'=>$list->property_price,
-						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_date'=>date('d M Y',strtotime($list->publish_date)),
 						'property_bedrooms'=>$list->no_of_bedroom,
-						'property_description'=>$list->property_description,
+						'property_description'=>$propertylangdata['description'],
 						'property_area'=>$list->property_area,
 						'favourite'=>$favourite,
 						'rating'=>5
@@ -2010,13 +2091,13 @@ public function getproperty_details_api($property_id,$userid)
 		        else{
 			        $filterpropertylistarr[]=array(
 			        	'property_id'=>$list->id,
-						'title'=>$list->title,
+						'title'=>$propertylangdata['title'],
 						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
 						'property_price'=>$list->property_price,
-						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_date'=>date('d M Y',strtotime($list->publish_date)),
 						'property_bedrooms'=>$list->no_of_bedroom,
-						'property_description'=>$list->property_description,
+						'property_description'=>$propertylangdata['description'],
 						'property_area'=>$list->property_area,
 						'favourite'=>$favourite
 					);
@@ -2043,7 +2124,7 @@ public function getproperty_details_api($property_id,$userid)
 
     }
 
-    public function get_recently_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng)
+    public function get_recently_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key)
     {
     	$radiusvalue=getdistanceradiusvalue();
     	if($lat!="" && $lng!="")
@@ -2142,8 +2223,7 @@ public function getproperty_details_api($property_id,$userid)
 
     	if(isset($built_year) && $built_year!="")
     	{
-    		$new_built_year=date('Y-m',strtotime($built_year));
-    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$new_built_year);
+    		$filterpropertyquery=$filterpropertyquery->where('built_in_year',$built_year);
     	}
 
     	if(isset($condition) && $condition!="")
@@ -2208,17 +2288,19 @@ public function getproperty_details_api($property_id,$userid)
 		        	$favourite=0;
 		        }
 
+		        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
+
 		        if($property_type==1)
 		        {
 			        $filterpropertylistarr[]=array(
 			        	'property_id'=>$list->id,
-						'title'=>$list->title,
+						'title'=>$propertylangdata['title'],
 						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
 						'property_price'=>$list->property_price,
-						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_date'=>date('d M Y',strtotime($list->publish_date)),
 						'property_bedrooms'=>$list->no_of_bedroom,
-						'property_description'=>$list->property_description,
+						'property_description'=>$propertylangdata['description'],
 						'property_area'=>$list->property_area,
 						'favourite'=>$favourite,
 						'rating'=>5
@@ -2227,13 +2309,13 @@ public function getproperty_details_api($property_id,$userid)
 		        else{
 			        $filterpropertylistarr[]=array(
 			        	'property_id'=>$list->id,
-						'title'=>$list->title,
+						'title'=>$propertylangdata['title'],
 						'property_address'=>$list->property_address,
 						'property_image'=>$property_image,
 						'property_price'=>$list->property_price,
-						'property_date'=>date('d M Y',strtotime($list->created_at)),
+						'property_date'=>date('d M Y',strtotime($list->publish_date)),
 						'property_bedrooms'=>$list->no_of_bedroom,
-						'property_description'=>$list->property_description,
+						'property_description'=>$propertylangdata['description'],
 						'property_area'=>$list->property_area,
 						'favourite'=>$favourite
 					);
@@ -2289,6 +2371,14 @@ public function getsearchpropertylist(Request $request)
 	        	$property_type=1;
 	        }
 
+	        if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
 		    if(isset($request->category) && $request->category!="")
 		    {
 		    	$property_category=$request->category;
@@ -2337,11 +2427,11 @@ public function getsearchpropertylist(Request $request)
 	        	//user login api
 	        	if($lat!="" && $lng!="")
 	        	{
-	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$user->id,$page,$sort_by,$search,$lat,$lng);
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$user->id,$page,$sort_by,$search,$lat,$lng,$lang_key);
 		        	
 	        	}
 	        	else{
-	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$user->id,$page,$sort_by,$search,$lat="",$lng="");
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$user->id,$page,$sort_by,$search,$lat="",$lng="",$lang_key);
 	        	}
                 
 	        }
@@ -2350,10 +2440,10 @@ public function getsearchpropertylist(Request $request)
 
 	        	if($lat!="" && $lng!="")
 	        	{
-	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$userid="",$page,$sort_by,$search,$lat,$lng);
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$userid="",$page,$sort_by,$search,$lat,$lng,$lang_key);
 	        	}
 	        	else{
-	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$userid="",$page,$sort_by,$search,$lat="",$lng="");
+	        		$searchpropertydata=$this->get_search_properties_list($property_type,$property_category,$userid="",$page,$sort_by,$search,$lat="",$lng="",$lang_key);
 	        	}
 
 	        }
@@ -2375,7 +2465,7 @@ public function getsearchpropertylist(Request $request)
                }
 }
 
-public function get_search_properties_list($property_type,$property_category,$userid,$page,$sort_by,$search,$lat,$lng)
+public function get_search_properties_list($property_type,$property_category,$userid,$page,$sort_by,$search,$lat,$lng,$lang_key)
 {
 	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
@@ -2490,17 +2580,19 @@ public function get_search_properties_list($property_type,$property_category,$us
 	        	$favourite=0;
 	        }
 
+	        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
+
 	        if($property_type==1)
 	        {
 		        $searchpropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
@@ -2509,13 +2601,13 @@ public function get_search_properties_list($property_type,$property_category,$us
 	        else{
 		        $searchpropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
@@ -2569,6 +2661,14 @@ public function searchrentingproperty(Request $request)
 	        }
 	        else{
 	        	$property_type=1;
+	        }
+
+	        if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
 	        }
 
 	        if(isset($request->category) && $request->category!="")
@@ -2681,10 +2781,10 @@ public function searchrentingproperty(Request $request)
 
                 if($lat!="" && $lng!="")
                 {
-                	$searchrentingdata=$this->get_search_property_renting_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
+                	$searchrentingdata=$this->get_search_property_renting_list($lat,$lng,$property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count,$lang_key);
                 }
                 else{
-                	$searchrentingdata=$this->get_search_property_renting_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
+                	$searchrentingdata=$this->get_search_property_renting_list($lat="",$lng="",$property_type,$property_category,$user->id,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count,$lang_key);
                 }
 	        }
 	        else{
@@ -2692,10 +2792,10 @@ public function searchrentingproperty(Request $request)
 
 	        	if($lat!="" && $lng!="")
                 {
-                	$searchrentingdata=$this->get_search_property_renting_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
+                	$searchrentingdata=$this->get_search_property_renting_list($lat,$lng,$property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count,$lang_key);
                 }
                 else{
-                	$searchrentingdata=$this->get_search_property_renting_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count);
+                	$searchrentingdata=$this->get_search_property_renting_list($lat="",$lng="",$property_type,$property_category,$userid="",$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count,$lang_key);
                 }
 	        }
 
@@ -2718,7 +2818,7 @@ public function searchrentingproperty(Request $request)
 
 
 
-public function get_search_property_renting_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count)
+public function get_search_property_renting_list($lat,$lng,$property_type,$property_category,$userid,$page,$sort_by,$check_in_date,$check_out_date,$adult_count,$children_count,$lang_key)
 {
 	$radiusvalue=getdistanceradiusvalue();
 	if($property_category!=0)
@@ -2833,17 +2933,19 @@ public function get_search_property_renting_list($lat,$lng,$property_type,$prope
 	        	$favourite=0;
 	        }
 
+	        $propertylangdata=getpropertydetbylang($lang_key,$list->id);
+
 	        if($property_type==1)
 	        {
 		        $searchpropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['title'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite,
 					'rating'=>5
@@ -2852,13 +2954,13 @@ public function get_search_property_renting_list($lat,$lng,$property_type,$prope
 	        else{
 		        $searchpropertylistarr[]=array(
 		        	'property_id'=>$list->id,
-					'title'=>$list->title,
+					'title'=>$propertylangdata['description'],
 					'property_address'=>$list->property_address,
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
-					'property_date'=>date('d M Y',strtotime($list->created_at)),
+					'property_date'=>date('d M Y',strtotime($list->publish_date)),
 					'property_bedrooms'=>$list->no_of_bedroom,
-					'property_description'=>$list->property_description,
+					'property_description'=>$propertylangdata['description'],
 					'property_area'=>$list->property_area,
 					'favourite'=>$favourite
 				);
@@ -2897,6 +2999,14 @@ public function getpropertybookingdetails(Request $request)
 	        }
 
 	        $property_id=$request->property_id;
+
+	        if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
 
 	        $checkproperty=Property::where('id',$property_id)->where('property_status',1)->get()->first();
         	if(!$checkproperty)
@@ -2963,7 +3073,7 @@ public function getpropertybookingdetails(Request $request)
 
 			if($checkpropertycategory)
 			{
-				$property_category=$checkpropertycategory->name;
+				$property_category=getcategorynamebylang($lang_key,$checkpropertyarray['property_category']);
 			}
 			else{
 				$property_category='-';
@@ -2973,19 +3083,21 @@ public function getpropertybookingdetails(Request $request)
 	        $booking_tax=getbookingtaxprice();
 	        $total_booking_price=$booking_price+$booking_tax;
 
+	        $propertylangdata=getpropertydetbylang($lang_key,$checkpropertyarray['id']);
+
 	        $propertyarray=array(
 				'property_id'=>$checkpropertyarray['id'],
 				'property_image'=>$property_image,
 				'property_type'=>$checkpropertyarray['property_type'],
-				'title'=>$checkpropertyarray['title'],
+				'title'=>$propertylangdata['title'],
 				'property_address'=>$checkpropertyarray['property_address'],
 				'property_price'=>$checkpropertyarray['property_price'],
-				'property_date'=>date('d M Y',strtotime($checkpropertyarray['created_at'])),
+				'property_date'=>date('d M Y',strtotime($checkpropertyarray['publish_date'])),
 				'property_category'=>$property_category,
 				'guest_count'=>$checkpropertyarray['guest_count'],
 				'no_of_bedroom'=>$checkpropertyarray['no_of_bedroom'],
 				'property_area'=>$checkpropertyarray['property_area'],
-				'property_description'=>$checkpropertyarray['property_description'],
+				'property_description'=>$propertylangdata['description'],
 				'booking_price'=>$booking_price,
 				'booking_tax'=>$booking_tax,
 				'total_booking_price'=>$total_booking_price,
