@@ -213,8 +213,7 @@ $.ajaxSetup({
                 email: true   
             },
             mobile:{
-                required: true,
-                min: 10
+                required: true
             },
         },
         messages: {

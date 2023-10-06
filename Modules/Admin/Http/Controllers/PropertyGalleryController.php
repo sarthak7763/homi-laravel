@@ -31,7 +31,8 @@ class PropertyGalleryController extends Controller{
     try{
                 $request->validate([
                   'property_id'=>'required',
-                  'property_gallery' => 'required|mimes:jpeg,png,jpg'
+                  'property_gallery' => 'required',
+                  'property_gallery.*' => 'image'
                 ]);
 
                 $property_id=$request->property_id;
@@ -40,16 +41,29 @@ class PropertyGalleryController extends Controller{
                 if($checkproperty)
                 {
                   $propertyslug=$checkproperty->slug;
-                  $fileNameToStore=uploadImage($request->file('property_gallery'),"images/property/gallery/",'');
 
-                  $propertygallery = new PropertyGallery;
-                  $propertygallery->property_id=$property_id;
-                  $propertygallery->image=$fileNameToStore;
-                  $propertygallery->status=1;
-                  $propertygallery->type=1;
+                  $property_gallery_files = [];
+                  if($request->hasfile('property_gallery'))
+                   {
+                      foreach($request->file('property_gallery') as $file)
+                      {
+                          $name = time().rand(1,50).'.'.$file->extension();
+                          $file->move(public_path('/images/property/gallery/'), $name);  
+                          $property_gallery_files[] = $name;  
+                      }
+                   }
 
-                  $propertygallery->save();
+                  foreach($property_gallery_files as $list)
+                  {
+                    $propertygallery = new PropertyGallery;
+                    $propertygallery->property_id=$property_id;
+                    $propertygallery->image=$list;
+                    $propertygallery->status=1;
+                    $propertygallery->type=1;
 
+                    $propertygallery->save();
+                  }
+                
                   toastr()->success('Property information saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
 
                   return redirect()->route('admin-property-gallery-view',$propertyslug)->with('success',"Property Image saved successfully.");

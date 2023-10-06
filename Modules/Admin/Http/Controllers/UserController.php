@@ -140,7 +140,6 @@ class UserController extends Controller{
           'mobile' => [
               'nullable',
               'numeric',
-              'digits_between:10,12'
           ],
 	    ],
       [
@@ -268,7 +267,6 @@ class UserController extends Controller{
           'mobile' => [
               'nullable',
               'numeric',
-              'digits_between:10,12'
           ],
       ],
       [

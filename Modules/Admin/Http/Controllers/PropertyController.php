@@ -224,11 +224,12 @@ class PropertyController extends Controller {
 
     public function add() {
         try{ 
+            $country_list=getcountrylist();
             $PropOwnerList = User::where('user_type',3)->where('status',1)->where('email_verified','1')->orderBy('name','ASC')->get();
             $catType = Category::where('status','1')->orderBy('name','ASC')->get();
 
             $condition = PropertyCondition::where('status','1')->get();
-            return view('admin::property.add',compact('catType','PropOwnerList','condition'));
+            return view('admin::property.add',compact('catType','PropOwnerList','condition','country_list'));
         }
         catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -247,16 +248,17 @@ class PropertyController extends Controller {
                   Rule::in('1','2'),
                 ],
                 'property_category'=>'required',
-                'guest_count'=>'numeric',
+                'guest_count'=>'nullable|numeric',
                 'no_of_bedroom'=>'required|numeric',
-                'no_of_kitchen'=>'numeric',
+                'built_in_year'=>'nullable',
+                'no_of_kitchen'=>'nullable|numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_pool'=>'numeric',
-                'no_of_garden'=>'numeric',
-                'no_of_balcony'=>'numeric',
+                'no_of_pool'=>'nullable|numeric',
+                'no_of_garden'=>'nullable|numeric',
+                'no_of_balcony'=>'nullable|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
-                'property_area'=>'numeric',
+                'property_area'=>'nullable|numeric',
                 'property_number'=>'required',
                 'property_email' => 'required|email',
                 'property_address'=>'required',
@@ -330,12 +332,12 @@ class PropertyController extends Controller {
                                 return back()->with('valid_error',$listmessage);
                             }
                             else{
-                                return back()->with('error','Something went wrong.');
+                                return back()->with('error','Something went wrong2.');
                             }
                             
                         }
                         else{
-                            return back()->with('error','Something went wrong.');
+                            return back()->with('error','Something went wrong1.');
                         }      
                    }
 
@@ -459,25 +461,25 @@ class PropertyController extends Controller {
 		            return back()->with('valid_error',$listmessage);
 		        }
 		        else{
-		            return back()->with('error','Something went wrong.');
+		            return back()->with('error','Something went wrong4.');
 		        }
 		        
 		    }
 		    else{
-		        return back()->with('error','Something went wrong.');
+		        return back()->with('error',$e->getMessage());
 		    }
         }
     }
     public function edit($slug){
         try{
-           
+            $country_list=getcountrylist();
             $propertyInfo=Property::where('slug',$slug)->first();
             $PropOwnerList = User::where('user_type',3)->where('status',1)->where('email_verified','1')->orderBy('name','ASC')->get();
             $catType = Category::where('status','1')->orderBy('name','ASC')->get();
 
             $condition = PropertyCondition::where('status','1')->get();
 
-            return view('admin::property.edit', compact('propertyInfo','catType','PropOwnerList','condition'));
+            return view('admin::property.edit', compact('propertyInfo','catType','PropOwnerList','condition','country_list'));
         }
         catch(Exception $e){
             return redirect()->back()->with('error', 'something wrong');            
@@ -497,16 +499,17 @@ class PropertyController extends Controller {
                   Rule::in('1','2'),
                 ],
                 'property_category'=>'required',
-                'guest_count'=>'numeric',
+                'guest_count'=>'nullable|numeric',
                 'no_of_bedroom'=>'required|numeric',
-                'no_of_kitchen'=>'numeric',
+                'built_in_year'=>'nullable',
+                'no_of_kitchen'=>'nullable|numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_pool'=>'numeric',
-                'no_of_garden'=>'numeric',
-                'no_of_balcony'=>'numeric',
+                'no_of_pool'=>'nullable|numeric',
+                'no_of_garden'=>'nullable|numeric',
+                'no_of_balcony'=>'nullable|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
-                'property_area'=>'numeric',
+                'property_area'=>'nullable|numeric',
                 'property_number'=>'required',
                 'property_email' => 'required|email',
                 'property_address'=>'required',

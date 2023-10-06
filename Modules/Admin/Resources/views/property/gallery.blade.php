@@ -97,7 +97,7 @@
                                     @csrf
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <input type="file" class="form-control" name="property_gallery" id="property_gallery" accept="image/*" onchange="preview_image()"> 
+                                            <input type="file" class="form-control" name="property_gallery[]" id="property_gallery" accept="image/*" multiple onchange="preview_image()"> 
                                             @if($property_image_error!="")
                                             <div id="errorDiv" class="alert alert-danger mt-2" style="max-height: 200px; overflow-y: auto;">
                                                 {{$property_image_error}}

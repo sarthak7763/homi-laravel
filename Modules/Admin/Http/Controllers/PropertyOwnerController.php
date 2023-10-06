@@ -140,7 +140,6 @@ class PropertyOwnerController extends Controller{
           'mobile' => [
               'required',
                'numeric',
-              'digits_between:10,12'
           ],
 	    ],
       [
@@ -267,8 +266,7 @@ class PropertyOwnerController extends Controller{
                 ],
           'mobile' => [ 
             'required',
-            'numeric',
-            'digits_between:10,12'
+            'numeric'
           ],
       ],
       [

@@ -19,6 +19,7 @@ use App\Models\Usertempbooking;
 use Validator;
 use Hash;
 use DB;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class DashboardController extends BaseController
 {
@@ -31,8 +32,18 @@ class DashboardController extends BaseController
 	            'country_code' => 'required'
 	        ]);
 
+			if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
 	        if($validator->fails()){
-	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+
+	        	$validationmessages=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+	            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages]);       
 	        }
 
 		    $country_code=$request->country_code;
@@ -80,11 +91,13 @@ class DashboardController extends BaseController
         		return $this::sendResponse($success, 'Property States List.');
 		    }
 		    else{
-		    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
+		    	$errormessage=GoogleTranslate::trans('Invalid Country',$lang_key);
+		    	return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 		    }
 	    }
 	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong']);    
+	    		$errormessage_two=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_two]);    
                }
 	}
 
@@ -98,8 +111,17 @@ class DashboardController extends BaseController
 	            'state_id'=>'required'
 	        ]);
 
+			if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
 	        if($validator->fails()){
-	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+	        	$validationmessages=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+	            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages]);       
 	        }
 
 		    $country_id=$request->country_id;
@@ -155,21 +177,33 @@ class DashboardController extends BaseController
             		return $this::sendResponse($success, 'Property Cities List.');
 		    	}
 		    	else{
-		    		return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid State.']);
+		    		$errormessage=GoogleTranslate::trans('Invalid State',$lang_key);
+		    		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 		    	}
 		    }
 		    else{
-		    	return $this::sendError('Unauthorised Exception.', ['error'=>'Invalid Country.']);
+		    	$errormessage_two=GoogleTranslate::trans('Invalid Country',$lang_key);
+		    	return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
 		    }
 	    }
 	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong']);    
+	    		$errormessage_three=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_three]);    
                }
 	}
 
 	public function getuserlocation(Request $request)
 	{
 		try{
+
+			if(isset($request->lang_key) && $request->lang_key!="")
+			{
+				$lang_key=$request->lang_key;
+			}
+			else{
+				$lang_key="en";
+			}
+
 	        $user = auth()->guard("api")->user();
 	        if($user)
 	        {
@@ -199,7 +233,8 @@ class DashboardController extends BaseController
 
     	}
     	catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong']);    
+    			$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage]);    
                }
 	}
 
@@ -310,7 +345,9 @@ class DashboardController extends BaseController
         	return $this::sendResponse($success, 'Property Category List.');
 	    }
 	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+
+	    		$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage]);    
                }
 	}
 
@@ -360,7 +397,8 @@ class DashboardController extends BaseController
 
 	        		if(!$checkpropertycategory)
 	        		{
-	        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	        			$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+	        			return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 	        		}
 	        	}
 	        }
@@ -436,7 +474,8 @@ class DashboardController extends BaseController
 	        }  
     	}
     	catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+    			$errormessage_two=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_two]);    
                }
     }
 
@@ -758,7 +797,8 @@ public function getnearbypropertieslist(Request $request)
 
 	    		if(!$checkpropertycategory)
 	    		{
-	    			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	    			$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+	    			return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 	    		}
 	    	}
 	    }
@@ -826,11 +866,13 @@ public function getnearbypropertieslist(Request $request)
         		return $this::sendResponse($success, 'Nearby Properties List.');
         	}
         	else{
-        		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbypropertydata['message']]);
+        		$errormessage=GoogleTranslate::trans($nearbypropertydata['message'],$lang_key);
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
         	}
 		}
 		catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
+				$errormessage_three=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_three]);    
                }
 }
 
@@ -1132,7 +1174,8 @@ public function getrecentlyaddeddpropertylist(Request $request)
 
 	    		if(!$checkpropertycategory)
 	    		{
-	    			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	    			$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+	    			return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 	    		}
 	    	}
 	    }
@@ -1194,11 +1237,13 @@ public function getrecentlyaddeddpropertylist(Request $request)
         		return $this::sendResponse($success, 'Recently added Properties List.');
         	}
         	else{
-        		return $this::sendError('Unauthorised Exception.', ['error'=>$recentlypropertydata['message']]);
+        		$errormessage_two=GoogleTranslate::trans($recentlypropertydata['message'],$lang_key);
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
         	}
 	    }
 	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+	    		$errormessage_three=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_three]);    
                }
 }
 
@@ -1397,7 +1442,8 @@ public function getpropertydetails(Request $request)
             		return $this::sendResponse($success, 'Properties Details.');
 	        	}
 	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$propertydata['message']]);
+	        		$errormessage=GoogleTranslate::trans($propertydata['message'],$lang_key);
+	        		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 	        	}
 	        }
 	        else{
@@ -1410,12 +1456,14 @@ public function getpropertydetails(Request $request)
             		return $this::sendResponse($success, 'Properties Details.');
 	        	}
 	        	else{
-	        		return $this::sendError('Unauthorised Exception.', ['error'=>$propertydata['message']]);
+	        		$errormessage_two=GoogleTranslate::trans($propertydata['message'],$lang_key);
+	        		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
 	        	}
 	        }
 	    }
 	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
+	    		$errormessage_three=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_three]);    
                }
 
 }
@@ -1583,8 +1631,18 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 		            'property_id' => 'required'
 		        ]);
 
+			if(isset($request->lang_key) && $request->lang_key!="")
+			{
+				$lang_key=$request->lang_key;
+			}
+			else{
+				$lang_key="en";
+			}
+
 	        if($validator->fails()){
-	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+
+	        	$validationmessages=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+	            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages]);       
 	        }
 
 		    $property_id=$request->property_id;
@@ -1602,13 +1660,15 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	        			$wishlistid=$checkpropertywishlist->id;
 	        			$favproperty=FavProperty::find($wishlistid);
 	        			if(is_null($favproperty)){
-				           return redirect('admin/user-list/')->with('error','Something went wrong.');
+	        			$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+				        return $this::sendError('Unauthorised.', ['error'=>$errormessage]);
 				        }
 
 				        $favproperty->delete();
 
 				        $success['favourite']=0;
-            			return $this::sendResponse($success, 'Property removed from wishlist');
+				        $successmessage=GoogleTranslate::trans('Property removed from wishlist',$lang_key);
+            			return $this::sendResponse($success,$successmessage);
 	        		}
 	        		else{
 	        			$favproperty=new FavProperty;
@@ -1617,22 +1677,25 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	        			$favproperty->save();
 
 	        			 $success['favourite']=1;
-            			return $this::sendResponse($success, 'Property added to wishlist');
+	        			 $successmessage_two=GoogleTranslate::trans('Property added to wishlist',$lang_key);
+            			return $this::sendResponse($success,$successmessage_two);
 	        		}
 	        	}
 	        	else{
-	        		return $this::sendError('Unauthorised.', ['error'=>'Invalid property.']);
+	        		$errormessage_two=GoogleTranslate::trans('Invalid property',$lang_key);
+	        		return $this::sendError('Unauthorised.', ['error'=>$errormessage_two]);
 	        	}
 	        }
 	        else{
 
 	        	// guest login
-
-	        	return $this::sendError('Unauthorised.', ['error'=>'Guest user not allowed to wishlist the property.']);
+	        	$errormessage_three=GoogleTranslate::trans('Guest user not allowed to wishlist the property',$lang_key);
+	        	return $this::sendError('Unauthorised.', ['error'=>$errormessage_three]);
 	        }  
     	}
     	catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+    			$errormessage_four=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_four]);    
                }
     }
 
@@ -1872,7 +1935,8 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    		return $this::sendResponse($success, 'Nearby Filter Properties List.');
 	    	}
 	    	else{
-	    		return $this::sendError('Unauthorised Exception.', ['error'=>$nearbyfilterpropertydata['message']]);
+	    		$errormessage=GoogleTranslate::trans($nearbyfilterpropertydata['message'],$lang_key);
+	    		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 	    	}
        	}
         
@@ -1887,13 +1951,15 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    		return $this::sendResponse($success, 'Recent Filter Properties List.');
 	    	}
 	    	else{
-	    		return $this::sendError('Unauthorised Exception.', ['error'=>$recentfilterpropertydata['message']]);
+	    		$errormessage_two=GoogleTranslate::trans($recentfilterpropertydata['message'],$lang_key);
+	    		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
 	    	}
        	}
     	
     }
     catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+    			$errormessage_three=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_three]);    
                }
 
 
@@ -2352,8 +2418,17 @@ public function getsearchpropertylist(Request $request)
 		            'lng'=>'required'
 		        ]);
 
+			if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
 	        if($validator->fails()){
-	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+	        	$validationmessages=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+	            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages]);       
 	        }
 
 	        $lat=$request->lat;
@@ -2371,14 +2446,6 @@ public function getsearchpropertylist(Request $request)
 	        	$property_type=1;
 	        }
 
-	        if(isset($request->lang_key) && $request->lang_key!="")
-	        {
-	        	$lang_key=$request->lang_key;
-	        }
-	        else{
-	        	$lang_key="en";
-	        }
-
 		    if(isset($request->category) && $request->category!="")
 		    {
 		    	$property_category=$request->category;
@@ -2388,7 +2455,8 @@ public function getsearchpropertylist(Request $request)
 
 		    		if(!$checkpropertycategory)
 		    		{
-		    			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+		    			$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+		    			return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 		    		}
 		    	}
 		    }
@@ -2457,11 +2525,13 @@ public function getsearchpropertylist(Request $request)
         		return $this::sendResponse($success, 'Search Properties List.');
         	}
         	else{
-        		return $this::sendError('Unauthorised Exception.', ['error'=>$searchpropertydata['message']]);
+        		$errormessage_two=GoogleTranslate::trans($searchpropertydata['message'],$lang_key);
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
         	}
 	    }
 	    catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>'Something went wrong.']);    
+	    		$errormessage_three=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_three]);    
                }
 }
 
@@ -2645,8 +2715,17 @@ public function searchrentingproperty(Request $request)
 		            'lng'=>'required'
 		        ]);
 
+			if(isset($request->lang_key) && $request->lang_key!="")
+	        {
+	        	$lang_key=$request->lang_key;
+	        }
+	        else{
+	        	$lang_key="en";
+	        }
+
 	        if($validator->fails()){
-	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+	        	$validationmessages=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+	            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages]);       
 	        }
 
 		    $lat=$request->lat;
@@ -2663,14 +2742,6 @@ public function searchrentingproperty(Request $request)
 	        	$property_type=1;
 	        }
 
-	        if(isset($request->lang_key) && $request->lang_key!="")
-	        {
-	        	$lang_key=$request->lang_key;
-	        }
-	        else{
-	        	$lang_key="en";
-	        }
-
 	        if(isset($request->category) && $request->category!="")
 	        {
 	        	$property_category=$request->category;
@@ -2680,7 +2751,8 @@ public function searchrentingproperty(Request $request)
 
 	        		if(!$checkpropertycategory)
 	        		{
-	        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	        			$errormessage=GoogleTranslate::trans('Something went wrong',$lang_key);
+	        			return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage]);
 	        		}
 	        	}
 	        }
@@ -2808,11 +2880,13 @@ public function searchrentingproperty(Request $request)
         		return $this::sendResponse($success, 'Search Renting Properties List.');
         	}
         	else{
-        		return $this::sendError('Unauthorised Exception.', ['error'=>$searchrentingdata['message']]);
+        		$errormessage_two=GoogleTranslate::trans($searchrentingdata['message'],$lang_key);
+        		return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
         	}
 	}
 	catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
+					$errormessage_three=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_three]);    
                }
 }
 
@@ -2994,13 +3068,7 @@ public function getpropertybookingdetails(Request $request)
 		            'property_id' => 'required'
 		        ]);
 
-	        if($validator->fails()){
-	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
-	        }
-
-	        $property_id=$request->property_id;
-
-	        if(isset($request->lang_key) && $request->lang_key!="")
+			if(isset($request->lang_key) && $request->lang_key!="")
 	        {
 	        	$lang_key=$request->lang_key;
 	        }
@@ -3008,10 +3076,18 @@ public function getpropertybookingdetails(Request $request)
 	        	$lang_key="en";
 	        }
 
+	        if($validator->fails()){
+	        	$validationmessages=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+	            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages]);       
+	        }
+
+	        $property_id=$request->property_id;
+
 	        $checkproperty=Property::where('id',$property_id)->where('property_status',1)->get()->first();
         	if(!$checkproperty)
         	{
-        		return $this::sendError('Unauthorised.', ['error'=>'Invalid Property.']);
+        	$errormessage=GoogleTranslate::trans('Invalid Property',$lang_key);
+        	return $this::sendError('Unauthorised.', ['error'=>$errormessage]);
         	}
 
 	        $user = auth()->guard("api")->user();
@@ -3029,7 +3105,8 @@ public function getpropertybookingdetails(Request $request)
 		        ]);
 
 			        if($validator->fails()){
-			            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+			        	$validationmessages_two=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+			            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages_two]);       
 			        }
 
 					if(isset($request->category) && $request->category!="")
@@ -3041,7 +3118,8 @@ public function getpropertybookingdetails(Request $request)
 
 			        		if(!$checkpropertycategory)
 			        		{
-			        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+			        			$errormessage_two=GoogleTranslate::trans('Something went wrong',$lang_key);
+			        			return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
 			        		}
 			        	}
 			        }
@@ -3120,11 +3198,13 @@ public function getpropertybookingdetails(Request $request)
 	            	return $this::sendResponse($success, 'Property Booking Details.');
 	        }
 	        else{
-	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']);
+	        	$errormessage_three=GoogleTranslate::trans('Please login again',$lang_key);
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>$errormessage_three]);
 	        }
 	}
 	catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
+				$errormessage_four=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_four]);    
                }
 }
 
@@ -3140,8 +3220,17 @@ public function insertuserbookinginfo(Request $request)
 		            'number'=>'required'
 		        ]);
 
+			if(isset($request->lang_key) && $request->lang_key!="")
+			{
+				$lang_key=$request->lang_key;
+			}
+			else{
+				$lang_key="en";
+			}
+
 	        if($validator->fails()){
-	            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+	        	$validationmessages=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+	            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages]);       
 	        }
 
 	        $property_id=$request->property_id;
@@ -3154,7 +3243,8 @@ public function insertuserbookinginfo(Request $request)
 	        $checkproperty=Property::where('id',$property_id)->where('property_status',1)->get()->first();
         	if(!$checkproperty)
         	{
-        		return $this::sendError('Unauthorised.', ['error'=>'Invalid Property.']);
+        	$errormessage=GoogleTranslate::trans('Invalid Property',$lang_key);
+        	return $this::sendError('Unauthorised.', ['error'=>$errormessage]);
         	}
 
 	        $user = auth()->guard("api")->user();
@@ -3172,7 +3262,8 @@ public function insertuserbookinginfo(Request $request)
 		        ]);
 
 		        if($validator->fails()){
-		            return $this::sendValidationError('Validation Error.',['error'=>$validator->messages()->all()[0]]);       
+		        	$validationmessages_two=GoogleTranslate::trans($validator->messages()->all()[0],$lang_key);
+		            return $this::sendValidationError('Validation Error.',['error'=>$validationmessages_two]);       
 		        }
 
 			if(isset($request->category) && $request->category!="")
@@ -3184,7 +3275,8 @@ public function insertuserbookinginfo(Request $request)
 
 	        		if(!$checkpropertycategory)
 	        		{
-	        			return $this::sendError('Unauthorised Exception.', ['error'=>'Something went wrong.']);
+	        			$errormessage_two=GoogleTranslate::trans('Something went wrong',$lang_key);
+	        			return $this::sendError('Unauthorised Exception.', ['error'=>$errormessage_two]);
 	        		}
 	        	}
 	        }
@@ -3234,15 +3326,18 @@ public function insertuserbookinginfo(Request $request)
 	        $this->saveuserbookinginfo($user->id);
 
 			$success=[];
-	        return $this::sendResponse($success, 'Property Booking successfully done.');
+			$success_message=GoogleTranslate::trans('Property Booking successfully done',$lang_key);
+	        return $this::sendResponse($success,$success_message);
 
 	        }
 	        else{
-	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>'Please login again.']);
+	        	$errormessage_three=GoogleTranslate::trans('Please login again',$lang_key);
+	        	return $this::sendUnauthorisedError('Unauthorised.', ['error'=>$errormessage_three]);
 	        }
 	}
 	catch(\Exception $e){
-                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$e->getMessage()]);    
+					$errormessage_four=GoogleTranslate::trans('Something went wrong',$lang_key);
+                  return $this::sendExceptionError('Unauthorised Exception.', ['error'=>$errormessage_four]);    
                }
 }
 

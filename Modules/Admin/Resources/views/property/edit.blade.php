@@ -481,8 +481,14 @@ label.error{
 
 
                         <div class="col-md-6">
-                            <div class="form-group">
+                            <div class="form-group country-select">
                                 <label class="font-weight-bold">Contact Number<span style="color:red;">*</span></label>
+                                <select id="country_id" name="country_id" class=" form-control">
+                                  @foreach($country_list as $list)
+                                      <option value="{{$list['id']}}">
+                                      {{$list['name']}} ({{$list['phonecode']}})</option>
+                                  @endforeach
+                                </select>
                                 <input type="text" class="form-control" value="{{$propertyInfo->property_number}}" name="property_number" id="property_number" placeholder="Enter Contact Number" >
 
                                 @if($phone_number_error!="")
