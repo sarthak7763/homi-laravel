@@ -9,13 +9,11 @@ use Mail;
 class Seller{
   
     public function handle($request, Closure $next) {
-   
-        
         if (Auth::user() && Auth::user()->user_type == "3") {
             return $next($request);
             
         }
-        else { 
+        else {
             Auth::guard('web')->logout();
             $request->session()->flush();
             $request->session()->regenerate();

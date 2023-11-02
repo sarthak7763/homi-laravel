@@ -87,10 +87,15 @@ span.messages strong{
         <div class="container h-100">
             <div class="row align-items-center justify-content-center h-100">
                 <div class="col-12">
-                    <form  name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.verifyotp')}}" method="POST" class="signup-form p-5">
+                    @if(session()->get('type')=="login")
+                        <form  name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.verifyloginotp')}}" method="POST" class="signup-form p-5">
+                    @else
+                        <form  name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.verifyregisterotp')}}" method="POST" class="signup-form p-5">
+                    @endif
+
                         @csrf
                         <h1>Welcome!</h1>
-                        <strong>Signup your account</strong>
+                        <strong>Verify your account</strong>
                         <div class="mb-4">
                             <input type="text" name="otp" class="form-control"  id="otp" aria-describedby="emailHelp" placeholder="Enter OTP">
                             @if($otp_error!="")

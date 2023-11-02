@@ -25,7 +25,9 @@ Route::post('/dealer/loginpost','BuyerController@sellerLoginPost')->name('buyer.
 
 Route::get('/dealer/verify-email', 'BuyerController@BuyerVerifyEmail')->name('buyer.verify.email');
 
-Route::post('/dealer/verifyotp','BuyerController@sellerverifyemailotp')->name('buyer.post.verifyotp');
+Route::post('/dealer/verifyregisterotp','BuyerController@sellerregisterverifyemailotp')->name('buyer.post.verifyregisterotp');
+
+Route::post('/dealer/verifyloginotp','BuyerController@sellerloginverifyemailotp')->name('buyer.post.verifyloginotp');
 
 Route::post('/dealer/resendotp','BuyerController@sellerresendemailotp')->name('buyer.post.resendotp');
 

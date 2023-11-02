@@ -1,74 +1,5 @@
 @extends('buyer::layouts.master')
-
-
-  <main>
-    <!-- <div div class="container">
-     <div div class="row profile"> -->
-      <!-- <div class="col-md-3">
-        <div class="profile-div">
-          <div class="main-profile rounded-circle mb-3">
-           <img class="rounded-pill" src="images/user-image-01.jpg">
-         </div>
-         <div class="profile-text">                
-          <strong>Albert Flores</strong>
-          <span>albertflores@gmail.com</span>
-        </div>
-      </div>
-      <div class="profile-usermenu">
-        <ul class="profile-nav">
-          <li class="item">
-            <a href="#">
-              <span class="user-icon dashboard-icon"></span>
-              Dashboard
-            </a>
-          </li>
-          <li class="item active">
-            <a href="#">
-              <span class="user-icon profile-icon">
-              </span>
-              My Profile
-            </a>
-          </li>
-          <li class="item">
-            <a href="#">
-              <span class="user-icon bookings-icon">
-              </span>
-              My Bookings
-            </a>
-          </li>
-          <li class="item">
-            <a href="#">
-              <span class="user-icon subscription-icon">              
-              </span>
-              My Subscription Plan
-            </a>
-          </li>
-          <li class="item">
-            <a href="#">
-              <span class="user-icon properties-icon">   
-              </span>
-              Manage Properties
-            </a> 
-          </li>
-          <li class="item">
-            <a href="#">
-              <span class="user-icon payments-icon">
-              </span>
-              Manage Payments
-            </a> 
-          </li>
-          <li class="item">
-            <a href="#">
-              <span class="user-icon logout-icon">            
-
-              </span>
-              Logout
-            </a> 
-          </li> 
-        </ul>
-      </div>
-    </div> -->
-    
+@section('content')
     <div class="col-md-9">
       <div class="profile-box">          
         <div class="profile-box-form">
@@ -78,7 +9,7 @@
               <div class="row">
                <div class="col-12 text-center">
                 <div class="user-box overflow-visible position-relative">
-                  <img class="rounded-pill" src="images/user-icon.jpg">              
+                  <img class="rounded-pill" src="{{url('/')}}/assets_front/images/user-icon.jpg">              
                   <div class="useravtarIcon">
                     <input type="file" id="myFile" class="opacity-0 position-absolute bottom-0" name="filename">
                     <span class="avtar_user d-inline-block rounded-pill position-absolute bottom-0 bg-white">
@@ -120,30 +51,4 @@
     </div>
   </div>
 </div>
-</main>
-
-
-<!-- <footer>
-  <div class="copyright-section text-center">
-    <div class="container">
-      <p>© 2023 - Homi. All rights reserved</p>          
-    </div>
-  </div>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
-
-<script src="js/owl.carousel.min.js"></script>
-
-
-<script>
-  $(".profile-nav .item").on("click", function() {
-    $(".profile-nav .item").removeClass("active");
-    $(this).addClass("active");
-  });
-
-</script>
-
-
-</body>
-</html>  -->
+@endsection

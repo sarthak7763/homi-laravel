@@ -199,6 +199,12 @@ function sendPushNotification($title,$description,$registrationIds,$payload,$dev
         return $adminInfo;
     }
 
+    function getSellerinfo($id)
+    {
+        $sellerInfo=User::where('id',$id)->where('user_type',3)->get()->first();
+        return $sellerInfo;
+    }
+
     function getLogo()
     {
         $logo=SystemSetting::where([['option_slug','website-logo'],['setting_type','sitelogo'],['status',1]])->first();

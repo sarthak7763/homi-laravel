@@ -7,9 +7,9 @@
   <!-- Bootstrap CSS -->
   <link href="{{url('/')}}/assets_front/css/bootstrap.min.css" rel="stylesheet"> 
   <link href="{{url('/')}}/assets_front/css/custom.css" rel="stylesheet">  
-  
-  <link rel="icon" href="images/favicon.png">
-  <title>Hello, world!</title>
+  @php $favicon=getFavicon(); @endphp
+  <link rel="icon" href="{{asset('storage'.$favicon)}}" type="image/x-icon">
+  <title>Homi Seller Panel</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="account-page"> 
@@ -18,19 +18,20 @@
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <div class="logo col-lg-auto me-lg-auto">
           <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">   
-            <img src="images/logo.png">
+            <img src="{{asset('storage'.getLogo())}}">
           </a>
         </div>
 
         <div class="dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <div class="account-box">
+              @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
               <div class="header-profile">
-                <img class="rounded-pill" src="images/user-icon.jpg">
+                <img class="rounded-pill" src="{{url('/')}}/assets_front/images/user-icon.jpg">
               </div>
               <div class="account-down">
                 <span>Welcome</span>
-                <strong>Albert Flores</strong>
+                <strong>{{$sellerinfo->name}}</strong>
               </div>              
             </div>
             

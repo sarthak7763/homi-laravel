@@ -1,13 +1,13 @@
- <div div class="container">
-     <div div class="row profile">
-     <div class="col-md-3">
+
+<div class="col-md-3">
 <div class="profile-div">
   <div class="main-profile rounded-circle mb-3">
-   <img class="rounded-pill" src="images/user-image-01.jpg">
+   <img class="rounded-pill" src="{{url('/')}}/assets_front/images/user-image-01.jpg">
  </div>
+ @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
  <div class="profile-text">                
-  <strong>Albert Flores</strong>
-  <span>albertflores@gmail.com</span>
+  <strong>{{$sellerinfo->name}}</strong>
+  <span>{{$sellerinfo->email}}</span>
 </div>
 </div>
 <div class="profile-usermenu">
