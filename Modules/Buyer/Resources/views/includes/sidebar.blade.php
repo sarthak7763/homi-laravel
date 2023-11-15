@@ -1,10 +1,11 @@
 
 <div class="col-md-3">
+@php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
 <div class="profile-div">
   <div class="main-profile rounded-circle mb-3">
-   <img class="rounded-pill" src="{{url('/')}}/assets_front/images/user-image-01.jpg">
+   <img class="rounded-pill" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
  </div>
- @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
+ 
  <div class="profile-text">                
   <strong>{{$sellerinfo->name}}</strong>
   <span>{{$sellerinfo->email}}</span>
@@ -19,28 +20,35 @@
     </a>
   </li>
   <li class="item active">
-    <a href="#">
+    <a href="{{route('buyer.my-profile')}}">
       <span class="user-icon profile-icon">
       </span>
       My Profile
     </a>
+    </li>
+  <li class="item active">
+    <a href="{{route('buyer.edit-profile')}}">
+      <span class="user-icon profile-icon">
+      </span>
+      Edit Profile
+    </a>
   </li>
   <li class="item">
-    <a href="#">
+    <a href="{{route('buyer.bookings')}}">
       <span class="user-icon bookings-icon">
       </span>
       My Bookings
     </a>
   </li>
   <li class="item">
-    <a href="#">
+    <a href="{{route('buyer.my-subscription')}}">
       <span class="user-icon subscription-icon">              
       </span>
       My Subscription Plan
     </a>
   </li>
   <li class="item">
-    <a href="#">
+    <a href="{{route('buyer.property')}}">
       <span class="user-icon properties-icon">   
       </span>
       Manage Properties
@@ -48,7 +56,7 @@
   </li>
   <li class="item">
     <a href="#">
-      <span class="user-icon payments-icon">
+      <span class="{{route('buyer.payment')}}">
       </span>
       Manage Payments
     </a> 

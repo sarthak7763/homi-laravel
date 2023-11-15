@@ -204,6 +204,8 @@ class UserController extends Controller{
       $user->name=$data['name'];
       $user->email=$data['email'];
       $user->mobile=$data['mobile'];
+      $user->owner_type=$data['owner_type'];
+      $user->agency_name=$data['agency_name'];
       $user->country_id = $data['country_id'];
       $user->password=$hashedPassword;
       $user->email_verified=1;

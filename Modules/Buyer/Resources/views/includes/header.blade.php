@@ -27,7 +27,8 @@
             <div class="account-box">
               @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
               <div class="header-profile">
-                <img class="rounded-pill" src="{{url('/')}}/assets_front/images/user-icon.jpg">
+                
+                <img class="rounded-pill" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
               </div>
               <div class="account-down">
                 <span>Welcome</span>

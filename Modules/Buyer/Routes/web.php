@@ -38,6 +38,53 @@ Route::group(['middleware' => 'Isseller'], function ()
 {
 
     Route::get('/dealer/dashboard', 'DashboardController@index')->name('buyer.dashboard');
+
+
+    //--------------------- profile routes------------------------------------                             //
     Route::get('/dealer/my-profile', 'MyprofileController@index')->name('buyer.my-profile');
+    Route::get('/dealer/edit-profile', 'MyprofileController@edit')->name('buyer.edit-profile');
+    Route::post('/dealer/update-profile', 'MyprofileController@update')->name('buyer.update-profile');
+
+// ----------------------------------------end------------------------------------//
+
+    
+
+    Route::get('/dealer/bookings', 'BookingController@booking')->name('buyer.bookings');
+
+    //-------------------------------------- subscription--------------------------------------------// 
+    Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
+    Route::get('/dealer/user-subscription/{id}', 'MysubscriptionController@usersubscription')->name('buyer.user-subscription');
+    Route::post('/dealer/user-subscription-confirmation/{id}', 'MysubscriptionController@subscriptionconfirmation')->name('buyer.subscription-confirmation');
+
+
+
+
+// --------------------------------------------------property---------------------------------------------//
+    Route::get('/dealer/manage-properties', 'PropertyController@index')->name('buyer.property');
+    Route::get('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
+    Route::get('/dealer/add-properties', 'PropertyController@add')->name('buyer.add-property');
+    Route::post('/dealer/get-categorydata-property', 'PropertyController@getcategory')->name('buyer.get-category');
+
+    Route::post('/dealer/save-propertiesData', 'PropertyController@store')->name('buyer.store-property');
+
+
+    // --------------------------------------------end-------------------------------------------------------//
+
+    
+
+
+
+
+
+
+
+
+
+    Route::get('/dealer/manage-payments', 'PaymentController@index')->name('buyer.payment');
+    
+
+
+
+
 
 });

@@ -178,9 +178,30 @@
                                 </span>
                             </div>
                         </div>
-                    </div> 
-
+                    </div>
+                    <br>
+                    <br>
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Owner Type</label>
+                                <select name="owner_type" id="owner_type"  class="form-control owner_type">
+                                  <option value="">Select Owner Type</option>
+                        <option value="1">Agency</option>
+                        <option value="2">Indiviuals</option>
+                        </select>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6" id="showagencydiv" style="display:none;">
+                            <div class="form-group" >
+                                <input type="text" class="form-control"  name="agency_name" id = "agency_name">
+                                </div>
+                           </div>
+
+                         </div>
+                        
+                         <div class="row">
                         <div class="col-md-12">
                             <button type="submit" id="submitBuyers" class="btn btn-primary m-b-0">Save</button>
 
@@ -260,5 +281,19 @@ for(var i=0;i<total_file;i++)
 
 }
 
+</script>
+
+
+<script>
+$(document).on('change','#owner_type',function(){
+    var value=$(this).val();
+    if(value==1)
+    {
+      $('#showagencydiv').show();
+    }
+    else{
+      $('#showagencydiv').hide();
+    }
+});
 </script>
 @endsection

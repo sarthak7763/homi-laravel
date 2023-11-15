@@ -39,7 +39,9 @@ class User extends Authenticatable
         'remember_token',
         'email_verified',
         'email_verification_token',
-        'is_verified'
+        'is_verified',
+        'owner_type',
+        'agency_name'
     ];
 
     /**
