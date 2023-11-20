@@ -112,7 +112,7 @@ span.messages strong{
                         @csrf
                         <h1>Welcome!</h1>
                         <strong>Signup your account</strong>
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <input type="text" name="name" class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter your name here">
                             @if($name_error!="")
                               <span class="messages">
@@ -121,7 +121,7 @@ span.messages strong{
                           @endif
                                
                         </div>
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <input type="email" name="email" class="form-control" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID">
 
@@ -132,7 +132,7 @@ span.messages strong{
                         @endif
                         </div>
 
-                        <div class="mb-4 input-group">
+                        <div class="mb-3 input-group">
                             <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                             <span toggle="#password" class="input-group-text togglePassword" id="">
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
@@ -163,7 +163,7 @@ span.messages strong{
                         </div>
 
 
-                        <div class="mb-4 input-group">
+                        <div class="mb-3 input-group">
                             <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Password">
                             <span toggle="#confirm_password" class="input-group-text togglePassword2" id="">
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
@@ -195,13 +195,13 @@ span.messages strong{
 
 
 
-                        <div class="mb-4 form-check">
+                        <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
                             <label class="form-check-label" for="exampleCheck1">I Accept <a href="#">Terms and
                                     Conditions</a></label>
                         </div>
                         <button type="submit"  id="btnSignup" class="btn btn-primary">Signup</button>
-                        <div class="signup-footer mt-5 text-center">
+                        <div class="signup-footer mt-4 text-center">
                             <p>Already have an account? <a href="{{url('/')}}/dealer/login">Sign in</a></p>
                         </div>
                     </form>

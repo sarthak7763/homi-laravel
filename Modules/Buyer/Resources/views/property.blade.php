@@ -58,8 +58,8 @@
                 <p>Owner: Albert Flores    |    Featured: No</p>
 
                 <div class="manage-btn-group">
-                  <a href="#" class="btn btn-view">View</a>
-                  <a href="#" class="btn btn-edit">Edit</a>
+                  <a href="{{route('buyer.view-property',($property->id))}}" class="btn btn-view">View</a>
+                  <a href="{{route('buyer.edit-property',($property->id))}}" class="btn btn-edit">Edit</a>
                   <a href="#" class="btn btn-delete">Delete</a>
                 </div>
                 

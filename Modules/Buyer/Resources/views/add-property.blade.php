@@ -4,7 +4,7 @@
    <div class="profile-box">
       <div class="profile-box-form">
          <h1 class="mb-3">Add New Properties</h1>
-         <form class="profile-form p-3 mb-4" action = "{{route('buyer.store-property')}}" method = "Post">
+         <form class="profile-form p-3 mb-4" action = "{{route('buyer.store-property')}}" method = "Post" enctype= "multipart/form-data">
             @csrf 
             <div class="row">
                <div class="col-12">
@@ -100,25 +100,25 @@
                   <div class="col-sm-3">
                      <div class="mb-4 ">
                         <label>Pool</label>
-                        <input type = "checkbox" name = "chk_pool" >           
+                        <input type = "checkbox" name = "chk_pool"  value = "1" >           
                      </div>
                   </div>
                   <div class="col-sm-3">
                      <div class="mb-4">
                         <label>Lift</label>
-                        <input type = "checkbox" name = "chk_lift" >           
+                        <input type = "checkbox" name = "chk_lift"   value = "1" >           
                      </div>
                   </div>
                   <div class="col-sm-3">
                      <div class="mb-4">
                         <label>Garden</label>
-                        <input type = "checkbox" name = "chk_garden" >           
+                        <input type = "checkbox" name = "chk_garden"  value = "1">           
                      </div>
                   </div>
                   <div class="col-sm-3">
                      <div class="mb-4">
                         <label>Parking</label>
-                        <input type = "checkbox" name = "chk_parking" >           
+                        <input type = "checkbox" name = "chk_parking"  value = "1" >           
                      </div>
                   </div>
                   <div class="col-sm-6">
@@ -175,18 +175,18 @@
                            </option>
                            @endforeach
                         </select>
-                        <input type="text" class="form-control" name = "property_number" value="{{$user_details->mobile}}" aria-describedby="" placeholder="Enter Contact No" id = "property_number">            
+                        <input type="text" class="form-control" name = "property_number" readonly value="{{$userData->mobile}} " aria-describedby="" placeholder="Enter Contact No" id = "property_number">            
                      </div>
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">            
-                        <input type="text" class="form-control" value="{{$user_details->email}}" name = "property_email"  aria-describedby="" placeholder="Enter Contact Email">            
+                        <input type="text" class="form-control" value="{{$userData->email}} " readonly name = "property_email"  aria-describedby="" placeholder="Enter Contact Email">            
                      </div>
                   </div>
                   <div class="col-sm-12">
                      <div class="mb-4 position-relative address-group">
                         <input type="text" class="form-control pe-5 @error('property_address') is-invalid @enderror" name = "property_address" id="" aria-describedby="" placeholder="Address">   
-                        @if($errors->has('property_condition'))
+                        @if($errors->has('property_address'))
                         <div class="invalid-feedback">
                            {{$errors->first('property_address')}}
                         </div>
@@ -217,32 +217,55 @@
                      </div>
                   </div>
                   <div class="col-sm-6">
-                     <div class="mb-4">            
-                        <input type="file" class="form-control" name = "" id="" aria-describedby="" placeholder="Enter Property Featured Image">            
+                     <div class="mb-4">
+                        <input type="file" class="form-control @error('property_image') is-invalid @enderror" name="property_image">            
+                        @if($errors->has('property_image'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_image')}}
+                        </div>
+                        @endif
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-12">
+                        <div class="mb-4">
+                           <select class="form-control js-example-tokenizer" name="property_features[]" multiple="multiple">
+                              <option value="">Add Features</option>
+                           </select>
+                        </div>
                      </div>
                   </div>
                   <div class="col-6">
                      <div class="mb-4">            
-                        <textarea class="form-control" name = "" id="exampleFormControlTextarea1" rows="3" placeholder="Meta Title"></textarea>         
+                        <textarea class="form-control" name = "meta_title" id="exampleFormControlTextarea1" rows="3" placeholder="Meta Title"></textarea>         
                      </div>
                   </div>
                   <div class="col-12">
                      <div class="mb-4">            
-                        <textarea class="form-control" name = "" id="exampleFormControlTextarea1" rows="3" placeholder="Meta keywords"></textarea>         
+                        <textarea class="form-control" name = "meta_keywords" id="exampleFormControlTextarea1" rows="3" placeholder="Meta keywords"></textarea>         
                      </div>
                   </div>
                   <div class="col-12">
                      <div class="mb-4">            
-                        <textarea class="form-control" name = "" id="exampleFormControlTextarea1" rows="3" placeholder="Meta Description"></textarea>         
+                        <textarea class="form-control" name = "meta_description" id="exampleFormControlTextarea1" rows="3" placeholder="Meta Description"></textarea>         
                      </div>
                   </div>
                </div>
                <div class="col-12">
                   <div class="mb-4">            
-                     <textarea class="form-control" name = "" id="exampleFormControlTextarea1" rows="3" placeholder="Property Description"></textarea>         
+                     <textarea class="form-control" name = "property_description" id="exampleFormControlTextarea1" rows="3" placeholder="Property Description"></textarea>         
                   </div>
                </div>
             </div>
+            <div>
+            </div>
+            <div class="col-sm-6">
+                     <div class="mb-4">
+                        <input type="file" class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple">            
+                        
+                     </div>
+                  </div>
+
             <div class="row">
                <div class="col-md-5 mb-4">
                   <div class="thumbnail-image text-center rounded-6" name = "">

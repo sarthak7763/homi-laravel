@@ -116,6 +116,32 @@
                                         @endif  
                                     </tr>
 
+                                    <tr>
+                                        <th>Owner Type:</th>
+                                        @if($userInfo->owner_type==1)
+                                        <td>
+                                            <span class="badge badge-success">Agency</span>
+                                        </td>
+                                        @else
+                                        <td>
+                                            <span class="badge badge-danger">Individuals</span>
+                                        </td> 
+                                        @endif  
+                                    </tr>
+
+                                    <tr>
+                                        <th>Agency Name:</th>
+                                        @if($userInfo->owner_type==1)
+                                        <td>
+                                            {{$userInfo->agency_name}}
+                                        </td>
+                                        @else
+                                        <td>
+                                            N.A.
+                                        </td> 
+                                        @endif  
+                                    </tr>
+
                                      <tr>
                                         <th>Status:</th>
                                         @if($userInfo->status==1)

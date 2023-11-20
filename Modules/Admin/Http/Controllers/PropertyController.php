@@ -253,8 +253,6 @@ class PropertyController extends Controller {
                 'built_in_year'=>'nullable',
                 'no_of_kitchen'=>'nullable|numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_pool'=>'nullable|numeric',
-                'no_of_garden'=>'nullable|numeric',
                 'no_of_balcony'=>'nullable|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
@@ -372,6 +370,46 @@ class PropertyController extends Controller {
             }
 
 
+        if(isset($request->no_of_garden))
+        {
+            $no_of_garden=$request->no_of_garden;
+        }
+        else{
+            $no_of_garden=0;
+        }
+
+        if(isset($request->no_of_pool))
+        {
+            $no_of_pool=$request->no_of_pool;
+        }
+        else{
+            $no_of_pool=0;
+        }
+
+        if(isset($request->no_of_parking))
+        {
+            $no_of_parking=$request->no_of_parking;
+        }
+        else{
+            $no_of_parking=0;
+        }
+
+        if(isset($request->no_of_lift))
+        {
+            $no_of_lift=$request->no_of_lift;
+        }
+        else{
+            $no_of_lift=0;
+        }
+
+        if(count($request->features) > 0)
+        {
+            $features_list=json_encode($request->features);
+        }
+        else{
+            $features_list="";
+        }
+
           $title_pt=GoogleTranslate::trans($data['title'],'pt');
           $property_address_pt="";
 
@@ -416,10 +454,13 @@ class PropertyController extends Controller {
             $property->no_of_bedroom=$data['no_of_bedroom'];
             $property->no_of_kitchen=$data['no_of_kitchen'];
             $property->no_of_bathroom=$data['no_of_bathroom'];
-            $property->no_of_pool=$data['no_of_pool'];
-            $property->no_of_garden=$data['no_of_garden'];
+            $property->no_of_pool=$no_of_pool;
+            $property->no_of_garden=$no_of_garden;
+            $property->no_of_lift=$no_of_lift;
+            $property->no_of_parking=$no_of_parking;
             $property->no_of_balcony=$data['no_of_balcony'];
             $property->no_of_floors=$data['no_of_floors'];
+            $property->property_features=$features_list;
             $property->property_area=$data['property_area'];
             $property->property_number=$data['property_number'];
             $property->property_address=$data['property_address'];
@@ -446,7 +487,10 @@ class PropertyController extends Controller {
             $property->save();
 
             toastr()->success('Property information saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-            return redirect()->route('admin-property-gallery-view',$property->slug)->with('success',"Property information saved successfully. Now add property Images to publish your property");
+
+            $this->uploadpropertyimages($property->id,$request);
+
+            return redirect()->route('admin-property-list')->with('success',"Property information saved successfully.");
         }
         catch (\Exception $e){
 	        if($e instanceof ValidationException){
@@ -470,6 +514,41 @@ class PropertyController extends Controller {
 		    }
         }
     }
+
+    public function uploadpropertyimages($propertyid,$request)
+    {
+        $checkproperty=Property::where('id',$propertyid)->get()->first();
+        if($checkproperty)
+        {
+            $property_gallery_files = [];
+              if($request->hasfile('property_gallery'))
+               {
+                  foreach($request->file('property_gallery') as $file)
+                  {
+                      $name = time().rand(1,50).'.'.$file->extension();
+                      $file->move(public_path('/images/property/gallery/'), $name);  
+                      $property_gallery_files[] = $name;  
+                  }
+               }
+
+            foreach($property_gallery_files as $list)
+              {
+                $propertygallery = new PropertyGallery;
+                $propertygallery->property_id=$propertyid;
+                $propertygallery->image=$list;
+                $propertygallery->status=1;
+                $propertygallery->type=1;
+
+                $propertygallery->save();
+              }
+
+              return true;
+        }
+        else{
+            return true;
+        }
+    }
+
     public function edit($slug){
         try{
             $country_list=getcountrylist();
@@ -479,7 +558,27 @@ class PropertyController extends Controller {
 
             $condition = PropertyCondition::where('status','1')->get();
 
-            return view('admin::property.edit', compact('propertyInfo','catType','PropOwnerList','condition','country_list'));
+            $galleryList=PropertyGallery::where('property_id',$propertyInfo->id)->where('type',"1")->where('status',1)->orderBy('id','DESC')->get();
+            if($galleryList)
+            {
+                $galleryListarray=$galleryList->toArray();
+                if($galleryListarray)
+                {
+                    $property_gallery=[];
+                    foreach($galleryListarray as $list)
+                    {
+                        $property_gallery[]=array('id'=>$list['id'],'url'=>url('/').'/images/property/gallery/'.$list['image']);
+                    }
+                }
+                else{
+                    $property_gallery=[];
+                }
+            }
+            else{
+                $property_gallery=[];
+            }
+
+            return view('admin::property.edit', compact('propertyInfo','catType','PropOwnerList','condition','country_list','property_gallery'));
         }
         catch(Exception $e){
             return redirect()->back()->with('error', 'something wrong');            
@@ -1051,6 +1150,34 @@ class PropertyController extends Controller {
         catch(Exception $e){
             return redirect()->back()->with('error', 'something wrong');     
         }  
+    }
+
+    public function ajaxpropertyimagedelete(Request $request)
+    {
+        $property_id=$request->property_id;
+        $checkproperty=Property::where('id',$property_id)->get()->first();
+        if($checkproperty)
+        {
+            $checkpropertygallery=PropertyGallery::where('id',$request->id)->where('property_id',$property_id)->get()->first();
+            if($checkpropertygallery)
+            {
+                PropertyGallery::where('id',$request->id)->where('property_id',$property_id)->delete();
+
+                $data=array('code'=>200,'message'=>'Image deleted successfully.');
+                $finaldata=json_encode($data);
+                return $finaldata;
+            }
+            else{
+                $data=array('code'=>400,'message'=>'Something went wrong.');
+                $finaldata=json_encode($data);
+                return $finaldata;
+            }
+        }
+        else{
+            $data=array('code'=>400,'message'=>'Invalid property.');
+            $finaldata=json_encode($data);
+            return $finaldata;
+        }
     }
 
 }

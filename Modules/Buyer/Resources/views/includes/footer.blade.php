@@ -6,16 +6,41 @@
   </div>
 </footer>
 <!--Jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
+
 <!-- Owl Carousel -->
-<script src="js/owl.carousel.min.js"></script>
+<!-- <script src="{{url('/')}}/js/owl.carousel.min.js"></script> -->
 <!-- custom JS code after importing jquery and owl -->
 
+
 <script>
-  $(".profile-nav .item").on("click", function() {
+
+$(".js-example-tokenizer").select2({
+    tags: true,
+    tokenSeparators: [',']
+})
+
+
+</script>
+
+<script>
+
+$(".profile-nav .item").on("click", function() {
     $(".profile-nav .item").removeClass("active");
     $(this).addClass("active");
   });
+
+// function preview_multiple_image() {
+//   // console.log('123');
+// $('#property_image_preview').html("");
+// var total_file=document.getElementById("property_image").files.length;
+// for(var i=0;i<total_file;i++)
+// {
+
+//   $('#property_image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid  mr-2'>");
+//  }
+
+// }
+
 
 </script>
 

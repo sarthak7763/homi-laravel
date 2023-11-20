@@ -9,6 +9,8 @@
   $image_error="";
   $password_error="";
   $mobile_error="";
+  $agency_name_error="";
+  $owner_type_error="";
   @endphp
 
   @if (session()->has('valid_error'))
@@ -41,6 +43,18 @@
       @php $image_error=$validationmessage['profile_pic']; @endphp
       @else
       @php $image_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['owner_type']))
+      @php $owner_type_error=$validationmessage['owner_type']; @endphp
+      @else
+      @php $owner_type_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['agency_name']))
+      @php $agency_name_error=$validationmessage['agency_name']; @endphp
+      @else
+      @php $agency_name_error=""; @endphp
       @endif
   @endif
  
@@ -172,6 +186,40 @@
                                 </span>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Owner Type</label>
+                                <select name="owner_type" id="owner_type" class="form-control">
+                                  <option value="">Choose Owner Type</option>
+                                  <option value="1">Agency</option>
+                                  <option value="2">Individuals</option>
+                                </select>
+                                @if($owner_type_error!="")
+                                @php $style="display:block;"; @endphp
+                                @else
+                                @php $style="display:none;"; @endphp
+                                @endif
+                                <span class="invalid-feedback" style="{{$style}}" role="alert">
+                                    <strong>{{ $owner_type_error }}</strong>
+                                </span>
+                            </div>
+                        </div>
+                        @if($agency_name_error!="")
+                          @php $divstyle="display:block;"; @endphp
+                        @else
+                          @php $divstyle="display:none;"; @endphp
+                        @endif
+                        <div class="col-md-6" id="agencynamediv" style="{{$divstyle}}">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Agency Name</label>
+                                <input type="text" class="form-control" name="agency_name" id="agency_name"  placeholder="Enter Agency Name" >
+                                <span class="invalid-feedback" style="{{$divstyle}}" role="alert">
+                                    <strong>{{ $agency_name_error }}</strong>
+                                </span>
+                            </div>
+                        </div>
+
                     </div> 
 
                     <div class="row">
@@ -195,6 +243,19 @@
 @endsection
 @section('js')
 
+<script type="text/javascript">
+  $(document).on('change','#owner_type',function(){
+    var owner_type=$(this).val();
+    if(owner_type==1)
+    {
+      $('#agencynamediv').show();
+    }
+    else{
+      $('#agencynamediv').hide();
+    }
+  });
+</script>
+
 <script>
 $.ajaxSetup({
    headers: {
@@ -215,6 +276,9 @@ $.ajaxSetup({
             mobile:{
                 required: true
             },
+            owner_type:{
+              required: true
+            },
         },
         messages: {
             name: {
@@ -227,6 +291,10 @@ $.ajaxSetup({
             },
             mobile: {
                 required: "please enter mobile number",
+                
+            },
+            owner_type: {
+                required: "please select owner type",
                 
             },
         },

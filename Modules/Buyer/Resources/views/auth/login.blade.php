@@ -13,11 +13,11 @@
                        @csrf
                         <h1>Welcome!</h1>
                         <strong>Signin your account</strong>
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <input type="email" name="email" class="form-control" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID">
                         </div>
-                        <div class="mb-4 input-group">
+                        <div class="mb-3 input-group">
                             <input type="password" name="password" class="form-control" id="password" placeholder="Password">
                             <span toggle="#password" class="input-group-text togglePassword" id="">
 
@@ -46,7 +46,7 @@
                             <p><a href="{{url('/')}}/dealer/forget-password">Forgot Password</a></p>
                         </div>
 
-                        <div class="signup-footer mt-5 text-center">
+                        <div class="signup-footer mt-4 text-center">
                             <p>Don't have an account? <a href="{{url('/')}}/dealer/register">Sign Up</a></p>
                         </div>
                     </form>

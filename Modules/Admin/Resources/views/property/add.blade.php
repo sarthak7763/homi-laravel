@@ -24,6 +24,9 @@ label.error{
   $bathroom_count_error="";
   $pool_count_error="";
   $garden_count_error="";
+  $lift_count_error="";
+  $parking_count_error="";
+  $features_error="";
   $balcony_count_error="";
   $floors_count_error="";
   $property_condition_error="";
@@ -103,6 +106,18 @@ label.error{
       @php $garden_count_error=$validationmessage['no_of_garden']; @endphp
       @else
       @php $garden_count_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['no_of_lift']))
+      @php $lift_count_error=$validationmessage['no_of_lift']; @endphp
+      @else
+      @php $lift_count_error=""; @endphp
+      @endif
+
+      @if($validationmessage!="" && isset($validationmessage['no_of_parking']))
+      @php $parking_count_error=$validationmessage['no_of_parking']; @endphp
+      @else
+      @php $parking_count_error=""; @endphp
       @endif
 
       @if($validationmessage!="" && isset($validationmessage['no_of_balcony']))
@@ -392,8 +407,8 @@ label.error{
                                 
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">No. of Pool</label>
-                                  <input type="text" name="no_of_pool" class="form-control"   value="" id="no_of_pool" placeholder="Enter No. of Pool">
+                                  <label class="font-weight-bold">Pool</label>
+                                  <input type="checkbox" name="no_of_pool" class="form-control"   value="1" id="no_of_pool">
                                   @if($pool_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $pool_count_error }}</strong>
@@ -401,10 +416,11 @@ label.error{
                                   @endif
                               </div>
                           </div>
+
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label class="font-weight-bold">No. of Garden</label>
-                                  <input type="text" name="no_of_garden" class="form-control" value="" id="no_of_garden" placeholder="Enter No. of garden ">
+                                  <label class="font-weight-bold">Garden</label>
+                                  <input type="checkbox" name="no_of_garden" class="form-control" value="1" id="no_of_garden">
                                   @if($garden_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $garden_count_error }}</strong>
@@ -412,6 +428,40 @@ label.error{
                                   @endif
                               </div>
                           </div>
+
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label class="font-weight-bold">Parking</label>
+                                  <input type="checkbox" name="no_of_parking" class="form-control" value="1" id="no_of_parking">
+                                  @if($parking_count_error!="")
+                                      <span class="messages">
+                                          <strong>{{ $parking_count_error }}</strong>
+                                      </span>
+                                  @endif
+                              </div>
+                          </div>
+
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label class="font-weight-bold">Lift</label>
+                                  <input type="checkbox" name="no_of_lift" class="form-control" value="1" id="no_of_lift">
+                                  @if($lift_count_error!="")
+                                      <span class="messages">
+                                          <strong>{{ $lift_count_error }}</strong>
+                                      </span>
+                                  @endif
+                              </div>
+                          </div>
+
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label class="font-weight-bold">Features</label>
+                                  <select class="form-control js-example-tokenizer" name="features[]" multiple="multiple">
+                                    
+                                  </select>
+                              </div>
+                          </div>
+
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">No. of Balcony</label>
@@ -423,6 +473,7 @@ label.error{
                                   @endif
                               </div>
                           </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Property Area <span>(Sq. Ft.)</span></label>
@@ -602,6 +653,22 @@ label.error{
                         @endif
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="font-weight-bold">Property Gallery Image<span style="color:red;">*</span></label>
+                        <small></small>
+                        <input type="file" class="form-control"  name="property_gallery[]" multiple="multiple" id="property_gallery_image"  onchange="preview_multiple_image()">
+                        @if($property_image_error!="")
+                             <span class="messages">
+                                <strong>{{ $property_image_error }}</strong>
+                            </span>
+                        @endif
+                        <div id="property_gallery_image_preview">
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -636,6 +703,19 @@ label.error{
 
 <script type="text/javascript">
 
+function preview_multiple_image() 
+{
+    
+$('#property_gallery_image_preview').html("");
+var total_file=document.getElementById("property_gallery_image").files.length;
+for(var i=0;i<total_file;i++)
+{
+
+  $('#property_gallery_image_preview').append("<div class='removeimage' id='removeimagediv_"+i+"' data-id='"+i+"'><img src='https://homi.ezxdemo.com/images/3687412.png' height='50px' width='50px'><img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid  mr-2'></div>");
+ }
+
+}
+
 function preview_image() 
 {
     
@@ -655,6 +735,15 @@ for(var i=0;i<total_file;i++)
     changeYear: true,
     dateFormat: 'mm/yy',
 });
+
+  $(document).on('click','.removeimage',function(){
+    var id=$(this).attr('data-id');
+    $('#removeimagediv_'+id).remove();
+    // var newFileList = Array.from(document.getElementById("property_gallery_image").files);
+    // console.log(newFileList,'newFileList');
+    // newFileList.splice(id,1);
+
+  });
 
   $('#property_type').on('change',function(){
     var property_type=$(this).val();
@@ -708,6 +797,11 @@ for(var i=0;i<total_file;i++)
 $(document).ready(function(){
     $(".js-example-placeholder-multiple").select2({
         placeholder: "Select"
+    });
+
+    $(".js-example-tokenizer").select2({
+        tags: true,
+        tokenSeparators: [',']
     });
 });
 </script>

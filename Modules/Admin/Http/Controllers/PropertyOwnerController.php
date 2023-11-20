@@ -141,6 +141,7 @@ class PropertyOwnerController extends Controller{
               'required',
                'numeric',
           ],
+          'owner_type'=>'required'
 	    ],
       [
         'name.required' => 'Name field can’t be left blank.',
@@ -150,7 +151,22 @@ class PropertyOwnerController extends Controller{
         'mobile.required'=>'Please enter a valid mobile number',
         'mobile.min'=>'Password can not be less than 10 character.',
         'mobile.max'=>'Password can not be more than 12 character',
+        'owner_type.required'=>'Please select owner type'
       ]);
+
+      if($request->owner_type==1)
+      {
+          $request->validate([
+            'agency_name'=>[
+                    'required',
+                    'regex:/^[\pL\s]+$/u',
+              ],
+        ],
+        [
+          'agency_name.required' => 'Agency Name field can’t be left blank.',
+          'agency_name.regex' => 'Please enter only alphabetic characters.',
+        ]);
+      }
 
       $fileNameToStore="";
       //Upload Image
@@ -212,6 +228,8 @@ class PropertyOwnerController extends Controller{
       $user->status=1;
       $user->profile_pic=$fileNameToStore;
       $user->user_type=3;
+      $user->owner_type=$data['owner_type'];
+      $user->agency_name=$data['agency_name'];
       $user->save();
 
       if($user){
@@ -268,6 +286,7 @@ class PropertyOwnerController extends Controller{
             'required',
             'numeric'
           ],
+          'owner_type'=>'required'
       ],
       [
         'name.required' => 'Name field can’t be left blank.',
@@ -277,7 +296,22 @@ class PropertyOwnerController extends Controller{
         'mobile.required'=>'Please enter a valid number',
         'mobile.min'=>'Password can not be less than 10 character.',
         'mobile.max'=>'Password can not be more than 12 character',
+        'owner_type.required'=>'Please select owner type'
       ]);
+
+      if($request->owner_type==1)
+      {
+          $request->validate([
+            'agency_name'=>[
+                    'required',
+                    'regex:/^[\pL\s]+$/u',
+              ],
+        ],
+        [
+          'agency_name.required' => 'Agency Name field can’t be left blank.',
+          'agency_name.regex' => 'Please enter only alphabetic characters.',
+        ]);
+      }
 
       if(!array_key_exists("id",$data))
       {
@@ -334,12 +368,16 @@ class PropertyOwnerController extends Controller{
             {
               $user->name = $data['name'];
               $user->mobile = $data['mobile'];
+              $user->owner_type=$data['owner_type'];
+              $user->agency_name=$data['agency_name'];
               $user->profile_pic=$fileNameToStore;
 
             }
             else{
               $user->name = $data['name'];
               $user->mobile = $data['mobile'];
+              $user->owner_type=$data['owner_type'];
+              $user->agency_name=$data['agency_name'];
             }
         }
         else{
@@ -354,6 +392,8 @@ class PropertyOwnerController extends Controller{
               $user->name = $data['name'];
               $user->email=$data['email'];
               $user->mobile = $data['mobile'];
+              $user->owner_type=$data['owner_type'];
+              $user->agency_name=$data['agency_name'];
               $user->profile_pic=$fileNameToStore;
 
             }
@@ -361,6 +401,8 @@ class PropertyOwnerController extends Controller{
               $user->name = $data['name'];
               $user->email=$data['email'];
               $user->mobile = $data['mobile'];
+              $user->owner_type=$data['owner_type'];
+              $user->agency_name=$data['agency_name'];
             }
           }
         }

@@ -177,6 +177,8 @@ Route::group(['middleware' => 'Isadmin'], function () {
 
         Route::post('/ajax-get-category-list', 'PropertyController@ajaxgetcategorylist')->name('admin-ajax-get-category-list');
 
+        Route::post('/ajax-property-image-delete', 'PropertyController@ajaxpropertyimagedelete')->name('admin-ajax-property-image-delete');
+
 
         Route::post('/ajax-get-ownder-details', 'PropertyController@ajaxgetownderdetails')->name('admin-ajax-get-ownder-details');
         

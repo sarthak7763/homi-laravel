@@ -20,7 +20,8 @@ class PropertyGallery extends Model
         'description',
         'add_by',
         'status',
-        'delete_status'
+        'delete_status',
+        'image'
     ];
 
     public function getAttachmentAttribute($value){

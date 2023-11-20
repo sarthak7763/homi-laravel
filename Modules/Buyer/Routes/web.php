@@ -66,6 +66,10 @@ Route::group(['middleware' => 'Isseller'], function ()
     Route::post('/dealer/get-categorydata-property', 'PropertyController@getcategory')->name('buyer.get-category');
 
     Route::post('/dealer/save-propertiesData', 'PropertyController@store')->name('buyer.store-property');
+    Route::get('/dealer/edit-propertiesData/{id}', 'PropertyController@edit')->name('buyer.edit-property');
+    Route::get('/dealer/view-propertiesData/{id}', 'PropertyController@view')->name('buyer.view-property');
+
+
 
 
     // --------------------------------------------end-------------------------------------------------------//
