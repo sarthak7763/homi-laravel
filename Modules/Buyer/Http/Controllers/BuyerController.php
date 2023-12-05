@@ -14,17 +14,15 @@ use App\Helpers\Helper;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Password;
-use Hash,Auth,Validator,Exception,DataTables,Mail,Str,Notification,Session;
-use Illuminate\Mail\Message; 
+use Hash,Auth,Validator,Exception,DataTables,Mail,Str,Notification,Session,DB;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
 class BuyerController extends Controller {
 
 	public function buyerlogin(Request $request) { 
+  
       try{
-
-        
         return view('buyer::auth.login');
     }
     catch(Exception $e){  
@@ -62,14 +60,112 @@ class BuyerController extends Controller {
     }
   }
 
-  public function buyerForgotPassword(){
-    try{
+  public function buyershowForgotPassword(){
+    
+  try{
+      session()->flash('message', 'email  successfully send.');
       return view('buyer::auth.passwords.email');
     }
     catch(Exception $e){  
       return redirect()->back()->with('error', 'something wrong');     
     }
   }
+
+
+
+
+  public function buyerSubmitResetPassword(Request $request){
+  
+   
+   try{
+
+      $user = User::where('email', $request->email)->select('email')->first();
+    if(!empty($user)){
+      
+        $token = Str::random(64);
+  
+        DB::table('password_resets')->insert([
+            'email' => $request->email, 
+            'token' => $token, 
+            'created_at' => Carbon::now()
+          ]);
+
+    $reset_password_link = 'https://homi.ezxdemo.com/dealer/reset-password/'.$token;
+ 
+   
+  Mail::send('emails.reset', ['reset_password_link' => $reset_password_link], function($message) use($user){
+      $message->to($user->email);
+      $message->subject('Reset Password');
+  });
+
+  return redirect()->baCK()->with('success', 'email has been sent  successfully.');
+}
+else{
+
+return redirect()->route('buyer-login')->with('error','id does not found');
+  }
+   }
+    catch(Exception $e){  
+      return redirect()->back()->with('error', 'something wrong');     
+    }
+  }
+
+
+  public function showResetPasswordForm($token) { 
+   
+    return view('buyer::auth.passwords.reset',['token' => $token]);
+ }
+
+
+
+ public function submitResetPasswordForm(Request $request)
+      {
+      
+          $request->validate([
+              'email' => 'required|email',
+              'password' => 'required|string|min:6|confirmed',
+              'password_confirmation' => 'required'
+          ]);
+  
+          $updatePassword = DB::table('password_resets')
+                              ->where([
+                                'email' => $request->email, 
+                                'token' => $request->token
+                              ])
+                              ->first();
+
+              if(!$updatePassword){
+              return back()->withInput()->with('error', 'Invalid token!');
+          }
+  
+          $user = User::where('email', $request->email)
+                      ->update(['password' => Hash::make($request->password)]);
+ 
+          DB::table('password_resets')->where(['email'=> $request->email])->delete();
+        
+          return redirect()->route('buyer-login')->with('message', 'Your password has been changed!');
+      }
+
+
+      public function buyerlogout(Request $request){
+              Auth::logout();
+      
+        return redirect()->route('buyer-login')->with('message', 'You Are Successfully logout!');
+      }
+
+
+
+
+ 
+ 
+
+
+
+
+ 
+
+
+
 
   //BUYER SIGN UP REGISTER POST 
   public function sellerSignupPost(Request $request){
@@ -167,12 +263,29 @@ class BuyerController extends Controller {
 
   public function sellerLoginPost(Request $request)
   {
+   
     try
     {
        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+            'email' => 'required|email',
+            'password' => [
+              'required',
+              'min:8',
+              'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+              'max:25'
+        ],
+      ],
+      
+      
+      [
+        'email.required' => 'email is required.',
+        'email.email' => 'please enter valid email type',
+        'password.required' => 'password is required.',
+        'password.min' => 'password should be minimum 8 characters.',
+        'password.max' => 'password should be maximum 25 characters',
+        'password.regex' => 'password should be capital letter, small letter,special charcters and number .',
+         ]);
+        
    
         $credentials = $request->only('email', 'password');
        

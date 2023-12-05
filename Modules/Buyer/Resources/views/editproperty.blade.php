@@ -4,8 +4,8 @@
    <div class="profile-box">
       <div class="profile-box-form">
          <h1 class="mb-3">Edit Properties</h1>
-         <form class="profile-form p-3 mb-4" action = "" method = "" enctype= "multipart/form-data">
-            
+         <form class="profile-form p-3 mb-4" action = "{{route('buyer.update-property',$propertyDetail->id)}}" method = "Post" enctype= "multipart/form-data">
+            @csrf
             <div class="row">
                <div class="col-12">
                   <div class="mb-4">
@@ -22,24 +22,21 @@
                <div class="row">
                   <div class="col-sm-6">
                      <div class="mb-4">
-                     <select name="property_type" id="property_type"  class="form-control ">
-                           <option value="1" {{ $propertyDetail->property_type == 1 ? 'selected' : '' }}>Renting</option>
-                            <option value="2" {{ $propertyDetail->property_type == 2 ? 'selected' : '' }}>Buying</option>
-                            
-                                 </select>
-                        
+                        <select name="property_type" id="property_type"  class="form-select form-control @error('property_type') is-invalid @enderror ">
+                        <option value="1" {{ $propertyDetail->property_type == 1 ? 'selected' : '' }}>Renting</option>
+                        <option value="2" {{ $propertyDetail->property_type == 2 ? 'selected' : '' }}>Buying</option>
+                        </select>
                         @if($errors->has('property_type'))
                         <div class="invalid-feedback">
                            {{$errors->first('property_type')}}
                         </div>
-                        @endif           
+                        @endif
                      </div>
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">
-                        <select class="form-select form-control @error('property_category') is-invalid @enderror" value = "{{$propertyDetail->property_category}}" name = "property_category" aria-label="Default select example" id="property_category">
+                        <select class="form-select form-control @error('property_category') is-invalid @enderror"  name = "property_category" aria-label="Default select example" id="property_category">
                            <option value = ""> Selerct Category</option>
-                           <option value=""></option>
                         </select>
                         @if($errors->has('property_category'))
                         <div class="invalid-feedback">
@@ -101,25 +98,25 @@
                   <div class="col-sm-3">
                      <div class="mb-4 ">
                         <label>Pool</label>
-                        <input type = "checkbox" name = "chk_pool" value = "{{$propertyDetail->no_of_pool}}" >           
+                        <input class="form-check-input" type="checkbox" name="chk_pool"  value="" @if (isset($propertyDetail)) @if ($propertyDetail->no_of_pool==1) checked @endif @endif id="">
                      </div>
                   </div>
                   <div class="col-sm-3">
                      <div class="mb-4">
                         <label>Lift</label>
-                        <input type = "checkbox" name = "chk_lift" value = "{{$propertyDetail->no_of_lift}}" >           
+                        <input class="form-check-input" type="checkbox" name="chk_lift"  value="" @if (isset($propertyDetail)) @if ($propertyDetail->no_of_lift==1) checked @endif @endif id="">           
                      </div>
                   </div>
                   <div class="col-sm-3">
                      <div class="mb-4">
                         <label>Garden</label>
-                        <input type = "checkbox" name = "chk_garden"  value = "{{$propertyDetail->no_of_garden}}">           
+                        <input class="form-check-input" type="checkbox" name="chk_garden"  value="" @if (isset($propertyDetail)) @if ($propertyDetail->no_of_garden==1) checked @endif @endif id="">           
                      </div>
                   </div>
                   <div class="col-sm-3">
                      <div class="mb-4">
                         <label>Parking</label>
-                        <input type = "checkbox" name = "chk_parking" value = "{{$propertyDetail->no_of_parking}}" >           
+                        <input class="form-check-input" type="checkbox" name="chk_parking"  value="" @if (isset($propertyDetail)) @if ($propertyDetail->no_of_parking==1) checked @endif @endif id="">           
                      </div>
                   </div>
                   <div class="col-sm-6">
@@ -155,33 +152,48 @@
                   <div class="col-sm-6">
                      <div class="mb-4">
                         <select name="property_condition" id="property_condition"  class="form-control ow">
-                           <option value="1" {{ $propertyDetail->property_condition == 1 ? 'selected' : '' }}>New Home</option>
-                            <option value="2" {{ $propertyDetail->property_condition == 2 ? 'selected' : '' }}>Good Condition</option>
-                            <option value="3" {{ $propertyDetail->property_condition == 3 ? 'selected' : '' }}>Need Renocation</option>
-                                 </select>
-                              </div>
-                             </div>
-
+                        <option value="1" {{ $propertyDetail->property_condition == 1 ? 'selected' : '' }}>New Home</option>
+                        <option value="2" {{ $propertyDetail->property_condition == 2 ? 'selected' : '' }}>Good Condition</option>
+                        <option value="3" {{ $propertyDetail->property_condition == 3 ? 'selected' : '' }}>Need Renocation</option>
+                        </select>
+                        @if($errors->has('property_condition'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_condition')}}
+                        </div>
+                        @endif
+                     </div>
+                  </div>
                   <div class="col-sm-6">
                      <div class="form-group country-select">
-                        
-                        <input type="text" class="form-control" name = "property_number" value="{{$propertyDetail->property_number}} " readonly   aria-describedby="" placeholder="Enter Contact No" id = "property_number">            
+                        <input type="text" class="form-control" readonoly name = "property_number" value="{{$propertyDetail->property_number}} " readonly   aria-describedby="" placeholder="Enter Contact No" id = "property_number">            
                      </div>
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">            
-                        <input type="text" class="form-control" value="{{$propertyDetail->property_email}}" name = "property_email" readonly  aria-describedby="" placeholder="Enter Contact Email">            
+                        <input type="text" class="form-control" readonly value="{{$propertyDetail->property_email}}" name = "property_email" readonly  aria-describedby="" placeholder="Enter Contact Email">            
                      </div>
                   </div>
                   <div class="col-sm-12">
                      <div class="mb-4 position-relative address-group">
                         <input type="text" class="form-control pe-5 @error('property_address') is-invalid @enderror" name = "property_address" value = "{{$propertyDetail->property_address}}" aria-describedby="" placeholder="Address">   
-                                    
+                        @if($errors->has('property_address'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_address')}}
+                        </div>
+                        @endif         
                      </div>
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">
-                                  
+                        <select class="form-select form-control @error('property_price_type') is-invalid @enderror" name="property_price_type"  aria-label="Default select example" id="property_price_type" >
+                           <option value="">Select price type</option>
+                        </select>
+                        @if($errors->has('property_price_type'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_price_type')}}
+                        </div>
+                        @endif  
+                        </select>           
                      </div>
                   </div>
                   <div class="col-sm-6">
@@ -195,33 +207,72 @@
                      </div>
                   </div>
                   <div class="col-sm-6">
-                     <div class="mb-4">            
-                        <input type="file" class="form-control" name="property_image">            
+                     <div class="mb-4">
+                        <input type="file"  id="edit_property_image" class="form-control @error('property_image') is-invalid @enderror" name="property_image">            
+                        @if($errors->has('property_image'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_image')}}
+                        </div>
+                        @endif
+                        @if($propertyDetail->property_image!="")
+                        <img class="rounded-pill" id="edit_property_image_preview" src="{{url('/')}}/images/property/thumbnail/{{$propertyDetail->property_image}}">
+                        @else
+                        <img class="rounded-pill" src="{{url('/')}}/images/property/thumbnail/user-image-01.jpg" id="edit_property_image_preview">
+                        @endif
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-12">
+                        <div class="mb-4">
+                           <select class="form-control js-edit-example-tokenizer" name="property_features[]" multiple="multiple" id="property_features" >
+                              @foreach($featuresArray as $features)
+                              <option Selected="Selected"> 
+                                 {{$features}}
+                              </option>
+                              @endforeach
+                           </select>
+                        </div>
                      </div>
                   </div>
                   <div class="col-6">
                      <div class="mb-4">            
-                        <textarea class="form-control" name = "meta_title" value = "{{$propertyDetail->meta_title}}" id="exampleFormControlTextarea1" rows="3" placeholder="Meta Title"></textarea>         
+                        <textarea class="form-control" name = "meta_title"   rows="3" placeholder="Meta Title">{{$propertyDetail->meta_title}}</textarea>         
                      </div>
                   </div>
                   <div class="col-12">
                      <div class="mb-4">            
-                        <textarea class="form-control" name = "meta_keywords" value = "{{$propertyDetail->meta_keywords}}" id="exampleFormControlTextarea1" rows="3" placeholder="Meta keywords"></textarea>         
+                        <textarea class="form-control" name = "meta_keywords"  rows="3" placeholder="Meta keywords">{{$propertyDetail->meta_keywords}}</textarea>         
                      </div>
                   </div>
                   <div class="col-12">
                      <div class="mb-4">            
-                        <textarea class="form-control" name = "meta_description" value = "{{$propertyDetail->meta_description}}" id="exampleFormControlTextarea1" rows="3" placeholder="Meta Description"></textarea>         
+                        <textarea class="form-control" name = "meta_description"   rows="3" placeholder="Meta Description">{{$propertyDetail->meta_description}}</textarea>         
                      </div>
                   </div>
                </div>
                <div class="col-12">
                   <div class="mb-4">            
-                     <textarea class="form-control" name = "property_description" value = "{{$propertyDetail->property_description}}" id="exampleFormControlTextarea1" rows="3" placeholder="Property Description"></textarea>         
+                     <textarea class="form-control" name = "property_description"   rows="3" placeholder="Property Description">{{$propertyDetail->property_description}}</textarea>
                   </div>
                </div>
             </div>
             <div>
+            </div>
+            <div class="col-sm-6">
+               <div class="mb-4">
+                  <input type="file" id="edit_property_gallery_image" class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple"> 
+                  @foreach($propertyGallery as $gallery) 
+                  <div class = "removeimage_{{$gallery['id']}}" >
+                     <img class="rounded-pill" src="{{url('/')}}/images/property/gallery/{{$gallery['image']}}">
+                     <button type="button" class="deleteProduct delete_property_gallery" id="delete_property_gallery"  data-id= "{{$gallery['id']}}" data-property= "{{$gallery['property_id']}}" class ="btn-btn-delete delete_image" >Delete Image</button>
+                  </div>
+                  @endforeach
+               </div>
+            </div>
+            <div class="col-md-12">
+               <div class="mt-1 text-center">
+                  <div class="images-preview-div"> </div>
+               </div>
             </div>
             <div class="row">
                <div class="col-md-5 mb-4">
@@ -258,4 +309,145 @@
 </div>
 </div>
 </div>
+</body>
+</html> 
 @endsection
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="{{ asset('assets_front/js/bootstrap.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('assets_front/js/script.js')}}"></script>
+<script>
+   $(document).ready(function(){
+      
+     var property_typeonload="{{$propertyDetail->property_type}}";
+     
+     var property_price_type="{{$propertyDetail->property_price_type}}";
+     
+     var property_category="{{$propertyDetail->property_category}}";
+     
+     var optionhtmlonload='<option value="">Select price type</option>';
+   
+     if(property_typeonload==1)
+     {
+   
+       if(property_price_type==4)
+       {
+         var selectoption4="selected";
+       }
+       else{
+         var selectoption4="";
+       }
+   
+       if(property_price_type==5)
+       {
+         var selectoption5="selected";
+       }
+       else{
+         var selectoption5="";
+       }
+   
+       if(property_price_type==6)
+       {
+         var selectoption6="selected";
+       }
+       else{
+         var selectoption6="";
+       }
+   
+       optionhtmlonload+='<option '+selectoption4+' value="4">Per night</option>';
+     }
+     else{
+       if(property_price_type==1)
+       {
+         var selectoption1="selected";
+       }
+       else{
+         var selectoption1="";
+       }
+   
+       if(property_price_type==2)
+       {
+         var selectoption2="selected";
+       }
+       else{
+         var selectoption2="";
+       }
+   
+       if(property_price_type==3)
+       {
+         var selectoption3="selected";
+       }
+       else{
+         var selectoption3="";
+       }
+   
+       optionhtmlonload+='<option '+selectoption1+' value="1">PerSq.Ft</option><option '+selectoption2+' value="2">Fixed </option><option '+selectoption3+' value="3">Persq.yard</option>';
+     }
+   
+     $('#property_price_type').html(optionhtmlonload);
+   
+     $.ajax({
+           type: "POST",
+           data:{_token: "{{ csrf_token() }}",property_type:property_typeonload,property_category:property_category}, 
+           url: "{{ route('buyer.get-category') }}",
+           dataType:'json',
+           beforeSend: function(){
+               $("#loading").show();
+           },
+           complete: function(){
+               $("#loading").hide();
+           },
+           success:function(result){
+               if(result.code==200) {
+                   $('#property_category').html(result.categoryhtml);
+               }
+               else {
+                   alert('error');
+               }
+           }
+       });
+   });
+</script>
+<script type="text/javascript">
+   $(document).ready(function (e) {
+   $('#edit_property_image').change(function(){
+   let reader = new FileReader();
+   reader.onload = (e) => {
+   
+   $('#edit_property_image_preview').attr('src', e.target.result);
+   
+       }
+   reader.readAsDataURL(this.files[0]);
+   });
+   
+      });
+   
+</script>
+<script>
+   $(function() {
+   // Multiple images preview with JavaScript
+   var previewImages = function(input, imgPreviewPlaceholder) {
+      
+   
+       if (input.files) {
+           var filesAmount = input.files.length;
+         alert(filesAmount);
+           for (i = 0; i < filesAmount; i++) {
+               var reader = new FileReader();
+   
+               reader.onload = function(event) {
+                   $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+               }
+   
+               reader.readAsDataURL(input.files[i]);
+           }
+       }
+   
+   };
+   $('#edit_property_gallery_image').on('change', function() {
+      alert('heeelo');
+       previewImages(this, 'div.images-preview-div');
+
+
+   });
+   });
+</script>

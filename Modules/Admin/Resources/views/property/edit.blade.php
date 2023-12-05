@@ -641,14 +641,13 @@ label.error{
                                 <strong>{{ $property_image_error }}</strong>
                             </span>
                         @endif
-                        <div id="image_preview"></div>
 
                   @if($propertyInfo->property_image!="")
                         <div id="image_preview">
                           <img id="preview-image" src="/images/property/thumbnail/{{ $propertyInfo->property_image }}" style="height: auto;width: 50%;">
                         </div>
                   @else
-                        <div id="image_preview"></div>
+                        <div id="image_preview" style="display: none;"></div>
                   @endif
                     </div>
                 </div>
@@ -710,22 +709,25 @@ label.error{
                                 <strong>{{ $property_image_error }}</strong>
                             </span>
                         @endif
+
                         @if(count($property_gallery) > 0)
-                        <input type="hidden" name="gallery_div" id="gallery_div" value="1">
+                        <input type="hidden" name="gallery_db_count" id="gallery_db_count" value="{{count($property_gallery)}}">
                         @else
-                        <input type="hidden" name="gallery_div" id="gallery_div" value="0">
+                        <input type="hidden" name="gallery_db_count" id="gallery_db_count" value="0">
                         @endif
 
-                        <div id="property_gallery_image_preview">
+                        <div id="property_gallery_image_preview_db">
                           @if(count($property_gallery) > 0)
                           @foreach($property_gallery as $key=>$list)
                           <div class="removedbimage" id="removedbimage_{{$list['id']}}" data-id="{{$list['id']}}">
-                            <img src='https://homi.ezxdemo.com/images/3687412.png' height='50px' width='50px'>
-                            <img src="{{$list['url']}}" height="150px" width="150px">
+                            <img class='remove_image_src' src='https://homi.ezxdemo.com/images/3687412.png' height='50px' width='50px'>
+                            <img class="main_image_src" src="{{$list['url']}}" height="150px" width="150px">
                           </div>
                           @endforeach
                           @endif
                         </div>
+
+                        <div id="property_gallery_image_preview"></div>
                     </div>
                 </div>
 
@@ -769,24 +771,34 @@ label.error{
 
 function preview_multiple_image() 
 {
-  var gallery_div=$('#gallery_div').val();
-  if(gallery_div==0)
+  $('#property_gallery_image_preview').html("");
+  var gallery_db_count=$('#gallery_db_count').val();
+  var total_file_count=8;
+  var remainfile=total_file_count-gallery_db_count;
+
+  if(remainfile==0)
   {
-      $('#property_gallery_image_preview').html("");
+    alert('you can only 8 property images');
   }
+  else{
+      var total_file=document.getElementById("property_gallery_image").files.length;
+      if(total_file > remainfile)
+      { 
+        alert('upload only 8 property images');
+      }
+      else{
+        for(var i=0;i<remainfile;i++)
+        {
 
-var total_file=document.getElementById("property_gallery_image").files.length;
-for(var i=0;i<total_file;i++)
-{
-
-  $('#property_gallery_image_preview').append("<div class='removeimage' id='removeimagediv_"+i+"' data-id='"+i+"'><img src='https://homi.ezxdemo.com/images/3687412.png' height='50px' width='50px'><img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid  mr-2'></div>");
- }
-
+          $('#property_gallery_image_preview').append("<div class='removeimage' id='removeimagediv_"+i+"' data-id='"+i+"'><img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid main_image_src mr-2'></div>");
+         }
+      }
+  }
 }
 
 function preview_image() 
 {
-    
+$('#image_preview').show();
 $('#image_preview').html("");
 var total_file=document.getElementById("property_image").files.length;
 for(var i=0;i<total_file;i++)
@@ -831,6 +843,7 @@ for(var i=0;i<total_file;i++)
         success:function(result){
             if(result.code==200) {
                 $('#removedbimage_'+id).remove();
+                $('#gallery_db_count').val(result.gallery_db_count);
             }
             else {
                 alert('error');
@@ -871,7 +884,7 @@ for(var i=0;i<total_file;i++)
       var selectoption6="";
     }
 
-    optionhtmlonload+='<option '+selectoption4+' value="4">Per night</option>';
+    optionhtmlonload+='<option '+selectoption4+' value="4">Per Month</option>';
   }
   else{
     if(property_price_type==1)
@@ -935,7 +948,7 @@ for(var i=0;i<total_file;i++)
       optionhtml+='<option value="1">PerSq.Ft</option><option value="2">Fixed </option><option value="3">Persq.yard</option>';
     }
     else{
-      optionhtml+='<option value="4">Per night</option>';
+      optionhtml+='<option value="4">Per Month</option>';
     }
 
     $('#property_price_type').html(optionhtml);

@@ -5705,7 +5705,12 @@ span.badge {
 
 .header-navbar .navbar-wrapper .navbar-container .nav-right .user-profile img {
     margin-right: 10px;
-    width: 30px
+    width: 40px;
+    max-width: 40px;
+    border-radius: 50px;
+    height: 40px;
+    object-fit: cover;
+    object-position: center;
 }
 
 .header-navbar .navbar-wrapper .navbar-container .nav-right .user-profile i {
@@ -26079,4 +26084,114 @@ button.bid_status.btn-rejected {background: #001c4e;border-color: #001c4e;}
 }
 .form-group.country-select label {
     display: block;
+}
+
+
+
+.pcoded-inner-content input[type=checkbox], .pcoded-inner-content  input[type=radio] {
+    width: auto;
+    float: left;
+    margin: 4px 10px 0 0;
+}
+
+.navbar.header-navbar.pcoded-header.iscollapsed {}
+
+.navbar.header-navbar .dropdown-toggle img {
+    max-width: 40px;
+    border-radius: 50px;
+    height: 40px;
+    width: 100%;
+}
+
+.pcoded-inner-content textarea {
+    width: calc(50% - 15px);
+    display: block;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    resize: none;
+}
+.form-group div#image_preview{
+    max-width: 90px;
+    border: 1px solid #ccc;
+    width: 100%;
+    height: 50px;
+    margin-top: 10px;
+    border-radius: 4px;
+    padding: 2px;
+    float: left;
+    margin-right: 5px;
+}
+
+div#image_preview img {
+    object-fit: cover;
+    height: 100% !important;
+    border-radius: 4px;
+    width: 100% !important;
+}
+
+img.remove_image_src {
+    position: absolute;
+    max-width: 30px;
+    height: 30px;
+    right: 0;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    cursor: pointer;
+}
+
+.removedbimage, .removeimage {
+    display: inline-block;
+    position: relative;
+    padding: 0px 0 0 0;
+    border: 1px solid #c7c7c7;
+    margin: 10px 9px 0 0;
+    border-radius: 8px;
+}
+
+.removedbimage:hover img {
+    opacity: 1;
+}
+
+.main_image_src {
+    border-radius: 8px;
+    max-height: 90px;
+    object-fit: cover;
+    object-position: center;
+    height: 100%;
+    min-height: 90px;
+    margin: 0 !important;
+}
+::-webkit-file-upload-button {
+   display: none;
+}
+.form-group input[type="file"] {
+    height: 35px;
+    font-size: 0;
+}
+input[type="file"] {
+    height: 35px;
+    font-size: 0;
+}
+
+input#property_gallery_image:after {
+    content: "\f093";
+    font: normal normal normal 20px/1 FontAwesome;
+    float: right;
+    color: #111c4e;
+    width: 100%;
+    text-align: end;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    padding-right: 10px;
+    line-height: 18px;
+}
+.form-group {
+    position: relative;
+}
+
+
+.btn_modify img {
+    filter: invert(1);
 }

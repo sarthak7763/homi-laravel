@@ -7,13 +7,19 @@ Route::get('/dealer/login', 'BuyerController@buyerlogin')->name('buyer-login');
 Route::post('/dealer-login', 'BuyerController@buyer_login')->name('buyer.login.post');
  Route::get('/dealer/page/{slug}','BuyerController@cmsPages')->name('buyer-cms-page-view'); 
 
-Route::get('/dealer/forget-password', 'BuyerController@buyerForgotPassword')->name('buyer-forget-password');
+Route::get('/dealer/forget-password', 'BuyerController@buyershowForgotPassword')->name('buyer-forget-password');
 
-Route::get('/dealer/forgot-password/{token}', 'BuyerController@buyerForgotPasswordValidate')->name('buyer-reset-password-link');
+// Route::get('/dealer/forgot-password/{token}', 'BuyerController@buyerForgotPasswordValidate')->name('buyer-reset-password-link');
 
-Route::post('/dealer/forgot-password', 'BuyerController@buyerResetPassword')->name('buyer-forget-password-post');
+Route::post('/dealer/submit-forgot-password', 'BuyerController@buyerSubmitResetPassword')->name('buyer-forget-password-post');
 
-Route::post('/dealer/reset-password', 'BuyerController@buyerUpdatePassword')->name('buyer-reset-password');
+Route::get('/dealer/reset-password/{token}', 'BuyerController@showResetPasswordForm')->name('buyer-reset-password');
+Route::post('/dealer/submit-reset-password/', 'BuyerController@submitResetPasswordForm')->name('buyer-update-password');
+
+
+Route::get('/dealer-logout', 'BuyerController@buyerlogout')->name('buyer.logout');
+
+
 
 
 /*----------------BUYER REGISTER ROUTES ---------------------*/
@@ -67,24 +73,33 @@ Route::group(['middleware' => 'Isseller'], function ()
 
     Route::post('/dealer/save-propertiesData', 'PropertyController@store')->name('buyer.store-property');
     Route::get('/dealer/edit-propertiesData/{id}', 'PropertyController@edit')->name('buyer.edit-property');
+    
+    
+     Route::get('/dealer/delete-propertiesData','PropertyController@ajaxdelete')->name('buyer.delete-propertyGallery');
+
+    
+   
+
+    Route::post('/dealer/update-propertiesData/{id}', 'PropertyController@update')->name('buyer.update-property');
+    Route::post('/dealer/update-propertiesDatastatus', 'PropertyController@updatePropertyStatus')->name('buyer.status-update-property');
     Route::get('/dealer/view-propertiesData/{id}', 'PropertyController@view')->name('buyer.view-property');
-
-
-
-
-    // --------------------------------------------end-------------------------------------------------------//
-
     
 
 
 
 
 
-
-
-
+    // --------------------------------------------end-------------------------------------------------------//
 
     Route::get('/dealer/manage-payments', 'PaymentController@index')->name('buyer.payment');
+
+
+
+
+
+
+    // -----------------------------------------------logout------------------------------------
+
     
 
 

@@ -62,7 +62,7 @@
     </a> 
   </li>
   <li class="item">
-    <a href="#">
+    <a href="{{route('buyer.logout')}}">
       <span class="user-icon logout-icon">            
 
       </span>

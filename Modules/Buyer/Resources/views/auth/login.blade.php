@@ -4,7 +4,13 @@
 @section('content')
 
 <div class="row">
-
+<div>
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+    </div>
     <section class="signup-section pt-4 pb-4">
         <div class="container h-100">
             <div class="row align-items-center justify-content-center h-100">
@@ -14,11 +20,22 @@
                         <h1>Welcome!</h1>
                         <strong>Signin your account</strong>
                         <div class="mb-3">
-                            <input type="email" name="email" class="form-control" id="exampleInputEmail1"
-                                aria-describedby="emailHelp" placeholder="Email ID">
+                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="Email ID"  style="display:block;"> 
+                                @if($errors->has('email'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('email')}}
+                        </div>
+                        @endif    
                         </div>
                         <div class="mb-3 input-group">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password">
+                            @if($errors->has('password'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('password')}}
+                        </div>
+                        @endif 
+                            
                             <span toggle="#password" class="input-group-text togglePassword" id="">
 
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
@@ -43,7 +60,7 @@
 
                         <button type="submit" class="btn btn-primary">Login</button>
                         <div class="forgot-password">
-                            <p><a href="{{url('/')}}/dealer/forget-password">Forgot Password</a></p>
+                            <p><a href="{{route('buyer-forget-password')}}">Forgot Password</a></p>
                         </div>
 
                         <div class="signup-footer mt-4 text-center">

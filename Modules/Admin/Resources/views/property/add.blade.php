@@ -603,7 +603,7 @@ label.error{
                                 <strong>{{ $property_image_error }}</strong>
                             </span>
                         @endif
-                        <div id="image_preview"></div>
+                        <div id="image_preview" style="display: none;"></div>
                     </div>
                 </div>
 
@@ -708,17 +708,23 @@ function preview_multiple_image()
     
 $('#property_gallery_image_preview').html("");
 var total_file=document.getElementById("property_gallery_image").files.length;
-for(var i=0;i<total_file;i++)
-{
+if(total_file > 8)
+{ 
+  alert('upload only 8 property images');
+}
+else{
+    for(var i=0;i<total_file;i++)
+    {
 
-  $('#property_gallery_image_preview').append("<div class='removeimage' id='removeimagediv_"+i+"' data-id='"+i+"'><img src='https://homi.ezxdemo.com/images/3687412.png' height='50px' width='50px'><img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid  mr-2'></div>");
- }
+      $('#property_gallery_image_preview').append("<div class='removeimage' id='removeimagediv_"+i+"' data-id='"+i+"'><img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid main_image_src mr-2'></div>");
+     }
+}
 
 }
 
 function preview_image() 
 {
-    
+$('#image_preview').show();    
 $('#image_preview').html("");
 var total_file=document.getElementById("property_image").files.length;
 for(var i=0;i<total_file;i++)
@@ -739,10 +745,14 @@ for(var i=0;i<total_file;i++)
   $(document).on('click','.removeimage',function(){
     var id=$(this).attr('data-id');
     $('#removeimagediv_'+id).remove();
-    // var newFileList = Array.from(document.getElementById("property_gallery_image").files);
-    // console.log(newFileList,'newFileList');
-    // newFileList.splice(id,1);
 
+    const galleryinput = document.getElementById('property_gallery_image');
+    galleryinput.addEventListener('change', () => {
+      const fileListArr = Array.from(galleryinput.files);
+      console.log('fileListArr11',fileListArr);
+      fileListArr.splice(1, 1);
+      console.log('fileListArr122',fileListArr);
+    });
   });
 
   $('#property_type').on('change',function(){
@@ -753,7 +763,7 @@ for(var i=0;i<total_file;i++)
       optionhtml+='<option value="1">PerSq.Ft</option><option value="2">Fixed </option><option value="3">Persq.yard</option>';
     }
     else{
-      optionhtml+='<option value="4">Per night</option>';
+      optionhtml+='<option value="4">Per Month</option>';
     }
 
     $('#property_price_type').html(optionhtml);

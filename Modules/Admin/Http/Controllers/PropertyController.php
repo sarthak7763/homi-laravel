@@ -368,8 +368,6 @@ class PropertyController extends Controller {
             {
             	return redirect()->back()->with('error', 'Property title already exists.');
             }
-
-
         if(isset($request->no_of_garden))
         {
             $no_of_garden=$request->no_of_garden;
@@ -402,13 +400,20 @@ class PropertyController extends Controller {
             $no_of_lift=0;
         }
 
-        if(count($request->features) > 0)
+        if(isset($request->features))
         {
-            $features_list=json_encode($request->features);
+	        if(count($request->features) > 0)
+	        {
+	            $features_list=json_encode($request->features);
+	        }
+	        else{
+	            $features_list="";
+	        }
         }
         else{
-            $features_list="";
+        	$features_list="";
         }
+        
 
           $title_pt=GoogleTranslate::trans($data['title'],'pt');
           $property_address_pt="";
@@ -603,8 +608,6 @@ class PropertyController extends Controller {
                 'built_in_year'=>'nullable',
                 'no_of_kitchen'=>'nullable|numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_pool'=>'nullable|numeric',
-                'no_of_garden'=>'nullable|numeric',
                 'no_of_balcony'=>'nullable|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
@@ -733,6 +736,52 @@ class PropertyController extends Controller {
                 return redirect()->back()->with('error', 'Please select another condition.');
             }
 
+        if(isset($request->no_of_garden))
+        {
+            $no_of_garden=$request->no_of_garden;
+        }
+        else{
+            $no_of_garden=0;
+        }
+
+        if(isset($request->no_of_pool))
+        {
+            $no_of_pool=$request->no_of_pool;
+        }
+        else{
+            $no_of_pool=0;
+        }
+
+        if(isset($request->no_of_parking))
+        {
+            $no_of_parking=$request->no_of_parking;
+        }
+        else{
+            $no_of_parking=0;
+        }
+
+        if(isset($request->no_of_lift))
+        {
+            $no_of_lift=$request->no_of_lift;
+        }
+        else{
+            $no_of_lift=0;
+        }
+
+        if(isset($request->features))
+        {
+	        if(count($request->features) > 0)
+	        {
+	            $features_list=json_encode($request->features);
+	        }
+	        else{
+	            $features_list="";
+	        }
+        }
+        else{
+        	$features_list="";
+        }
+
             if($propertyupdate->title==$data['title'])
             {
                 if($fileNameToStore!="")
@@ -743,8 +792,11 @@ class PropertyController extends Controller {
                     $propertyupdate->no_of_bedroom=$data['no_of_bedroom'];
                     $propertyupdate->no_of_kitchen=$data['no_of_kitchen'];
                     $propertyupdate->no_of_bathroom=$data['no_of_bathroom'];
-                    $propertyupdate->no_of_pool=$data['no_of_pool'];
-                    $propertyupdate->no_of_garden=$data['no_of_garden'];
+                    $propertyupdate->no_of_pool=$no_of_pool;
+                    $propertyupdate->no_of_garden=$no_of_garden;
+                    $propertyupdate->no_of_lift=$no_of_lift;
+            		$propertyupdate->no_of_parking=$no_of_parking;
+            		$propertyupdate->property_features=$features_list;
                     $propertyupdate->no_of_balcony=$data['no_of_balcony'];
                     $propertyupdate->no_of_floors=$data['no_of_floors'];
                     $propertyupdate->property_area=$data['property_area'];
@@ -771,8 +823,11 @@ class PropertyController extends Controller {
                     $propertyupdate->no_of_bedroom=$data['no_of_bedroom'];
                     $propertyupdate->no_of_kitchen=$data['no_of_kitchen'];
                     $propertyupdate->no_of_bathroom=$data['no_of_bathroom'];
-                    $propertyupdate->no_of_pool=$data['no_of_pool'];
-                    $propertyupdate->no_of_garden=$data['no_of_garden'];
+                    $propertyupdate->no_of_pool=$no_of_pool;
+                    $propertyupdate->no_of_garden=$no_of_garden;
+                    $propertyupdate->no_of_lift=$no_of_lift;
+            		$propertyupdate->no_of_parking=$no_of_parking;
+            		$propertyupdate->property_features=$features_list;
                     $propertyupdate->no_of_balcony=$data['no_of_balcony'];
                     $propertyupdate->no_of_floors=$data['no_of_floors'];
                     $propertyupdate->property_area=$data['property_area'];
@@ -808,8 +863,11 @@ class PropertyController extends Controller {
                     $propertyupdate->no_of_bedroom=$data['no_of_bedroom'];
                     $propertyupdate->no_of_kitchen=$data['no_of_kitchen'];
                     $propertyupdate->no_of_bathroom=$data['no_of_bathroom'];
-                    $propertyupdate->no_of_pool=$data['no_of_pool'];
-                    $propertyupdate->no_of_garden=$data['no_of_garden'];
+                    $propertyupdate->no_of_pool=$no_of_pool;
+                    $propertyupdate->no_of_garden=$no_of_garden;
+                    $propertyupdate->no_of_lift=$no_of_lift;
+            		$propertyupdate->no_of_parking=$no_of_parking;
+            		$propertyupdate->property_features=$features_list;
                     $propertyupdate->no_of_balcony=$data['no_of_balcony'];
                     $propertyupdate->no_of_floors=$data['no_of_floors'];
                     $propertyupdate->property_area=$data['property_area'];
@@ -837,8 +895,11 @@ class PropertyController extends Controller {
                     $propertyupdate->no_of_bedroom=$data['no_of_bedroom'];
                     $propertyupdate->no_of_kitchen=$data['no_of_kitchen'];
                     $propertyupdate->no_of_bathroom=$data['no_of_bathroom'];
-                    $propertyupdate->no_of_pool=$data['no_of_pool'];
-                    $propertyupdate->no_of_garden=$data['no_of_garden'];
+                    $propertyupdate->no_of_pool=$no_of_pool;
+                    $propertyupdate->no_of_garden=$no_of_garden;
+                    $propertyupdate->no_of_lift=$no_of_lift;
+            		$propertyupdate->no_of_parking=$no_of_parking;
+            		$propertyupdate->property_features=$features_list;
                     $propertyupdate->no_of_balcony=$data['no_of_balcony'];
                     $propertyupdate->no_of_floors=$data['no_of_floors'];
                     $propertyupdate->property_area=$data['property_area'];
@@ -905,6 +966,8 @@ class PropertyController extends Controller {
 
 
             $propertyupdate->save();
+
+            $this->uploadpropertyimages($propertyupdate->id,$request);
 
             toastr()->success('Property information updated successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
             return redirect()->route('admin-property-list')->with('success',"Property information updated successfully.");
@@ -1163,7 +1226,28 @@ class PropertyController extends Controller {
             {
                 PropertyGallery::where('id',$request->id)->where('property_id',$property_id)->delete();
 
-                $data=array('code'=>200,'message'=>'Image deleted successfully.');
+
+	           $galleryList=PropertyGallery::where('property_id',$property_id)->where('type',"1")->where('status',1)->orderBy('id','DESC')->get();
+	            if($galleryList)
+	            {
+	                $galleryListarray=$galleryList->toArray();
+	                if($galleryListarray)
+	                {
+	                    $property_gallery=[];
+	                    foreach($galleryListarray as $list)
+	                    {
+	                        $property_gallery[]=url('/').'/images/property/gallery/'.$list['image'];
+	                    }
+	                }
+	                else{
+	                    $property_gallery=[];
+	                }
+	            }
+	            else{
+	                $property_gallery=[];
+	            }
+
+                $data=array('code'=>200,'message'=>'Image deleted successfully.','gallery_db_count'=>count($property_gallery));
                 $finaldata=json_encode($data);
                 return $finaldata;
             }

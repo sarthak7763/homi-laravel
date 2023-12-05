@@ -4,6 +4,7 @@
    <div class="profile-box">
       <div class="profile-box-form">
          <h1 class="mb-3">Add New Properties</h1>
+ 
          <form class="profile-form p-3 mb-4" action = "{{route('buyer.store-property')}}" method = "Post" enctype= "multipart/form-data">
             @csrf 
             <div class="row">
@@ -18,6 +19,7 @@
                   </div>
                </div>
             </div>
+            
             <div class="row">
                <div class="row">
                   <div class="col-sm-6">
@@ -167,14 +169,9 @@
                      </div>
                   </div>
                   <div class="col-sm-6">
-                     <div class="form-group country-select">
-                        <select id="country_id" name="country_id" class=" form-control">
-                           @foreach($countryData as $country)
-                           <option value="{{$country['id']}}">
-                              {{$country['name']}} ({{$country['phonecode']}})
-                           </option>
-                           @endforeach
-                        </select>
+                     <div class="mb-4">
+                     <input type="text" class="form-control"  readonly value="+{{$userData->phonecode}} " aria-describedby="" >            
+                        
                         <input type="text" class="form-control" name = "property_number" readonly value="{{$userData->mobile}} " aria-describedby="" placeholder="Enter Contact No" id = "property_number">            
                      </div>
                   </div>
@@ -218,7 +215,7 @@
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">
-                        <input type="file" class="form-control @error('property_image') is-invalid @enderror" name="property_image">            
+                        <input type="file" id="property_image" class="form-control @error('property_image') is-invalid @enderror" name="property_image">            
                         @if($errors->has('property_image'))
                         <div class="invalid-feedback">
                            {{$errors->first('property_image')}}
@@ -226,6 +223,12 @@
                         @endif
                      </div>
                   </div>
+                  <div class="col-md-12 mb-2">
+                        <img id="property_image_preview" src="#"
+                        alt="" style="max-height: 250px;">
+
+              </div>
+
                   <div class="row">
                      <div class="col-12">
                         <div class="mb-4">
@@ -261,11 +264,21 @@
             </div>
             <div class="col-sm-6">
                      <div class="mb-4">
-                        <input type="file" class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple">            
+                        <input type="file" id="property_gallery_image" class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple">            
                         
                      </div>
                   </div>
+                  <div class="col-md-12">
 
+                    <div class="mt-1 text-center">
+
+                        <div class="images-preview-div"> </div>
+
+                    </div> 
+
+                </div>
+
+                  
             <div class="row">
                <div class="col-md-5 mb-4">
                   <div class="thumbnail-image text-center rounded-6" name = "">
@@ -302,3 +315,61 @@
 </div>
 </div>
 @endsection
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script type="text/javascript" src="{{ asset('assets_front/js/bootstrap.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('assets_front/js/script.js')}}"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function (e) {
+   
+$('#property_image').change(function(){
+let reader = new FileReader();
+reader.onload = (e) => {
+
+$('#property_image_preview').attr('src', e.target.result);
+
+    }
+reader.readAsDataURL(this.files[0]);
+});
+
+   });
+
+</script>
+
+
+
+<script>
+    $(function() {
+    // Multiple images preview with JavaScript
+    var previewImages = function(input, imgPreviewPlaceholder) {
+    
+        if (input.files) {
+            var filesAmount = input.files.length;
+           
+            for (i = 0; i < filesAmount; i++) {
+
+                var reader = new FileReader();
+
+                reader.onload = function(event) {
+                    $($.parseHTML('<img style="height:150px;width:150px;">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+                }
+
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+
+    };
+
+    $('#property_gallery_image').on('change', function() {
+        previewImages(this, 'div.images-preview-div');
+    });
+  });
+</script>
+
+
+
+

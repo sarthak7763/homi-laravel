@@ -91,4 +91,10 @@ class Property extends Model
         return $value;
     }
 
+
+    public function categoryname()
+    {
+        return $this->hasOne(Category::class,'id','property_category');
+    }
+
 }

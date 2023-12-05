@@ -174,13 +174,37 @@
 
                                 <dt class="col-4 col-sm-4">No. of Pools</dt>
                                  <dd class="col-8 col-sm-8">  
-                                    {{$propertyInfo->no_of_pool ? $propertyInfo->no_of_pool  : '--' }}
+                                    {{$propertyInfo->no_of_pool==1 ? 'Yes': 'No' }}
                                 </dd>
 
                                 <dt class="col-4 col-sm-4">No. of Garden</dt>
                                  <dd class="col-8 col-sm-8">  
-                                    {{$propertyInfo->no_of_garden ? $propertyInfo->no_of_garden  : '--' }}
+                                    {{$propertyInfo->no_of_garden==1 ? 'Yes': 'No' }}
                                 </dd>
+
+                                <dt class="col-4 col-sm-4">No. of Lift</dt>
+                                 <dd class="col-8 col-sm-8">  
+                                    {{$propertyInfo->no_of_lift==1 ? 'Yes': 'No' }}
+                                </dd>
+
+                                <dt class="col-4 col-sm-4">No. of Parking</dt>
+                                 <dd class="col-8 col-sm-8">  
+                                    {{$propertyInfo->no_of_parking==1 ? 'Yes': 'No' }}
+                                </dd>
+
+                                <dt class="col-4 col-sm-4">Property Features</dt>
+                                @if($propertyInfo->property_features!="")
+                                 <dd class="col-8 col-sm-8">  
+                                  @php $property_features_array=json_decode($propertyInfo->property_features,true); @endphp
+                                  @foreach($property_features_array as $list)
+                                    <p>{{$list}}</p>
+                                  @endforeach
+                                </dd>
+                                @else
+                                  <dd class="col-8 col-sm-8">  
+                                    N.A.
+                                </dd>
+                                @endif
 
                                 <dt class="col-4 col-sm-4">No. of Balcony</dt>
                                  <dd class="col-8 col-sm-8">  
