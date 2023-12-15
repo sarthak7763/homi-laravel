@@ -1,84 +1,76 @@
 @extends('buyer::layouts.master')
 @section('content')
-    <div class="col-md-9">
-      <div class="profile-box">          
-        <div class="profile-box-form">
-          <h1 class="mb-3">My Profile</h1>
-          <form class="profile-form "> 
-            <div class="user-box-img">
-              <div class="row">
-               <div class="col-12 text-center">
-                <div class="user-box overflow-visible position-relative">
-                  <!-- <img class="rounded-pill" src="{{url('/')}}/assets_front/images/user-icon.jpg"> -->
-                  @if($userInfo->profile_pic)
-                <img class="rounded-pill" src="{{url('/')}}/images/{{$userInfo->profile_pic}}">
-                  @else
-                  <img class="rounded-pill" src="{{url('/')}}/assets_front/images/user-icon.jpg">
-                  @endif            
-                  <div class="useravtarIcon">
-                   <input type="file" id="myFile" class="opacity-0 position-absolute bottom-0" name="filename">
-                  <!-- <span class="avtar_user d-inline-block rounded-pill position-absolute bottom-0 bg-white"> -->
-                      <!-- <svg width="18" height="16" viewBox="0 0 18 16" fill="none" class="mt-1">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.75 5.25002C0.75 4.2375 1.57081 3.41669 2.58333 3.41669H3.43549C4.04848 3.41669 4.6209 3.11034 4.96092 2.6003L5.70575 1.48307C6.04577 0.973037 6.61819 0.666687 7.2312 0.666687H10.7688C11.3818 0.666687 11.9542 0.973037 12.2942 1.48307L13.0391 2.6003C13.3791 3.11034 13.9516 3.41669 14.5645 3.41669H15.4167C16.4292 3.41669 17.25 4.2375 17.25 5.25002V13.5C17.25 14.5126 16.4292 15.3334 15.4167 15.3334H2.58333C1.57081 15.3334 0.75 14.5126 0.75 13.5V5.25002Z" stroke="#4A5568" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.75 8.91669C11.75 10.4355 10.5188 11.6667 9 11.6667C7.48117 11.6667 6.25 10.4355 6.25 8.91669C6.25 7.39786 7.48117 6.16669 9 6.16669C10.5188 6.16669 11.75 7.39786 11.75 8.91669Z" stroke="#4A5568" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg> -->
-                    <!-- </span> -->
-                  </div>
-                </div> 
-              </div> 
-            </div>           
-            <div class="row">
-              <div class="col-12">
-                <strong>Owner Type</strong>
-              </div>
-              <div class="col-6">
-               <div class="mb-4">            
-                <input type="text" class="form-control"  aria-describedby="" value="{{$userInfo->name}}" readonly>            
-              </div>
+<div class="col-md-9">
+<div class="profile-box">
+    <div class="profile-box-form">
+        <h1 class="mb-3">My Profile</h1>
+        <div>
+        @if (session()->has('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
             </div>
-            <div class="col-6">
-              <div class="mb-4"> 
-                <input type="email" class="form-control"  aria-describedby="" value="{{$userInfo->email}}" readonly>   
-              </div>
-            </div>
-          </div>
-         
-         <div class="row">
-            <div class="col-12">
-             <input type="integer" class="form-control " readonly  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}">   
-           </div>
-         </div>
-
-         <br>
-         <br>
-         <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bold">Owner Type</label>
-                                <input type="text" class="form-control" readonly  aria-describedby="" name="owner_type"  value="<?php if ($userInfo->owner_type == 1) echo "Agency"; else echo "Indiviuals" ; ?>">   
-                                </div>
-                                </div>
-
-                        @if($userInfo->owner_type == 1)
-                        <div class="col-md-6"  style="display:block;">
-                            <div class="form-group" >
-                                <input type="text" class="form-control" readonly  value = "{{$userInfo->agency_name}}">
-                              </div>
-                        </div>
-                        @else
-                    <div class="col-md-6"  style="display:none;">
-                            @endif
-                        </div>
-                    </div>       
-          
-      </form>      
+        @endif
     </div>
-  </div>
+        <form class="profile-form ">
+            <div class="user-box-img">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="user-box overflow-visible position-relative">
+                            <div class="user-box2-img">
+                          @if($userInfo->profile_pic)
+                            <img class="rounded-pill-box" src="{{url('/')}}/images/{{$userInfo->profile_pic}}">
+                            @else
+                            <img class="rounded-pill-box" src="{{url('/')}}/assets_front/images/user-icon.jpg">
+                            @endif    
+                            </div>        
+                            <div class="useravtarIcon">
+                                <input type="file" id="myFile" class="opacity-0 position-absolute bottom-0" name="filename">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Owner Type</strong>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-4">            
+                            <input type="text" class="form-control"  aria-describedby="" value="{{$userInfo->name}}" readonly>            
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-4"> 
+                            <input type="email" class="form-control"  aria-describedby="" value="{{$userInfo->email}}" readonly>   
+                        </div>
+                    </div>
+                </div>
+                        <div class="row">
+                        <div class="col-12">
+                            <input type="integer" class="form-control " readonly  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}">   
+                        </div>
+                    </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Owner Type</label>
+                            <input type="text" class="form-control" readonly  aria-describedby="" name="owner_type"  value="<?php if ($userInfo->owner_type == 1) echo "Agency"; else echo "Indiviuals" ; ?>">   
+                        </div>
+                    </div>
+                    @if($userInfo->owner_type == 1)
+                    
+                    <div class="col-md-6"  style="display:block ;">
+                        <div class="form-group" >
+                            <input type="text" class="form-control" readonly  value = "{{$userInfo->agency_name}}">
+                        </div>
+                    </div>
+                    @else
+                    <div class="col-md-6"  style="display:none;">
+                        @endif
+                    </div>
+                </div>
+        </form>
+        </div>
+    </div>
 </div>
 @endsection
-
-
-
-
-
-

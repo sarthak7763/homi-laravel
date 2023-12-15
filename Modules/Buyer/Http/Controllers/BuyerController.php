@@ -60,10 +60,10 @@ class BuyerController extends Controller {
     }
   }
 
+  
   public function buyershowForgotPassword(){
-    
   try{
-      session()->flash('message', 'email  successfully send.');
+      
       return view('buyer::auth.passwords.email');
     }
     catch(Exception $e){  
@@ -75,45 +75,41 @@ class BuyerController extends Controller {
 
 
   public function buyerSubmitResetPassword(Request $request){
-  
-   
    try{
+        $user = User::where('email', $request->email)->select('email')->first();
+          if(!empty($user)){
+            $token = Str::random(64);
+            DB::table('password_resets')->insert([
+                  'email' => $request->email, 
+                  'token' => $token, 
+                  'created_at' => Carbon::now()
+                ]);
 
-      $user = User::where('email', $request->email)->select('email')->first();
-    if(!empty($user)){
-      
-        $token = Str::random(64);
-  
-        DB::table('password_resets')->insert([
-            'email' => $request->email, 
-            'token' => $token, 
-            'created_at' => Carbon::now()
-          ]);
+            $reset_password_link = 'https://homi.ezxdemo.com/dealer//dealer/reset-password/'.$token;
 
-    $reset_password_link = 'https://homi.ezxdemo.com/dealer/reset-password/'.$token;
- 
-   
-  Mail::send('emails.reset', ['reset_password_link' => $reset_password_link], function($message) use($user){
-      $message->to($user->email);
-      $message->subject('Reset Password');
-  });
-
-  return redirect()->baCK()->with('success', 'email has been sent  successfully.');
-}
-else{
-
-return redirect()->route('buyer-login')->with('error','id does not found');
-  }
-   }
-    catch(Exception $e){  
-      return redirect()->back()->with('error', 'something wrong');     
+              Mail::send('emails.resetpassword', ['token' => $token ], function($message) use($user){
+                  $message->to($user->email);
+                  $message->subject('Reset Password');
+              });
+              return redirect()->back()->with('success', 'Email has been sent on your email id !');
+          }
+          else{
+            return redirect()->back()->with('error', 'please enter valid email id !');
+          }
+      }
+      catch(Exception $e){ 
+     return redirect()->back()->with('error', $e->getmessage());     
     }
   }
 
 
   public function showResetPasswordForm($token) { 
-   
+   try{
     return view('buyer::auth.passwords.reset',['token' => $token]);
+   }
+    catch(Exception $e){ 
+      return redirect()->back()->with('error', $e->getmessage());     
+     }
  }
 
 
@@ -143,33 +139,22 @@ return redirect()->route('buyer-login')->with('error','id does not found');
  
           DB::table('password_resets')->where(['email'=> $request->email])->delete();
         
-          return redirect()->route('buyer-login')->with('message', 'Your password has been changed!');
+          return redirect()->route('buyer-login')->with('success', 'Your password has been changed!');
       }
 
 
       public function buyerlogout(Request $request){
-              Auth::logout();
-      
+        try{
+        Auth::logout();
         return redirect()->route('buyer-login')->with('message', 'You Are Successfully logout!');
-      }
+        }
+        catch(Exception $e){ 
+          return redirect()->back()->with('error', $e->getmessage());     
+        }
 
 
-
-
- 
- 
-
-
-
-
- 
-
-
-
-
-  //BUYER SIGN UP REGISTER POST 
+      }//BUYER SIGN UP REGISTER POST 
   public function sellerSignupPost(Request $request){
-    
     try{
           $data=$request->all();
           $request->validate([
@@ -263,8 +248,7 @@ return redirect()->route('buyer-login')->with('error','id does not found');
 
   public function sellerLoginPost(Request $request)
   {
-   
-    try
+   try
     {
        $request->validate([
             'email' => 'required|email',
@@ -275,8 +259,6 @@ return redirect()->route('buyer-login')->with('error','id does not found');
               'max:25'
         ],
       ],
-      
-      
       [
         'email.required' => 'email is required.',
         'email.email' => 'please enter valid email type',
@@ -300,7 +282,7 @@ return redirect()->route('buyer-login')->with('error','id does not found');
               if($email_verified==1)
               {
                 Session::put('user_id', $user->id);
-                return redirect('dealer/my-profile/')->with('success', 'Login successfully.');
+                return redirect()->route('buyer.my-profile');
               }
               else{
                 Session::put('email', $user->email);

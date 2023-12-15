@@ -34,7 +34,7 @@
               @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
               <div class="header-profile">
                 
-                <img class="rounded-pill" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
+                <img class="rounded-pill-box" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
               </div>
               <div class="account-down">
                 <span>Welcome</span>

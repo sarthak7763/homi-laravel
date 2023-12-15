@@ -1,9 +1,9 @@
 
-<div class="col-md-3">
+<div class="col-lg-3  mb-4">
 @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
 <div class="profile-div">
   <div class="main-profile rounded-circle mb-3">
-   <img class="rounded-pill" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
+   <img class="rounded-pill-box" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
  </div>
  
  <div class="profile-text">                
@@ -14,19 +14,19 @@
 <div class="profile-usermenu">
 <ul class="profile-nav">
   <li class="item">
-    <a href="#">
+   <a href="{{route('buyer.bookings')}}">
       <span class="user-icon dashboard-icon"></span>
       Dashboard
     </a>
   </li>
-  <li class="item active">
+  <li class="item">
     <a href="{{route('buyer.my-profile')}}">
       <span class="user-icon profile-icon">
       </span>
       My Profile
     </a>
     </li>
-  <li class="item active">
+  <li class="item">
     <a href="{{route('buyer.edit-profile')}}">
       <span class="user-icon profile-icon">
       </span>
@@ -55,8 +55,8 @@
     </a> 
   </li>
   <li class="item">
-    <a href="#">
-      <span class="{{route('buyer.payment')}}">
+    <a href="{{route('buyer.payment')}}">
+      <span class="user-icon payments-icon">
       </span>
       Manage Payments
     </a> 

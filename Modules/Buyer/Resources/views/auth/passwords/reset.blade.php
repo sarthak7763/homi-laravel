@@ -2,7 +2,8 @@
 @section('title',"Homi Reset Password")
 @section('content')
 <div class="row">
-   <div class="col-md-5 leftCol bg-white px-4">
+      
+    <div class="col-md-5 leftCol bg-white px-4">
       <div class="logo snIN d-flex justify-content-center align-items-center">
          <img src="{{asset('assets_front/images/brand-logo/logo.png')}}"/>
       </div>

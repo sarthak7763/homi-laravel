@@ -19,7 +19,8 @@ class PropertyController extends Controller
     //
     public function index(Request $request)
     {
-                                             
+       try
+       {                                        
         $user_id = Auth::User()->id;
         $searchData = $request->title_search;
         if(isset($request->title_search) && !empty($request->title_search)){
@@ -30,6 +31,10 @@ class PropertyController extends Controller
 
         }   
         return view('buyer::property',compact('propertyData'));
+      }
+      catch(Exception $e){  
+        return redirect()->back()->with('error', 'something wrong');     
+      }
     }
     
     
@@ -108,6 +113,7 @@ class PropertyController extends Controller
 
     public function store(Request $request) {
       $data=$request->all();
+
       $request->validate([
 			    'title'=>'required',
 			     'property_type'=>[
@@ -261,19 +267,18 @@ class PropertyController extends Controller
                                   }
                           }
                           
-                          session()->flash('success', 'Property has been added');
-                          return redirect()->route('buyer.property');      
+                      return redirect()->route('buyer.property')->with('success', 'Property has been added !');      
                       }
                      else{
                           return back()->with('error','Please choose property thumbnail image.');
                     }
-        }
+                  }
 
 
 
     public function edit($id){
       try{
-        $propertyDetail = Property::where('id',$id)->where('property_status',1)->get()->first();
+        $propertyDetail = Property::where('id',$id)->get()->first();
         $my_property_features = $propertyDetail->property_features;
         $featuresArray = json_decode($my_property_features, true);
         $propertyGallery = PropertyGallery::where('property_id',$id)->where('status',1)->get()->toArray();
@@ -281,7 +286,7 @@ class PropertyController extends Controller
         return view('buyer::editproperty',compact('propertyDetail','propertyGallery','featuresArray'));
       }
       catch (\Exception $e){
-        return response()->json(["status" => 'error','message'=>'Something went wrong.']);
+        return response()->json(["status" => 'error','message'=>$e->getMessage()]);
       }
     }
 
@@ -289,6 +294,7 @@ class PropertyController extends Controller
 
     public function update(Request $request,$id){
         $data=$request->all();
+       
         $request->validate([
 			    'title'=>'required',
 			     'property_type'=>[
@@ -340,6 +346,8 @@ class PropertyController extends Controller
         
               ]);
               $property=Property::find($id);
+              if(!empty($property))
+              {
               $checkpropertycategory=Category::where('id',$data['property_category'])->where('category_type',$data['property_type'])->where('status',1)->get()->first();
               
             if(!$checkpropertycategory)
@@ -561,9 +569,15 @@ class PropertyController extends Controller
                                         $gallery->save();
                                   }
                             }
-                          toastr()->success('Property information saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-                          return redirect()->route('buyer.property')->with('success',"Property information updated successfully. Now add property Images to publish your property");      
-           }
+                          // toastr()->success('Property information saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
+                          return redirect()->route('buyer.property')->with('success', 'Property has been updated !'); 
+                }
+                
+                else
+                {
+                  return redirect()->back()->with('error', 'id does not found !'); 
+                }
+              }
 
 
 
@@ -578,6 +592,7 @@ class PropertyController extends Controller
                 ]);
   
               $propertyupdate=Property::find($data['property_id']);
+              
               if(is_null($propertyupdate)){
                  return redirect()->route('buyer.property')->with('error',"Something went wrong.");
               }

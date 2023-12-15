@@ -25,7 +25,7 @@
           </div>
           <div class="my-plant-contant">
             <ul class="my-plant-ul">
-              <li>{{$subscription->plan_description}}</li>
+              <li>{!! $subscription->plan_description !!}</li>
               <li>{{$subscription->plan_price}}</li>
               <li>{{$subscription->plan_duration}}</li>
               <li>{{$subscription->product_listing}}</li>

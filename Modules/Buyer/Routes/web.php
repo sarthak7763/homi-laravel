@@ -12,11 +12,8 @@ Route::get('/dealer/forget-password', 'BuyerController@buyershowForgotPassword')
 // Route::get('/dealer/forgot-password/{token}', 'BuyerController@buyerForgotPasswordValidate')->name('buyer-reset-password-link');
 
 Route::post('/dealer/submit-forgot-password', 'BuyerController@buyerSubmitResetPassword')->name('buyer-forget-password-post');
-
 Route::get('/dealer/reset-password/{token}', 'BuyerController@showResetPasswordForm')->name('buyer-reset-password');
 Route::post('/dealer/submit-reset-password/', 'BuyerController@submitResetPasswordForm')->name('buyer-update-password');
-
-
 Route::get('/dealer-logout', 'BuyerController@buyerlogout')->name('buyer.logout');
 
 
@@ -56,6 +53,12 @@ Route::group(['middleware' => 'Isseller'], function ()
     
 
     Route::get('/dealer/bookings', 'BookingController@booking')->name('buyer.bookings');
+    Route::post('/dealer/bookings-search', 'BookingController@booking')->name('buyer.bookings-search');
+    Route::post('/dealer/bookings-status-change', 'BookingController@bookingstatus')->name('buyer.bookings-update-status');
+    Route::post('/dealer/bookings-cancel-booiking', 'BookingController@cancelbooking')->name('buyer.bookings-cancel-booking');
+
+    Route::any('/dealer/bookings-views/{booking_id}', 'BookingController@bookingview')->name('buyer.bookings_view');
+
 
     //-------------------------------------- subscription--------------------------------------------// 
     Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');

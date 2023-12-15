@@ -122,8 +122,9 @@ $(document).on('change','#owner_type',function(){
       $('#showagencydiv').hide();
     }
 });
-
 </script>
+
+
 
 
 <script>
@@ -135,8 +136,45 @@ $(document).on('change','#owner_type',function(){
         $('#property_hidden_status').val(property_status);    
 	}); 
 });
+
  
-</script>]
+</script>
+
+
+
+
+ 
+
+
+
+<script>
+    $(document).ready(function(){
+      
+
+      $(".status_change").on("click", function() {
+        
+       var booking_id= $(this).attr('data-id');
+       
+       var booking_status= $(this).attr('data-status');
+       
+        $('#booking_hidden_id').val(booking_id);
+        $('#booking_hidden_status').val(booking_status);    
+	}); 
+});
+ 
+</script>
+
+
+<script>
+    $(document).ready(function(){
+    $(".cancel_booking").on("click", function() {
+        var booking_id= $(this).attr('data-id');
+        $('#cancel_booking_hidden_id').val(booking_id);
+
+    }); 
+});
+ </script>
+
 
 
 <!-- Owl Carousel -->

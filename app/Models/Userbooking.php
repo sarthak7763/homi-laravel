@@ -34,5 +34,4 @@ class Userbooking extends Model
         'cancel_date'
     ];
 
-   
 }
