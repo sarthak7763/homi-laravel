@@ -11,14 +11,7 @@
             </div>
         @endif
     </div>
-    <div>
-        @if (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-    </div>
-    <section class="signup-section pt-4 pb-4">
+        <section class="signup-section pt-4 pb-4">
         <div class="container h-100">
             <div class="row align-items-center justify-content-center h-100">
                 <div class="col-12">
@@ -26,22 +19,29 @@
                        @csrf
                         <h1>Welcome!</h1>
                         <strong>Signin your account</strong>
-                        <div class="mb-3">
+                        <div>
+                                @if (session()->has('error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="mb-3">
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID"  style="display:block;"> 
-                                @if($errors->has('email'))
-                        <div class="invalid-feedback">
-                           {{$errors->first('email')}}
-                        </div>
-                        @endif    
+                                @error('email')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror
                         </div>
                         <div class="mb-3 input-group">
                             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password">
-                            @if($errors->has('password'))
-                        <div class="invalid-feedback">
-                           {{$errors->first('password')}}
-                        </div>
-                        @endif 
+                            @error('password')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror
                             
                             <span toggle="#password" class="input-group-text togglePassword" id="">
 
@@ -81,6 +81,9 @@
 
 </div>
 @endsection
+
+<script src="{{ asset ("/js/validator.js") }}" type="text/javascript"></script>
+
 @section('js')
 <script type="text/javascript">
 $(document).on("click", "#btnLogin", function() {

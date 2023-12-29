@@ -35,12 +35,24 @@ Route::post('/dealer/verifyloginotp','BuyerController@sellerloginverifyemailotp'
 Route::post('/dealer/resendotp','BuyerController@sellerresendemailotp')->name('buyer.post.resendotp');
 
 
+
+
+
+
 /*------------------------middleware Routes-----------------*/
 
 Route::group(['middleware' => 'Isseller'], function () 
 {
 
     Route::get('/dealer/dashboard', 'DashboardController@index')->name('buyer.dashboard');
+
+    // change password
+
+    Route::get('/dealer/change-password', 'BuyerController@changePassword')->name('buyer.change-password');
+    Route::post('/dealer/change-password-submit', 'BuyerController@submitchangePassword')->name('buyer.change-password-save');
+
+
+
 
 
     //--------------------- profile routes------------------------------------                             //
@@ -52,7 +64,8 @@ Route::group(['middleware' => 'Isseller'], function ()
 
     
 
-    Route::get('/dealer/bookings', 'BookingController@booking')->name('buyer.bookings');
+    Route::get('/dealer/bookings/', 'BookingController@booking')->name('buyer.bookings');
+    Route::get('/dealer/bookings/{segment}', 'BookingController@booking')->name('buyer.bookings');
     Route::post('/dealer/bookings-search', 'BookingController@booking')->name('buyer.bookings-search');
     Route::post('/dealer/bookings-status-change', 'BookingController@bookingstatus')->name('buyer.bookings-update-status');
     Route::post('/dealer/bookings-cancel-booiking', 'BookingController@cancelbooking')->name('buyer.bookings-cancel-booking');
@@ -61,16 +74,20 @@ Route::group(['middleware' => 'Isseller'], function ()
 
 
     //-------------------------------------- subscription--------------------------------------------// 
-    Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
-    Route::get('/dealer/user-subscription/{id}', 'MysubscriptionController@usersubscription')->name('buyer.user-subscription');
+    Route::get('/dealer/subscription-plans', 'MysubscriptionController@allsubscriptions')->name('buyer.subscription-plans');
     Route::post('/dealer/user-subscription-confirmation/{id}', 'MysubscriptionController@subscriptionconfirmation')->name('buyer.subscription-confirmation');
+    
+     Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
+    // Route::get('/dealer/user-subscription/{id}', 'MysubscriptionController@usersubscription')->name('buyer.user-subscription');
 
 
 
 
 // --------------------------------------------------property---------------------------------------------//
     Route::get('/dealer/manage-properties', 'PropertyController@index')->name('buyer.property');
-    Route::get('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
+     Route::get('/dealer/manage-properties/{segment}', 'PropertyController@index')->name('buyer.property');
+     
+    Route::post('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
     Route::get('/dealer/add-properties', 'PropertyController@add')->name('buyer.add-property');
     Route::post('/dealer/get-categorydata-property', 'PropertyController@getcategory')->name('buyer.get-category');
 

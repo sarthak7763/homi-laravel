@@ -23,8 +23,7 @@
                 <tr>
                   <td class="payments-image-td ps-0">
                     <a href="#" tabindex="-1" class="product-payments-photo">
-                      <span class="bookings-image">                    
-                        <img class="product-image-photo" src="images/received-payments.png">
+                      <span class="payments-box received-payments"> 
                       </span>
                     </a>
                   </td>
@@ -33,9 +32,9 @@
                     <p>Cody Smith</p>         
                   </td>
                   <td class="text-center">08 March 2023 </td>
-                  <td class="text-center">Credit to 
-                    <span class="payments-card-image">                    
-                        <img class="product-image-photo" src="images/payments-card.png">
+                  <td class="text-center">
+                    <strong class="credit-box"> Credit to </strong>                   
+                    <span class="payments-card-image card-image">                  
                       </span>
                     </td>
                   <td class="text-end">
@@ -48,8 +47,7 @@
                 <tr>
                   <td class="payments-image-td ps-0">
                     <a href="#" tabindex="-1" class="product-payments-photo">
-                      <span class="bookings-image">                    
-                        <img class="product-image-photo" src="images/received-payments.png">
+                      <span class="payments-box received-payments"> 
                       </span>
                     </a>
                   </td>
@@ -58,9 +56,9 @@
                     <p>Wade Warren</p>         
                   </td>
                   <td class="text-center">08 March 2023 </td>
-                  <td class="text-center">Credit to 
-                    <span class="payments-card-image">                    
-                        <img class="product-image-photo" src="images/payments-card.png">
+                  <td class="text-center">
+                   <strong class="credit-box"> Credit to </strong>                   
+                    <span class="payments-card-image card-image">                  
                       </span>
                     </td>
                   <td class="text-end">
@@ -73,8 +71,7 @@
                 <tr>
                   <td class="payments-image-td ps-0">
                     <a href="#" tabindex="-1" class="product-payments-photo">
-                      <span class="bookings-image">                    
-                        <img class="product-image-photo" src="images/received-payments.png">
+                       <span class="payments-box received-payments"> 
                       </span>
                     </a>
                   </td>
@@ -83,9 +80,9 @@
                     <p>Brooklyn Simmons</p>         
                   </td>
                   <td class="text-center">08 March 2023 </td>
-                  <td class="text-center">Credit to 
-                    <span class="payments-card-image">                    
-                        <img class="product-image-photo" src="images/payments-card.png">
+                  <td class="text-center">
+                    <strong class="credit-box"> Credit to </strong>                   
+                    <span class="payments-card-image card-image">                  
                       </span>
                     </td>
                   <td class="text-end">
@@ -98,8 +95,7 @@
                  <tr>
                   <td class="payments-image-td ps-0">
                     <a href="#" tabindex="-1" class="product-payments-photo">
-                      <span class="bookings-image">                    
-                        <img class="product-image-photo" src="images/received-payments.png">
+                        <span class="payments-box received-payments"> 
                       </span>
                     </a>
                   </td>
@@ -108,9 +104,9 @@
                     <p>Guy Hawkins</p>         
                   </td>
                   <td class="text-center">08 March 2023 </td>
-                  <td class="text-center">Credit to 
-                    <span class="payments-card-image">                    
-                        <img class="product-image-photo" src="images/payments-card.png">
+                  <td class="text-center">
+                   <strong class="credit-box"> Credit to </strong>                   
+                    <span class="payments-card-image card-image">                  
                       </span>
                     </td>
                   <td class="text-end">
@@ -123,8 +119,7 @@
                  <tr>
                   <td class="payments-image-td ps-0">
                     <a href="#" tabindex="-1" class="product-payments-photo">
-                      <span class="bookings-image">                    
-                        <img class="product-image-photo" src="images/received-payments.png">
+                       <span class="payments-box received-payments"> 
                       </span>
                     </a>
                   </td>
@@ -133,9 +128,9 @@
                     <p>Leslie Alexander</p>         
                   </td>
                   <td class="text-center">08 March 2023 </td>
-                  <td class="text-center">Credit to 
-                    <span class="payments-card-image">                    
-                        <img class="product-image-photo" src="images/payments-card.png">
+                  <td class="text-center">
+                    <strong class="credit-box"> Credit to </strong>                   
+                    <span class="payments-card-image card-image">                  
                       </span>
                     </td>
                   <td class="text-end">
@@ -147,8 +142,7 @@
                 <tr>
                   <td class="payments-image-td ps-0">
                     <a href="#" tabindex="-1" class="product-payments-photo">
-                      <span class="bookings-image">                    
-                        <img class="product-image-photo" src="images/received-payments.png">
+                       <span class="payments-box received-payments"> 
                       </span>
                     </a>
                   </td>
@@ -157,9 +151,9 @@
                     <p>Robert Fox</p>         
                   </td>
                   <td class="text-center">08 March 2023 </td>
-                  <td class="text-center">Credit to 
-                    <span class="payments-card-image">                    
-                        <img class="product-image-photo" src="images/payments-card.png">
+                  <td class="text-center">
+                  <strong class="credit-box"> Credit to </strong>                   
+                    <span class="payments-card-image card-image">                  
                       </span>
                     </td>
                   <td class="text-end">
@@ -171,8 +165,7 @@
                 <tr>
                   <td class="payments-image-td ps-0">
                     <a href="#" tabindex="-1" class="product-payments-photo">
-                      <span class="bookings-image">                    
-                        <img class="product-image-photo" src="images/received-payments.png">
+                        <span class="payments-box received-payments"> 
                       </span>
                     </a>
                   </td>
@@ -181,9 +174,9 @@
                     <p>Floyd Miles</p>         
                   </td>
                   <td class="text-center">08 March 2023 </td>
-                  <td class="text-center">Credit to 
-                    <span class="payments-card-image">                    
-                        <img class="product-image-photo" src="images/payments-card.png">
+                  <td class="text-center">
+                    <strong class="credit-box"> Credit to </strong>                   
+                    <span class="payments-card-image card-image">                  
                       </span>
                     </td>
                   <td class="text-end">

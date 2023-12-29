@@ -20,7 +20,7 @@
                </div>
             </div>
             
-            <div class="row">
+            <div class="row-col">
                <div class="row">
                   <div class="col-sm-6">
                      <div class="mb-4">
@@ -99,30 +99,7 @@
                         @endif
                      </div>
                   </div>
-                  <div class="col-sm-3">
-                     <div class="mb-4 ">
-                        <label>Pool</label>
-                        <input type = "checkbox" name = "chk_pool"  value = "1" >           
-                     </div>
-                  </div>
-                  <div class="col-sm-3">
-                     <div class="mb-4">
-                        <label>Lift</label>
-                        <input type = "checkbox" name = "chk_lift"   value = "1" >           
-                     </div>
-                  </div>
-                  <div class="col-sm-3">
-                     <div class="mb-4">
-                        <label>Garden</label>
-                        <input type = "checkbox" name = "chk_garden"  value = "1">           
-                     </div>
-                  </div>
-                  <div class="col-sm-3">
-                     <div class="mb-4">
-                        <label>Parking</label>
-                        <input type = "checkbox" name = "chk_parking"  value = "1" >           
-                     </div>
-                  </div>
+                 
                   <div class="col-sm-6">
                      <div class="mb-4">
                         <input type="text" class="form-control @error('no_of_balcony') is-invalid @enderror"  name = "no_of_balcony"  aria-describedby="" placeholder="Enter No of Balcony">            
@@ -170,14 +147,33 @@
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">
-                     <input type="text" class="form-control"  readonly value="+{{$userData->phonecode}} " aria-describedby="" >            
+                        <div class="country_code_div">
+                        <select id="country_id" name="country_id" class=" form-control">
+                        @foreach($country_list as $list)
+                        <option value="{{$list['id']}}">
+                            ({{$list['phonecode']}})</option>
+                           @endforeach
+                         
+                           </select>          
                         
-                        <input type="text" class="form-control" name = "property_number" readonly value="{{$userData->mobile}} " aria-describedby="" placeholder="Enter Contact No" id = "property_number">            
+                        <input type="text" class="form-control" name = "property_number" value="{{$userData->mobile}}"  aria-describedby="" placeholder="Enter Contact No" id = "property_number">  
+                        @if($errors->has('property_number'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_number')}}
+                        </div>
+                        @endif   
+                     
+                     </div>         
                      </div>
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">            
-                        <input type="text" class="form-control" value="{{$userData->email}} " readonly name = "property_email"  aria-describedby="" placeholder="Enter Contact Email">            
+                        <input type="text" class="form-control" value="{{$userData->email}}"  name = "property_email"  aria-describedby="" placeholder="Enter Contact Email">
+                        @if($errors->has('property_email'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_email')}}
+                        </div>
+                        @endif            
                      </div>
                   </div>
                   <div class="col-sm-12">
@@ -232,13 +228,13 @@
                   <div class="row">
                      <div class="col-12">
                         <div class="mb-4">
-                           <select class="form-control js-example-tokenizer" name="property_features[]" multiple="multiple">
+                           <select class="form-control js-example-tokenizer" placeholder="Add Features" name="property_features[]" multiple="multiple">
                               <option value="">Add Features</option>
                            </select>
                         </div>
                      </div>
                   </div>
-                  <div class="col-6">
+                  <div class="col-sm-12">
                      <div class="mb-4">            
                         <textarea class="form-control" name = "meta_title" id="exampleFormControlTextarea1" rows="3" placeholder="Meta Title"></textarea>         
                      </div>
@@ -262,6 +258,35 @@
             </div>
             <div>
             </div>
+             <div class="col-sm-12">
+                   <div class="row"> 
+                     <div class="col-auto">
+                        <div class="mb-4 checkbox-col">
+                           <label>Pool</label>
+                           <input type = "checkbox" name = "chk_pool"  value = "1" >           
+                        </div>
+                     </div>
+                     <div class="col-auto">
+                        <div class="mb-4 checkbox-col">
+                           <label>Lift</label>
+                           <input type = "checkbox" name = "chk_lift"   value = "1" >           
+                        </div>
+                     </div>
+                 
+                  <div class="col-auto">
+                     <div class="mb-4 checkbox-col">
+                        <label>Garden</label>
+                        <input type = "checkbox" name = "chk_garden"  value = "1">           
+                     </div>
+                  </div>
+                  <div class="col-auto">
+                     <div class="mb-4 checkbox-col">
+                        <label>Parking</label>
+                        <input type = "checkbox" name = "chk_parking"  value = "1" >           
+                     </div>
+                  </div>
+                   </div>
+                   </div>
             <div class="col-sm-6">
                      <div class="mb-4">
                         <input type="file" id="property_gallery_image" class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple">            
@@ -276,36 +301,8 @@
 
                     </div> 
 
-                </div>
-
-                  
-            <div class="row">
-               <div class="col-md-5 mb-4">
-                  <div class="thumbnail-image text-center rounded-6" name = "">
-                     <span>
-                        <svg width="40" height="39" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M9.58333 27.7999C10.1356 27.7999 10.5833 27.3522 10.5833 26.7999C10.5833 26.2477 10.1356 25.7999 9.58333 25.7999V27.7999ZM7.75148 12.5743L7.94175 13.556C8.21269 13.5035 8.44989 13.3413 8.59718 13.1079C8.74446 12.8745 8.78874 12.5906 8.71952 12.3235L7.75148 12.5743ZM28.1254 8.80147L27.1519 9.02996C27.2594 9.4881 27.6718 9.80928 28.1423 9.80132L28.1254 8.80147ZM30.2439 25.635C29.6999 25.7304 29.3363 26.2487 29.4317 26.7927C29.5271 27.3367 30.0454 27.7003 30.5894 27.6049L30.2439 25.635ZM25.5962 22.1566C26.0141 22.5176 26.6456 22.4716 27.0067 22.0537C27.3678 21.6357 27.3217 21.0043 26.9038 20.6432L25.5962 22.1566ZM20.6538 15.2431C20.2359 14.882 19.6044 14.9281 19.2433 15.346C18.8822 15.7639 18.9283 16.3954 19.3462 16.7565L20.6538 15.2431ZM20.6538 16.7565C21.0717 16.3954 21.1178 15.7639 20.7567 15.346C20.3956 14.9281 19.7641 14.882 19.3462 15.2431L20.6538 16.7565ZM13.0962 20.6432C12.6783 21.0043 12.6322 21.6357 12.9933 22.0537C13.3544 22.4716 13.9859 22.5176 14.4038 22.1566L13.0962 20.6432ZM21 15.9998C21 15.4475 20.5523 14.9998 20 14.9998C19.4477 14.9998 19 15.4475 19 15.9998H21ZM19 37.6001C19 38.1524 19.4477 38.6001 20 38.6001C20.5523 38.6001 21 38.1524 21 37.6001H19ZM9.58333 25.7999C5.39105 25.7999 2.25 22.8918 2.25 19.5998H0.25C0.25 24.2608 4.57086 27.7999 9.58333 27.7999V25.7999ZM2.25 19.5998C2.25 16.7516 4.57871 14.2078 7.94175 13.556L7.56121 11.5925C3.482 12.3831 0.25 15.5824 0.25 19.5998H2.25ZM8.71952 12.3235C8.5758 11.7687 8.5 11.1922 8.5 10.5997H6.5C6.5 11.3639 6.59791 12.109 6.78344 12.8251L8.71952 12.3235ZM8.5 10.5997C8.5 6.31359 12.5738 2.59961 17.9167 2.59961V0.599609C11.7536 0.599609 6.5 4.94462 6.5 10.5997H8.5ZM17.9167 2.59961C22.5801 2.59961 26.3124 5.45297 27.1519 9.02996L29.099 8.57298C28.0097 3.93203 23.3336 0.599609 17.9167 0.599609V2.59961ZM28.1423 9.80132C28.2059 9.80025 28.2695 9.7997 28.3333 9.7997V7.7997C28.258 7.7997 28.1832 7.80035 28.1085 7.80161L28.1423 9.80132ZM28.3333 9.7997C33.6762 9.7997 37.75 13.5137 37.75 17.7998H39.75C39.75 12.1447 34.4963 7.7997 28.3333 7.7997V9.7997ZM37.75 17.7998C37.75 21.5603 34.6352 24.8647 30.2439 25.635L30.5894 27.6049C35.7073 26.7072 39.75 22.7479 39.75 17.7998H37.75ZM26.9038 20.6432L20.6538 15.2431L19.3462 16.7565L25.5962 22.1566L26.9038 20.6432ZM19.3462 15.2431L13.0962 20.6432L14.4038 22.1566L20.6538 16.7565L19.3462 15.2431ZM19 15.9998V37.6001H21V15.9998H19Z" fill="#124868"/>
-                        </svg>
-                     </span>
-                     <h3>Upload Thumbnail Image</h3>
-                     <p>Drag and Drop or Browse</p>
-                  </div>
-               </div>
-               <div class="col-md-7 mb-4">
-                  <div class="thumbnail-image text-center rounded-6" name = "">
-                     <span>
-                        <svg width="40" height="39" viewBox="0 0 40 39" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M9.58333 27.7999C10.1356 27.7999 10.5833 27.3522 10.5833 26.7999C10.5833 26.2477 10.1356 25.7999 9.58333 25.7999V27.7999ZM7.75148 12.5743L7.94175 13.556C8.21269 13.5035 8.44989 13.3413 8.59718 13.1079C8.74446 12.8745 8.78874 12.5906 8.71952 12.3235L7.75148 12.5743ZM28.1254 8.80147L27.1519 9.02996C27.2594 9.4881 27.6718 9.80928 28.1423 9.80132L28.1254 8.80147ZM30.2439 25.635C29.6999 25.7304 29.3363 26.2487 29.4317 26.7927C29.5271 27.3367 30.0454 27.7003 30.5894 27.6049L30.2439 25.635ZM25.5962 22.1566C26.0141 22.5176 26.6456 22.4716 27.0067 22.0537C27.3678 21.6357 27.3217 21.0043 26.9038 20.6432L25.5962 22.1566ZM20.6538 15.2431C20.2359 14.882 19.6044 14.9281 19.2433 15.346C18.8822 15.7639 18.9283 16.3954 19.3462 16.7565L20.6538 15.2431ZM20.6538 16.7565C21.0717 16.3954 21.1178 15.7639 20.7567 15.346C20.3956 14.9281 19.7641 14.882 19.3462 15.2431L20.6538 16.7565ZM13.0962 20.6432C12.6783 21.0043 12.6322 21.6357 12.9933 22.0537C13.3544 22.4716 13.9859 22.5176 14.4038 22.1566L13.0962 20.6432ZM21 15.9998C21 15.4475 20.5523 14.9998 20 14.9998C19.4477 14.9998 19 15.4475 19 15.9998H21ZM19 37.6001C19 38.1524 19.4477 38.6001 20 38.6001C20.5523 38.6001 21 38.1524 21 37.6001H19ZM9.58333 25.7999C5.39105 25.7999 2.25 22.8918 2.25 19.5998H0.25C0.25 24.2608 4.57086 27.7999 9.58333 27.7999V25.7999ZM2.25 19.5998C2.25 16.7516 4.57871 14.2078 7.94175 13.556L7.56121 11.5925C3.482 12.3831 0.25 15.5824 0.25 19.5998H2.25ZM8.71952 12.3235C8.5758 11.7687 8.5 11.1922 8.5 10.5997H6.5C6.5 11.3639 6.59791 12.109 6.78344 12.8251L8.71952 12.3235ZM8.5 10.5997C8.5 6.31359 12.5738 2.59961 17.9167 2.59961V0.599609C11.7536 0.599609 6.5 4.94462 6.5 10.5997H8.5ZM17.9167 2.59961C22.5801 2.59961 26.3124 5.45297 27.1519 9.02996L29.099 8.57298C28.0097 3.93203 23.3336 0.599609 17.9167 0.599609V2.59961ZM28.1423 9.80132C28.2059 9.80025 28.2695 9.7997 28.3333 9.7997V7.7997C28.258 7.7997 28.1832 7.80035 28.1085 7.80161L28.1423 9.80132ZM28.3333 9.7997C33.6762 9.7997 37.75 13.5137 37.75 17.7998H39.75C39.75 12.1447 34.4963 7.7997 28.3333 7.7997V9.7997ZM37.75 17.7998C37.75 21.5603 34.6352 24.8647 30.2439 25.635L30.5894 27.6049C35.7073 26.7072 39.75 22.7479 39.75 17.7998H37.75ZM26.9038 20.6432L20.6538 15.2431L19.3462 16.7565L25.5962 22.1566L26.9038 20.6432ZM19.3462 15.2431L13.0962 20.6432L14.4038 22.1566L20.6538 16.7565L19.3462 15.2431ZM19 15.9998V37.6001H21V15.9998H19Z" fill="#124868"/>
-                        </svg>
-                     </span>
-                     <h3>Upload Image</h3>
-                     <p>
-                        Drag and Drop or Browse
-                        (Allow maximum 8 images format allowed will be JPEG, PNG)
-                     </p>
-                  </div>
-               </div>
-            </div>
+                </div> 
+          
             <button type="submit" class="btn btn-primary w-auto">Save</button>
          </form>
       </div>
@@ -369,7 +366,3 @@ reader.readAsDataURL(this.files[0]);
     });
   });
 </script>
-
-
-
-

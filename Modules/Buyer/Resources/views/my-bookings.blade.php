@@ -5,73 +5,97 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<div class="col-md-9">
+<div class="col-lg-9">
     <div class="profile-box">
         <div class="profile-box-form">
-            <div class="row align-items-center mb-3">
-                <div class="col">
-                    <h1 class="mb-0">Total Bookings</h1>
+            <h1 class="mb-3">Total Bookings</h1>
+           
+             
+                    
                     @if (session()->has('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
-                </div>
-                <div class="col-auto">
+          
+             
                     <form action = "{{route('buyer.bookings-search')}}" method="Post">
                         @csrf
                         <div class="search-input-group">
-                            <div class="form-outline">
-                                <input type="text" id="form1" class="form-control" name = "title_search" placeholder="Search Property Name" />
-                                <input type="number" id="form1" class="form-control" name = "booking_id_search" placeholder="Search Booking ID" />
-                            </div>
-                            <button type="submit" class="btn-search">
+                            <div class="row form-outline ">
+                                <div class="col-12 col-lg-6 form-outline-box1">                                   
+                                            <input type="text" id="form1" class="form-control" name = "title_search" placeholder="Search Property Name" >                                      
+                                       
+                                            <input type="text" id="form1" class="form-control" name = "booking_id_search" placeholder="Search Booking ID">                                      
+                                                                     
+                                </div>                                
+                                <div class="col date-box">
+                                    <label>Checkin Date</label>
+                                    <input type="text" id="datepicker1" name = "check_in_search">
+                                </div>
+                                <div class="col date-box">
+                                     <label>Checkout Date</label>
+                                     <input type="text" id="datepicker2" name = "check_out_search">
+                                </div>
+                                <div class="col-auto date-box-submit">
+                                     <button type="submit" class="btn-search">
                             Search
                             </button>
+                                </div> 
+                                
+                                </div>                           
+                            
                         </div>
                     </form>
-                </div>
-            </div>
+     
             <div class="total-bookings">
                 <table class="table mb-0">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">Sr.no</th>
-                            <th class="text-center" scope="col">Property Name</th>
-                            <th class="text-center" scope="col">Booking ID</th>
-                            <th class="text-center" scope="col">Check in</th>
-                            <th class="text-center" scope="col">Check out</th>
-                            <th class="text-center" scope="col">Price</th>
-                            <th class="bookings-status text-end" scope="col">Status</th>
-                            <th class="bookings-status text-end" scope="col">Actions</th>
+                            <th scope="col">Sr.no</th>
+                            <th scope="col">Property Name</th>
+                            <th scope="col">Booking ID</th>
+                            <th scope="col">Check in</th>
+                            <th scope="col">Check out</th>
+                            <th scope="col">Price</th>
+                            <th class="bookings-status" scope="col">Status</th>
+                            <th class="bookings-status" scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($bookingData as $booking)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td class="text-center">{{$booking->title}}</td>
-                            <td class="text-center">
+                            <td>{{$booking->title}}</td>
+                            <td>
                                 <a href="{{route('buyer.bookings_view',($booking->booking_id))}}" class="button-like">{{$booking->booking_id}}</a>
                             </td>
-                            <td class="text-center">{{date('M d, Y',strtotime($booking->user_checkin_date))}}</td>
+                            <td>{{date('M d, Y',strtotime($booking->user_checkin_date))}}</td>
                             
-                            <td class="text-center">{{date('M d, Y',strtotime($booking->user_checkout_date))}}</td>
-                            <td class="text-center">{{$booking->booking_property_price}}</td>
+                            <td>{{date('M d, Y',strtotime($booking->user_checkout_date))}}</td>
+                            <td>{{$booking->booking_property_price}}</td>
                             <td class="text-end"><span class="text-warning"></span>
                                 @if($booking->booking_status==0)
                                 {{'ongoing'}}
                                 @elseif($booking->booking_status==1) 
-                                {{'complete'}}
+                                {{'completed'}}
                                 @elseif($booking->booking_status==2) 
                                 {{'cancel'}}
                                 @endif
                             </td>
                             <td>
-                                <button type="button" class="button-like status_change" data-toggle="modal" data-target="#myModal" data-id="{{$booking->booking_id}}" data-status="{{$booking->booking_status}}">Change Status</button>              
+                                @if($booking->booking_status==1 || $booking->booking_status==2)
+                                <button type="button" class="button-like status_change" data-toggle="modal" data-target="#myModal" data-id="{{$booking->booking_id}}" data-status="{{$booking->booking_status}}" style = "display:none"; >Change Status</button>
+                                @else
+                                <button type="button" class="button-like status_change" data-toggle="modal" data-target="#myModal" data-id="{{$booking->booking_id}}" data-status="{{$booking->booking_status}}">Change Status</button>
+                                 @endif
+                             </td>
                             <td>
-                            <td>
-                                <button type="button" class="button-like cancel_booking" data-toggle="modal" data-target="#cancelModal" data-id="{{$booking->booking_id}}">Cancel Booking</button>
+                            @if($booking->booking_status==1 || $booking->booking_status==2 )
+                                <button type="button" class="button-like cancel_booking" data-toggle="modal" data-target="#cancelModal" data-id="{{$booking->booking_id}}" style = "display:none";>Cancel Booking</button>
+                            @else
+                            <button type="button" class="button-like cancel_booking" data-toggle="modal" data-target="#cancelModal" data-id="{{$booking->booking_id}}">Cancel Booking</button>
+                            @endif
                             </td>
                         </tr>
                         @endforeach    
@@ -143,3 +167,20 @@
 </div>
 </main>
 @endsection
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+<script>
+  $( function() {
+    $( "#datepicker1" ).datepicker();
+  } );
+  </script>
+
+<script>
+  $( function() {
+    $( "#datepicker2" ).datepicker();
+  } );
+  </script>

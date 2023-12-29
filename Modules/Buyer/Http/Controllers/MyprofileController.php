@@ -12,6 +12,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
     //
 		public function index(Request $request)
 		{
+			
 			$user_id = AUth::User()->id;
 			$userInfo =User::where('id',$user_id)->first();
 			return view('buyer::my-profile',compact('userInfo'));
@@ -39,21 +40,22 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 			$data                    =    $request->all();
 			$user_id                 =    Auth::User()->id;
 			$request->validate([
-					'name'=>[
-							'required',
-							'regex:/^[\pL\s]+$/u',
-							],
-					'mobile' => [
-						'nullable',
-						'numeric',
-					],
+					
+					'name'=>'required|regex:/^[\pL\s]+$/u',
+					  
+					  'mobile' => 'required|string|min:10|max:12|regex:/[0-9]{9}/'
 			],
 			[
 				'name.required' => 'Name field can’t be left blank.',
 				'name.regex' => 'Please enter only alphabetic characters.',
-				'email.required'=>'Email field can not be empty',
-				'email.email'=>'Please enter a valid email address',
-				'mobile.max'=>'Mobile number can not be more than 12 character',
+				'mobile.required' => 'mobile no field can’t be left blank.',
+				
+				 'mobile.min'=>'Mobile number can not be less than 10 character',
+				 'mobile.regex'=>'Please enter only alphabetic characters',
+
+				'mobile.max' => 'Mobile number can not be max than 12 character',
+
+
 			]);
 					try{
 						$user  = User::find($user_id);
@@ -74,6 +76,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 								$user->owner_type = $data['owner_type'];
 								$user->agency_name = $data['agency_name'];
 							}
+							
 						$user->save();
 						return redirect()->route('buyer.my-profile')->with('success', 'Profile has been updated !');
 					    }

@@ -49,7 +49,7 @@
             var gallery_id = $(this).attr('data-id');
                   var propery_id = $(this).attr('data-property');
                   // console.log(gallery_id);
-                  if (confirm("Are you sure you want to delete this Member?")) {
+                  if (confirm("Are you sure you want to delete this property image?")) {
                     // 2nd method
                   // var display =  $(this).parent().find(".removeimage_"+gallery_id);
                   // $(".removeimage_"+gallery_id).css('display','none');

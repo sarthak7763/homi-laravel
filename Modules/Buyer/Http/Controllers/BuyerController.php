@@ -76,6 +76,16 @@ class BuyerController extends Controller {
 
   public function buyerSubmitResetPassword(Request $request){
    try{
+
+    $request->validate([
+					'email'=>'required|email'
+    ],
+  [
+   
+    'email.required'=>'Email field can not be empty',
+    'email.email'=>'Please enter a valid email address',
+    
+  ]);
         $user = User::where('email', $request->email)->select('email')->first();
           if(!empty($user)){
             $token = Str::random(64);
@@ -485,5 +495,71 @@ class BuyerController extends Controller {
       }
   }
 
+
+  public function changePassword() {
+   
+    try{
+     return view('buyer::changepassword');
+    }
+     catch(Exception $e){ 
+       return redirect()->back()->with('error', $e->getmessage());     
+      }
+  }
+
+
+
+  public function submitchangePassword(Request $request) {
+    try
+    {
+      $request->validate([
+                'current_password' => 'required',
+                  'new_password' => 'required|min:6',
+                  'confirm_password' => 'required'
+                  
+        ],
+        [
+          'current_password.required' => 'current passsword is required.',
+          'new_password.required' => 'new password is required.',
+          'new_password.min' => ' new password should be minimum 6 characters.',
+          'new_password.regex' => 'password should be capital letter, small letter,special charcters and number .',
+          
+        ]);
+
+          $curr_password = $request->current_password;
+          $new_password  = $request->new_password;
+
+          
+            
+          if(!Hash::check($curr_password,Auth::user()->password)){
+              return redirect()->route('buyer.change-password')->with('error', 'Please enter correct password');
+            }
+          else{
+                $user_id = Auth::user()->id;
+                $update_password = DB::table('users')->where('id',$user_id)->update(
+                                                                          [
+                                                                            'password'=> Hash::make($new_password),
+                                                                          ]);
+                return redirect()->route('buyer.my-profile')->with('success', 'Password has been updated !');
+          }
+      }
+      catch(Exception $e){ 
+        return redirect()->back()->with('error', $e->getmessage());     
+     }
+ }
+
+      
+
+      
+  
+                                 
+
+    
+  }
+
  
-}
+
+
+
+
+
+ 

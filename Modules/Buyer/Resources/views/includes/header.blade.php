@@ -23,13 +23,14 @@
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <div class="logo col-lg-auto me-lg-auto">
-          <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">   
+          <a href="{{route('buyer.dashboard')}}" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">   
             <img src="{{asset('storage'.getLogo())}}">
           </a>
         </div>
+        
 
-        <div class="dropdown text-end">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="dropdown text-end" id="seller_account">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle profiledropdown"  data-bs-toggle="dropdown" aria-expanded="false">
             <div class="account-box">
               @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
               <div class="header-profile">
@@ -41,17 +42,28 @@
                 <strong>{{$sellerinfo->name}}</strong>
               </div>              
             </div>
+            </a>
+          <ul class="dropdown-menu text-small ssss" id="seller_dropdown">
             
-            
-          </a>
-          <ul class="dropdown-menu text-small">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer/my-profile*')) ? 'active' : '' }}"><a class="dropdown-item" href="{{route('buyer.my-profile')}}">My Profile</a></li>
+            <li><a class="dropdown-item" href="{{route('buyer.change-password')}}">Change Password</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a class="dropdown-item " href="{{route('buyer.logout')}}">Sign out</a></li>
           </ul>
         </div>
       </div>
     </div>
   </header>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="{{ asset('assets_admin/bower_components/jquery-ui/js/jquery-ui.min.js')}}"></script>
+
+
+<script>
+$(document).on('click','#seller_account',function(){
+    
+  $('#seller_dropdown').toggle();
+    
+});
+</script>
+

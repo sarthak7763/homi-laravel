@@ -3,7 +3,7 @@
   <div class="col-md-9">
     <div class="profile-box">          
       <div class="profile-box-form">
-        <h1 class="mb-3">My Subscription Plan</h1>
+        <h1 class="mb-3">My Subscription Plan </h1>
         
         <form action ="{{route('buyer.subscription-confirmation',($subscription_plan->id))}}" method = "Post">
           @csrf

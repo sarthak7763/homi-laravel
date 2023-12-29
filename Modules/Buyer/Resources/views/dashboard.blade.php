@@ -1,57 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Bootstrap CSS -->
-  <link href="{{url('/')}}/assets_front/css/bootstrap.min.css" rel="stylesheet"> 
-  <link href="{{url('/')}}/assets_front/css/custom.css" rel="stylesheet">  
-  <link rel="icon" href="images/favicon.png">
-  <title>Hello, world!</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-</head>
-<body class="dashboard-page"> 
-  <header class="p-3">
-    <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <div class="logo col-lg-auto me-lg-auto">
-          <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">   
-            <img src="images/logo.png">
-          </a>
-        </div>
-
-        <div class="dropdown text-end">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            <div class="account-box">
-              <div class="header-profile">
-                <img class="rounded-pill" src="images/user-icon.jpg">
-              </div>
-              <div class="account-down">
-                <span>Welcome</span>
-                <strong>Albert Flores</strong>
-              </div>              
-            </div>
-            
-            
-          </a>
-          <ul class="dropdown-menu text-small">
-            <li><a class="dropdown-item" href="#">New project...</a></li>
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-   <section class="section-dashboard">
-    <div class="container">
-      <div class="row align-items-center justify-content-center">
-        <div class="col-4 mb-3">
+@extends('buyer::layouts.master')
+@section('content')
+<div class="col-lg-9">
+     <section class="section-dashboard">
+  
+      <div class="row align-items-center">
+        <div class="col-md-6">
           <div class="dashboard-box">
            <div class="row align-items-center">
             <div class="col-auto">
@@ -62,13 +15,15 @@
               </div>
             </div>
             <div class="col text-end">
-              <h3>150</h3>
+              <a href="{{route('buyer.property','all')}}">
+              <h3>{{$total_property}}</h3>
               <p class="mb-0">Total Properties</p>
+              </a>
             </div>
           </div>
         </div>          
       </div>
-      <div class="col-4 mb-3">
+      <div class="col-md-6">
         <div class="dashboard-box">
          <div class="row align-items-center">
           <div class="col-auto">
@@ -79,13 +34,15 @@
             </div>
           </div>
           <div class="col text-end">
-            <h3>100</h3>
+          <a href="{{route('buyer.bookings','all')}}">
+            <h3>{{$total_booking}}</h3>
             <p class="mb-0">Total Bookings</p>
           </div>
+        </a>
         </div>
       </div>          
     </div>
-          <div class="col-4 mb-3">
+          <div class="col-md-6">
         <div class="dashboard-box">
          <div class="row align-items-center">
           <div class="col-auto">
@@ -96,13 +53,15 @@
             </div>
           </div>
           <div class="col text-end">
-            <h3>50</h3>
-            <p class="mb-0">Ongoing Bookings</p>
+          <a href="{{route('buyer.bookings','ongoing')}}">
+            <h3>{{$ongoing_booking}}</h3>
+            <p class="mb-0">ongoing booking</p>
+</a>
           </div>
         </div>
       </div>          
     </div>
-          <div class="col-4 mb-3">
+          <div class="col-md-6">
         <div class="dashboard-box">
          <div class="row align-items-center">
           <div class="col-auto">
@@ -113,13 +72,15 @@
             </div>
           </div>
           <div class="col text-end">
-            <h3>80</h3>
+          <a href="{{route('buyer.bookings','completed')}}">
+            <h3>{{$completed_booking}}</h3>
             <p class="mb-0">Completed Bookings</p>
+</a>
           </div>
         </div>
       </div>          
     </div>
-          <div class="col-4 mb-3">
+          <div class="col-md-6">
         <div class="dashboard-box">
          <div class="row align-items-center">
           <div class="col-auto">
@@ -130,14 +91,16 @@
             </div>
           </div>
           <div class="col text-end">
-            <h3>20</h3>
+          <a href="{{route('buyer.bookings','cancel')}}">
+            <h3>{{$cancel_booking}}</h3>
             <p class="mb-0">Cancelled Bookings</p>
+           </a>
           </div>
         </div>
       </div>          
     </div>
 
-            <div class="col-4 mb-3">
+            <div class="col-md-6">
           <div class="dashboard-box">
            <div class="row align-items-center">
             <div class="col-auto">
@@ -148,14 +111,15 @@
               </div>
             </div>
             <div class="col text-end">
-              <h3>120</h3>
-              <p class="mb-0">Total Property for Active
-Selling</p>
+            <a href="{{route('buyer.property','buying')}}">
+              <h3>{{$total_buying_property}}</h3>
+              <p class="mb-0">Total Property for Active Selling</p>
+             </a>
             </div>
           </div>
         </div>          
       </div>
-              <div class="col-4 mb-3">
+              <div class="col-md-6">
           <div class="dashboard-box">
            <div class="row align-items-center">
             <div class="col-auto">
@@ -166,62 +130,19 @@ Selling</p>
               </div>
             </div>
             <div class="col text-end">
-              <h3>70</h3>
-              <p class="mb-0">Total Rented/Sold
-Properties</p>
+            <a href="{{route('buyer.property','renting')}}">
+              <h3>{{$total_renting_property}}</h3>
+              <p class="mb-0">Total Renting Properties</p>
+              </a>
             </div>
           </div>
         </div>          
       </div>
   </div>
-</div>
+
 </section>
-</main>
-
-
-
-<footer>
-  <div class="copyright-section text-center">
-    <div class="container">
-      <p>© 2023 - Homi. All rights reserved</p>          
-    </div>
   </div>
-</footer>
-<!--Jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
-<!-- Owl Carousel -->
-<script src="js/owl.carousel.min.js"></script>
-<!-- custom JS code after importing jquery and owl -->
-<script type="text/javascript">
-  $(document).ready(function () {
-    $(".owl-carousel").owlCarousel();
-  });
-
-  $('.owl-carousel').owlCarousel({
-    loop: true,
-    margin: 10,
-    nav: true,
-    responsive: {
-      0: {
-        items: 1
-      },
-      600: {
-        items: 3
-      },
-      1000: {
-        items: 5
-      }
-    }
-  })
-</script>
-<script>
-  $(".profile-nav .item").on("click", function() {
-    $(".profile-nav .item").removeClass("active");
-    $(this).addClass("active");
-  });
-
-</script>
 
 
-</body>
-</html> 
+
+@endsection

@@ -14,7 +14,7 @@
 <div class="card-block">
 <div class="tab-content">
 <div class="tab-pane active" id="AboutTab">
-   <div class="card col-md-12 o-auto">
+   <div class="card col-md-12 o-auto p-3">
       @if(count($property_gallery) > 0)
       <div class="row" style="margin-top: 20px;">
          <div class="col-lg-12 col-xl-12">
@@ -44,96 +44,158 @@
          </div>
       </div>
       @endif
-      <div class="view-info">
-         <div class="row" style="font-size: 12px">
-            <div class="col-lg-3">
-               <img class="img-thumbnail" src="{{url('/')}}/images/property/thumbnail/{{ $propertyData->property_image}}" alt="user-pic" title="Featured Image">
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">property Type:
-                  @if($propertyData->property_type==1)
-                  {{'Renting'}}
-                  @else
-                  {{'buying'}}
-                  @endif
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">property Category :
-                  {{$propertyData->categoryname->name}}
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">property Title : {{$propertyData->title ? $propertyData->title : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Guest Count : {{$propertyData->guest_count ? $propertyData->guest_count : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Kitchen : {{$propertyData->no_of_kitchen ? $propertyData->no_of_kitchen : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Bathroom : {{$propertyData->no_of_bathroom ? $propertyData->no_of_bathroom : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Floors : {{$propertyData->no_of_floors ? $propertyData->no_of_floors : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Lift :
-                  @if($propertyData->no_of_lift==1)
+      <div class="view-info mt-3"> 
+         <div class="booking-detail">
+            <div class="row">
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">property Type:</p>
+                   <strong>
+                                    @if($propertyData->property_type==1)
+                                    {{'Renting'}}
+                                    @else
+                                    {{'buying'}}
+                                    @endif
+                  </strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0"> property Category :</p>
+                  <strong>{{$propertyData->categoryname->name}}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0"> property Title :</p>
+                  <strong>{{$propertyData->title ? $propertyData->title : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0"> Guest Count :</p>
+                  <strong>{{$propertyData->guest_count ? $propertyData->guest_count : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0"> No Of Kitchen :</p>
+                  <strong> {{$propertyData->no_of_kitchen ? $propertyData->no_of_kitchen : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Bathroom :</p>
+                  <strong> {{$propertyData->no_of_bathroom ? $propertyData->no_of_bathroom : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Floors :</p>
+                  <strong> {{$propertyData->no_of_bathroom ? $propertyData->no_of_bathroom : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Lift :</p>
+                  <strong>@if($propertyData->no_of_lift==1)
                   {{'Yes'}}
                   @else
                   {{'No'}}
-                  @endif
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Bedroom : {{$propertyData->no_of_bedroom ? $propertyData->no_of_bedroom : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Balcony : {{$propertyData->no_of_balcony ? $propertyData->no_of_balcony : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Garden :
-                  @if($propertyData->no_of_garden==1)
+                  @endif</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Lift :</p>
+                  <strong>@if($propertyData->no_of_lift==1)
                   {{'Yes'}}
                   @else
                   {{'No'}}
-                  @endif
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Parking :
-                  @if($propertyData->no_of_parking==1)
+                  @endif</strong> 
+               </div>
+               </div>
+                <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Bedroom : </p>
+                  <strong>{{$propertyData->no_of_bedroom ? $propertyData->no_of_bedroom : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Balcony :</p>
+                  <strong>{{$propertyData->no_of_balcony ? $propertyData->no_of_balcony : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Garden :</p>
+                  <strong>@if($propertyData->no_of_garden==1)
                   {{'Yes'}}
                   @else
                   {{'No'}}
-                  @endif
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">No Of Pool :
-                  @if($propertyData->no_of_pool==1)
+                  @endif</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0">No Of Parking :</p>
+                  <strong>@if($propertyData->no_of_parking==1)
                   {{'Yes'}}
                   @else
                   {{'No'}}
-                  @endif
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Email: {{$propertyData->property_email? $propertyData->property_email : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Mobile: {{$propertyData->property_number ? $propertyData->property_number : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">property Condition:
-                  {{$property_conditionData->name}}
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">property price type:
-                  @if($propertyData->property_price_type==1)
+                  @endif</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                     <p class="mb-0">No Of Parking :</p>
+                     <strong>@if($propertyData->no_of_parking==1)
+                     {{'Yes'}}
+                     @else
+                     {{'No'}}
+                     @endif</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">No Of Pool :</p>
+                     <strong> @if($propertyData->no_of_pool==1)
+                  {{'Yes'}}
+                  @else
+                  {{'No'}}
+                  @endif</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+
+                  <p class="mb-0">Email:</p>
+                     <strong> {{$propertyData->property_email? $propertyData->property_email : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Mobile:</p>
+                     <strong> {{$propertyData->property_number ? $propertyData->property_number : '--' }}</strong> 
+                  </div>
+               </div>
+                <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Mobile:</p>
+                     <strong> {{$propertyData->property_number ? $propertyData->property_number : '--' }}</strong> 
+                  </div>
+               </div>
+                <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">property Condition:</p>
+                     <strong>{{$property_conditionData->name}}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">property price type:</p>
+                     <strong> @if($propertyData->property_price_type==1)
                   {{'PerSq.Ft'}}
                   @elseif ($propertyData->property_price_type==2)
                   {{'Fixed'}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                               '}}
@@ -145,48 +207,78 @@
                   {{'Per Month'}}
                   @elseif ($propertyData->property_price_type==6)
                   {{'Per Annual'}}
-                  @endif
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Built In Year: {{$propertyData->built_in_year ? $propertyData->built_in_year : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Property Price: {{$propertyData->property_price ? $propertyData->property_price : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Property Description: {{$propertyData->property_description ? $propertyData->property_description : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Property Features: {{$propertyData->property_features ? $propertyData->property_features : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Property Address: {{$propertyData->property_address ? $propertyData->property_address : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Property Status: 
-                  @if($propertyData->property_status==1)
+                  @endif</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Built In Year:</p>
+                     <strong> {{$propertyData->built_in_year ? $propertyData->built_in_year : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Property Price:</p>
+                     <strong> {{$propertyData->property_price ? $propertyData->property_price : '--' }}</strong> 
+                  </div>
+               </div>
+               
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Property Features: </p>
+                     <strong> {{$propertyData->property_features ? $propertyData->property_features : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Property Address: </p>
+                     <strong> {{$propertyData->property_address ? $propertyData->property_address : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-12 col-md-12">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Property Description:</p>
+                     <strong> {{$propertyData->property_description ? $propertyData->property_description : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Property Status: </p>
+                     <strong>  @if($propertyData->property_status==1)
                   {{'Active'}}
                   @else
                   {{'pending'}}
-                  @endif
-               </dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Publish Date: {{$propertyData->publish_date ? $propertyData->publish_date : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Meta Title: {{$propertyData->meta_title ? $propertyData->meta_title : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Meta Keywords: {{$propertyData->meta_keywords ? $propertyData->meta_keywords : '--' }}</dt>
-            </div>
-            <div>
-               <dt class="col-md-12 mt-2">Meta Description: {{$propertyData->meta_description ? $propertyData->meta_description : '--' }}</dt>
-            </div>
-            <div>
+                  @endif</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Publish Date:</p>
+                     <strong>  {{$propertyData->publish_date ? $propertyData->publish_date : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Meta Title:</p>
+                     <strong>  {{$propertyData->meta_title ? $propertyData->meta_title : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Meta Keywords:</p>
+                     <strong> {{$propertyData->meta_keywords ? $propertyData->meta_keywords : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Meta Description:</p>
+                     <strong>  {{$propertyData->meta_description ? $propertyData->meta_description : '--' }}</strong> 
+                  </div>
+               </div>
             </div>
          </div>
+               
+                    
       </div>
    </div>
 </div>

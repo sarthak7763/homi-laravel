@@ -22,37 +22,85 @@ class PropertyController extends Controller
        try
        {                                        
         $user_id = Auth::User()->id;
-        $searchData = $request->title_search;
-        if(isset($request->title_search) && !empty($request->title_search)){
-        $propertyData = Property::where('title','Like','%'.$searchData.'%')->where('add_by',$user_id)->paginate(5); 
-      }
+        $search_title = $request->title_search;
+        $search_status = $request->status_search;
+        if($request->segment(3))
+        {
+        	$segmentvalue=$request->segment(3);
+        }
         else{
-        $propertyData  = Property::where('add_by',$user_id)->paginate(5);
+        	$segmentvalue="";
+        }
+       
+        //DB::enableQueryLog();
+        $propertyDetail = Property::where('add_by',$user_id); 
 
-        }   
+
+        if($search_title!="" || $search_status!="" || $segmentvalue!="") {
+
+          $propertyDetail->where(function($query) use ($search_title, $search_status,$segmentvalue)
+              {
+                if($search_title!=""){
+                  $query->where('title', 'like', '%' . $search_title . '%');
+                }
+
+                
+                if ($search_status!="") {
+                  $query->where('property_status',$search_status );
+              	}
+
+              if($segmentvalue!="" && $segmentvalue!="all")
+              {
+              	if($segmentvalue=="buying")
+              	{
+              		$query->where('property_type',2);
+              	}
+              	else{
+              		$query->where('property_type','1');
+              	}
+              }
+               
+              });
+            }
+
+        $propertyData = $propertyDetail->get()->toArray();
+        //dd(DB::getQueryLog());
+        foreach($propertyData as $key=>$list)
+        {
+        	$categorydet=Category::where('id',$list['property_category'])->get()->first();
+        	if($categorydet)
+        	{
+        		$propertyData[$key]['category_name']=$categorydet->name;
+        	}
+        	else{
+        		$propertyData[$key]['category_name']='';
+        	}
+        }
+
         return view('buyer::property',compact('propertyData'));
       }
       catch(Exception $e){  
         return redirect()->back()->with('error', 'something wrong');     
       }
     }
-    
+
     
     
     public function add(Request $request)
     {
       try{
+        $country_list=getcountrylist();
         $propertyDetail = Property::all();
         $user_id = Auth::User()->id;
-        $userData = DB::table('users')->leftjoin('countries','countries.id','=','users.country_id')
-                                      ->where('users.id',$user_id)
-                                      ->select('users.email','users.mobile','countries.phonecode')
-                                      ->get()
-                                      ->first();
+       $userData = DB::table('users')->where('users.id',$user_id)
+                                       ->select('users.email','users.mobile')
+                                       ->get()
+                                       ->first();
+
 
 
         $property_condition = PropertyCondition::where('status',1)->get();
-        return view('buyer::add-property',compact('propertyDetail','property_condition','userData'));
+        return view('buyer::add-property',compact('propertyDetail','property_condition','country_list','userData'));
       }
       catch (\Exception $e){
         return response()->json(["status" => 'error','message'=>'Something went wrong.']);
@@ -121,20 +169,23 @@ class PropertyController extends Controller
                    Rule::in('1','2'),
                  ],
                  'property_category'=>'required',
-                'guest_count'=>'nullable|numeric',
+                'guest_count'=>'required|numeric',
                 'no_of_bedroom'=>'required|numeric',
-                'built_in_year'=>'nullable',
-                'no_of_kitchen'=>'nullable|numeric',
+                'built_in_year'=>'required',
+                'no_of_kitchen'=>'required|numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_balcony'=>'nullable|numeric',
+                'no_of_balcony'=>'required|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
                 'property_features'=>'required',
-                'property_area'=>'nullable|numeric',
+                'property_area'=>'required|numeric',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
+                
                 'property_image' => 'required|mimes:jpeg,png,jpg'
+                
+
 
 			      ],
 		       [
@@ -267,7 +318,7 @@ class PropertyController extends Controller
                                   }
                           }
                           
-                      return redirect()->route('buyer.property')->with('success', 'Property has been added !');      
+                      return redirect()->route('buyer.property','all')->with('success', 'Property has been added !');      
                       }
                      else{
                           return back()->with('error','Please choose property thumbnail image.');
@@ -278,12 +329,14 @@ class PropertyController extends Controller
 
     public function edit($id){
       try{
+        $country_list=getcountrylist();
         $propertyDetail = Property::where('id',$id)->get()->first();
+        
         $my_property_features = $propertyDetail->property_features;
         $featuresArray = json_decode($my_property_features, true);
         $propertyGallery = PropertyGallery::where('property_id',$id)->where('status',1)->get()->toArray();
         $featuresArray = json_decode($my_property_features, true);
-        return view('buyer::editproperty',compact('propertyDetail','propertyGallery','featuresArray'));
+        return view('buyer::editproperty',compact('propertyDetail','propertyGallery','featuresArray','country_list'));
       }
       catch (\Exception $e){
         return response()->json(["status" => 'error','message'=>$e->getMessage()]);
@@ -302,16 +355,16 @@ class PropertyController extends Controller
                     Rule::in('1','2'),
                   ],
                 'property_category'=>'required',
-                'guest_count'=>'nullable|numeric',
+                'guest_count'=>'required|numeric',
                 'no_of_bedroom'=>'required|numeric',
-                'built_in_year'=>'nullable',
-                'no_of_kitchen'=>'nullable|numeric',
+                'built_in_year'=>'required',
+                'no_of_kitchen'=>'required|numeric',
                 'no_of_bathroom'=>'required|numeric',
-                'no_of_balcony'=>'nullable|numeric',
+                'no_of_balcony'=>'required|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
                 'property_features'=>'required',
-                'property_area'=>'nullable|numeric',
+                'property_area'=>'required|numeric',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
@@ -486,6 +539,7 @@ class PropertyController extends Controller
                           $property->no_of_kitchen=$data['no_of_kitchen'];
                           $property->no_of_bathroom=$data['no_of_bathroom'];
                           $property->no_of_pool=$data['chk_pool'] ?? 0;
+                         
                           $property->no_of_garden=$data['chk_garden'] ?? 0;
                           $property->no_of_lift=$data['chk_lift'] ?? 0;
                           $property->no_of_parking=$data['chk_parking'] ?? 0;
@@ -524,6 +578,7 @@ class PropertyController extends Controller
                     $property->no_of_kitchen=$data['no_of_kitchen'];
                     $property->no_of_bathroom=$data['no_of_bathroom'];
                     $property->no_of_pool=$data['chk_pool'] ?? 0;
+                  
                     $property->no_of_garden=$data['chk_garden'] ?? 0;
                     $property->no_of_lift=$data['chk_lift'] ?? 0;
                     $property->no_of_parking=$data['chk_parking'] ?? 0;
@@ -570,7 +625,7 @@ class PropertyController extends Controller
                                   }
                             }
                           // toastr()->success('Property information saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-                          return redirect()->route('buyer.property')->with('success', 'Property has been updated !'); 
+                          return redirect()->route('buyer.property','all')->with('success', 'Property has been updated !'); 
                 }
                 
                 else
@@ -594,11 +649,11 @@ class PropertyController extends Controller
               $propertyupdate=Property::find($data['property_id']);
               
               if(is_null($propertyupdate)){
-                 return redirect()->route('buyer.property')->with('error',"Something went wrong.");
+                 return redirect()->route('buyer.property','all')->with('error',"Something went wrong.");
               }
               if($propertyupdate->property_status==1)
               {
-                  $status=0;
+                  $status=2;
               }
                   else
                   {
@@ -606,10 +661,10 @@ class PropertyController extends Controller
                   }
                   $propertyupdate->property_status=$status;
                   $propertyupdate->save();
-                  return redirect()->route('buyer.property')->with('success',"Property status updated successfully.");
+                  return redirect()->route('buyer.property','all')->with('success',"Property status updated successfully.");
                 }
           catch (\Exception $e){
-              return response()->json(["status" => 'error','message'=>'Something went wrong.']);
+              return response()->json(["status" => 'error','message'=>$e->getMessage()]);
           }
             
     }                 

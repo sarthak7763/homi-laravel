@@ -4,21 +4,8 @@
 @section('content')
 
 <div class="row">
-<div>
-        @if (session()->has('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-    </div>
-    <div>
-        @if (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-    </div>
-    <section class="signup-section pt-4 pb-4">
+
+        <section class="signup-section pt-4 pb-4">
         <div class="container h-100">
             <div class="row align-items-center justify-content-center h-100">
                 <div class="col-12">
@@ -29,11 +16,26 @@
                         <div class="mb-3">
                             <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID"  style="display:block;"> 
-                                @if($errors->has('email'))
-                        <div class="invalid-feedback">
-                           {{$errors->first('email')}}
-                        </div>
-                        @endif    
+                                @error('email')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror
+                  <div>
+        @if (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+    </div>
+    <div>
+        @if (session()->has('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+    </div>
+
                         </div>
                         <button type="submit" class="btn btn-primary">Send Link</button>
                       </form>

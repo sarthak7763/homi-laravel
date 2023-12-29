@@ -31,7 +31,8 @@ class UserSubscription  extends Authenticatable
         'ending_date',
         'delete_status',
         'created_at',
-        'updated_at',   
+        'updated_at',
+        'subscription_status'   
         
     ];
     
