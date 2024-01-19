@@ -241,6 +241,7 @@ function table_ajax(){
                 },
               {data:"title",
                 "mRender": function(data, type, full){
+                
                 return $("<div/>").html(data).text();
                 }
             },

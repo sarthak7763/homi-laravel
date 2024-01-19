@@ -96,6 +96,10 @@ span.messages strong{
                         @csrf
                         <h1>Welcome!</h1>
                         <strong>Verify your account</strong>
+
+                       
+                        
+                       
                         <div class="mb-4">
                             <input type="text" name="otp" class="form-control"  id="otp" aria-describedby="emailHelp" placeholder="Enter OTP">
                             @if($otp_error!="")
@@ -107,9 +111,9 @@ span.messages strong{
                         </div>   
 
                         <button type="submit"  id="btnSignup" class="btn btn-primary">Verify</button>
+                        <button type = "button" class="btn btn-warning" id="verifyresendotp">Resend OTP</a>
+                         </form>
 
-                        <button type="button"  id="btnresendotp" class="btn btn-warning">Resend OTP</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -167,4 +171,41 @@ $.ajaxSetup({
 </script>
 
 
+<script type="text/javascript" src="{{ asset('assets_front/js/bootstrap.min.js')}}"></script>
+<script type="text/javascript" src="{{ asset('assets_front/js/script.js')}}"></script>
+
+
+<script>
+        $("#verifyresendotp").on("click", function() {
+                $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        url : "{{ route('buyer.resendotp') }}",
+                        
+                        type : 'GET',
+                        dataType : 'json',
+                        success : function(result){
+                            if (result.status=='success') {
+                            $('div.alert-success').html(result.message);
+                            } else {
+                            $('div.alert-danger').html(result.message);
+                            }                          
+                        },
+                });
+        });
+</script>
+
+
 @endsection
+
+
+
+
+
+
+
+
+
+
+

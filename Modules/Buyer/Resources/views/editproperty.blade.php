@@ -286,7 +286,12 @@
                 <div class="col-sm-6">
                     <div class="mb-4 row-box-img">
                         <input type="file" id="edit_property_gallery_image" class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple"> 
-                        @foreach($propertyGallery as $gallery) 
+                      
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mt-1 text-center row">
+                          @foreach($propertyGallery as $gallery) 
                         <div class = "removeimage-box removeimage_{{$gallery['id']}}" >
                             <img class="rounded-pill-box" src="{{url('/')}}/images/property/gallery/{{$gallery['image']}}">
                             <button type="button" class="deleteProduct delete_property_gallery" id="delete_property_gallery"  data-id= "{{$gallery['id']}}" data-property= "{{$gallery['property_id']}}" class ="btn-btn-delete delete_image" ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -297,10 +302,6 @@
 </button>
                         </div>
                         @endforeach
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="mt-1 text-center">
                         <div class="images-preview-div"> </div>
                     </div>
                 </div>

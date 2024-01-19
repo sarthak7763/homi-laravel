@@ -241,7 +241,29 @@ Route::group(['middleware' => 'Isadmin'], function () {
         Route::get('/site-logo', 'SystemSettingController@indexSiteLogo')->name('admin-site-logo');
         Route::post('/edit-site-logo', 'SystemSettingController@updateSiteLogo')->name('admin.edit.site.logo');
   Route::post('/edit-site-favicon', 'SystemSettingController@updateSiteFavIcon')->name('admin.edit.site.favicon');
-      
+
+
+
+  //--------------------------- Email Template Controller-----------------------------------------------------------//
+
+
+  Route::get('/email-template-add', 'EmailTemplateController@add')->name('admin-email-template-add');
+  Route::post('/email-template-save', 'EmailTemplateController@store')->name('admin-email-template-save');
+  Route::get('/email-template-list', 'EmailTemplateController@index')->name('admin-email-template-list');
+  Route::get('/email-template-edit/{id}', 'EmailTemplateController@edit')->name('admin-email-template-edit');
+  Route::post('/email-template-update/{id}', 'EmailTemplateController@update')->name('admin-email-template-update');
+  
+  //---------------------------------Email Template End--------------------------------------------------------------//
+
+//-------------------------------- seller subscription--------------------------------------------------------------//
+
+  Route::get('/seller-subscription-list', 'SellerSubscriptionController@index')->name('admin-seller-subscription-list');
+  Route::post('/seller-subscription-status-change', 'SellerSubscriptionController@statusupdate')->name('admin-seller-subscription-status-change');
+
+
+
+
+
         
         
         //___________SubAdminController______________

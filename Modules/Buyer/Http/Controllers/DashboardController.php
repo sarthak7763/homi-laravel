@@ -11,6 +11,12 @@ class DashboardController extends Controller
     //
     public function index(Request $request)
     {
+    $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
+   
     try{
 
         
@@ -35,5 +41,13 @@ class DashboardController extends Controller
         }
     
     }
+
+
+
+
+    
+
+
+
 
 }

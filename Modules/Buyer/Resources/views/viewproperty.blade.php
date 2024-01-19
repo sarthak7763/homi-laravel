@@ -49,7 +49,7 @@
             <div class="row">
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
-                   <p class="mb-0">property Type:</p>
+                   <p class="mb-0">Property Type:</p>
                    <strong>
                                     @if($propertyData->property_type==1)
                                     {{'Renting'}}
@@ -61,14 +61,14 @@
                </div>
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
-                   <p class="mb-0"> property Category :</p>
+                   <p class="mb-0"> Property Category :</p>
                   <strong>{{$propertyData->categoryname->name}}</strong> 
                </div>
                </div>
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
-                   <p class="mb-0"> property Title :</p>
-                  <strong>{{$propertyData->title ? $propertyData->title : '--' }}</strong> 
+                   <p class="mb-0"> Property Title :</p>
+                  <strong>{{$propertyData->title ? ucfirst($propertyData->title) : '--' }}</strong> 
                </div>
                </div>
                <div class="col-sm-6 col-md-4">
@@ -137,16 +137,7 @@
                   @endif</strong> 
                </div>
                </div>
-               <div class="col-sm-6 col-md-4">
-                  <div class="booking-detail-box">
-                   <p class="mb-0">No Of Parking :</p>
-                  <strong>@if($propertyData->no_of_parking==1)
-                  {{'Yes'}}
-                  @else
-                  {{'No'}}
-                  @endif</strong> 
-               </div>
-               </div>
+               
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
                      <p class="mb-0">No Of Parking :</p>
@@ -180,12 +171,7 @@
                      <strong> {{$propertyData->property_number ? $propertyData->property_number : '--' }}</strong> 
                   </div>
                </div>
-                <div class="col-sm-6 col-md-4">
-                   <div class="booking-detail-box">
-                  <p class="mb-0">Mobile:</p>
-                     <strong> {{$propertyData->property_number ? $propertyData->property_number : '--' }}</strong> 
-                  </div>
-               </div>
+                
                 <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">property Condition:</p>
@@ -195,21 +181,25 @@
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">property price type:</p>
-                     <strong> @if($propertyData->property_price_type==1)
-                  {{'PerSq.Ft'}}
-                  @elseif ($propertyData->property_price_type==2)
-                  {{'Fixed'}}                                                                                                                                                                                                                                                                                                                                                                                                                                                                               '}}
-                  @elseif ($propertyData->property_price_type==3)
-                  {{'Persq.Yard'}}
-                  @elseif ($propertyData->property_price_type==4)
-                  {{'Per Night'}}
-                  @elseif ($propertyData->property_price_type==5)
-                  {{'Per Month'}}
-                  @elseif ($propertyData->property_price_type==6)
-                  {{'Per Annual'}}
-                  @endif</strong> 
-               </div>
-               </div>
+                     <strong>
+                        
+                     
+                     @if($propertyData->property_price_type==1)
+                                    {{'PerSq.Ft'}}
+                                    @elseif ($propertyData->property_price_type==2)
+                                    {{'Fixed'}}
+                                    @elseif ($propertyData->property_price_type==3)
+                                    {{'Persq.Yard'}}
+                                    @elseif ($propertyData->property_price_type==4)
+                                    {{'Per Night'}}
+                                    @elseif ($propertyData->property_price_type==5)
+                                    {{'Per Month'}}
+                                    @elseif ($propertyData->property_price_type==6)
+                                    {{'Per Annual'}}
+                                    @endif
+                           </strong> 
+                         </div>
+                        </div>
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">Built In Year:</p>
@@ -219,14 +209,15 @@
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">Property Price:</p>
+                  
                      <strong> {{$propertyData->property_price ? $propertyData->property_price : '--' }}</strong> 
                   </div>
                </div>
                
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
-                  <p class="mb-0">Property Features: </p>
-                     <strong> {{$propertyData->property_features ? $propertyData->property_features : '--' }}</strong> 
+                   <p class="mb-0">Property Features: </p>
+                     <strong>{{implode(", ",$featuresArray)}}</strong>
                   </div>
                </div>
                <div class="col-sm-6 col-md-4">
@@ -235,13 +226,7 @@
                      <strong> {{$propertyData->property_address ? $propertyData->property_address : '--' }}</strong> 
                   </div>
                </div>
-               <div class="col-sm-12 col-md-12">
-                   <div class="booking-detail-box">
-                  <p class="mb-0">Property Description:</p>
-                     <strong> {{$propertyData->property_description ? $propertyData->property_description : '--' }}</strong> 
-                  </div>
-               </div>
-               <div class="col-sm-6 col-md-4">
+                              <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">Property Status: </p>
                      <strong>  @if($propertyData->property_status==1)
@@ -275,6 +260,14 @@
                      <strong>  {{$propertyData->meta_description ? $propertyData->meta_description : '--' }}</strong> 
                   </div>
                </div>
+               <div class="col-sm-12 col-md-12">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Property Description:</p>
+                     <strong> {{$propertyData->property_description ? $propertyData->property_description : '--' }}</strong> 
+                  </div>
+               </div>
+
+
             </div>
          </div>
                

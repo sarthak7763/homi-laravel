@@ -5,34 +5,34 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<div class="col-md-9">
+<div class="col-lg-9">
     <div class="profile-box">
         <div class="profile-box-form">
-            <div class="row align-items-center mb-3">
-                <div>
+            <div>
                     @if (session()->has('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}
                     </div>
                     @endif
                 </div>
-                <div class="col">
-                    <h1 class="mb-0">Property</h1>
+            <div class="row align-items-center mb-3 group-property-row">
+                
+                <div class="col-md">
+                    <h1 class="mb-3">Property</h1>
                 </div>
-                <div class="col-auto">
-                    <form action = "{{route('buyer.property-search')}}" method="post">
+                <div class="col-md-auto">
+                    <form action = "{{route('buyer.property-search')}}" method="post" id="searchform" autocomplete="off">
                         @csrf
-                        <div class="search-input-group">
+                        <div class="search-input-group input-group-property">
                             <div class="form-outline">
-                                <input type="text" id="form1" class="form-control" name = "title_search" placeholder="Search data" />
+                                <input type="text" id="title_search" class="form-control" name = "title_search" placeholder="Search data" value ="{{$search_title}}" />
                                 <select name="status_search">
-                                  <option value ="">select status</option> 
-                                  <option value ="1">Active</option>
-                                  <option value ="2">Suspend</option>
+                                  <option value ="" >select status</option> 
+                                  <option value ="1" {{ $search_status == 1 ? 'selected' : '' }}>Active</option>
+                                  <option value ="2" {{ $search_status ==                                                                                                                                                                            2 ? 'selected' : '' }}>Suspend</option>
                                   <option value ="0">Pending</option>
-                                </select>                                
-
-                            </div>
+                                 </select>                                
+                                </div>
                             <button type="submit" class="btn-search">
                             Search
                             </button>
@@ -44,6 +44,7 @@
         <div>
             <a href="{{route('buyer.add-property')}}" class="btn btn-info" button type="submit">Add Property</a>
         </div>
+        @if(!empty($propertyData))
         <div class="manage-total-bookings">
             <ul class="manage-list">
                 @foreach($propertyData as $property)
@@ -97,6 +98,13 @@
             </div> 
             
         </div>
+        @else
+        <div class ="no-data-box">
+            <center>
+    <h2>{{'No Data Found '}}</h2>
+</center>
+</div>
+@endif
         <form action = "{{route('buyer.status-update-property')}}" method ="Post" enctype = "multipart/form-data" >
             @csrf
             <div class="modal fade" id="myModal" role="dialog">

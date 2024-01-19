@@ -20,6 +20,7 @@ class SystemSettingController extends Controller {
     public function index() {
         try {
             $systemSettingData = SystemSetting::all();
+            
             return view('admin::systemsettings.index', compact('systemSettingData'));
         } catch (\Throwable $th) {
             toastr()->error('Either something went wrong or invalid access!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
@@ -34,9 +35,11 @@ class SystemSettingController extends Controller {
     
     public function update(Request $request) {
         try {
+            
             $data = $request->all();
             $arr = array();
             $cont = count($request->slug);
+            
             for ($j = 0; $j < $cont; $j++) {
                 if (isset($request->value[$j])) {
                     $arr[$j]['value'] = $request->value[$j];
@@ -44,9 +47,7 @@ class SystemSettingController extends Controller {
                     $arr[$j]['setting_type'] = $request->setting_type[$j];
                 }
             }
-           
-
-            foreach ($arr as $arrEach) {
+           foreach ($arr as $arrEach) {
 
                 SystemSetting::where("option_slug", $arrEach['slug'])->update(['option_value' => $arrEach['value']]);     
             }

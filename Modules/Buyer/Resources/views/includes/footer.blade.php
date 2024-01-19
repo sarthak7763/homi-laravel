@@ -197,6 +197,12 @@ $(document).on('change','#owner_type',function(){
 });
 </script>
 
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
 
 
 

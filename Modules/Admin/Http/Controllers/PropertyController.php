@@ -16,6 +16,7 @@ class PropertyController extends Controller {
 
   	public function index(Request $request) {
         try{  
+            
             if($request->ajax()) {   
                 $data = Property::latest();
 

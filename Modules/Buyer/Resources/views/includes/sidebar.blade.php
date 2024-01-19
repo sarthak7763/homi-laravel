@@ -35,7 +35,7 @@
     </a>
   </li>
   <li class="item {{ (request()->is('dealer/bookings*')) ? 'active' : '' }}">
-    <a href="{{route('buyer.bookings','all')}}">
+    <a href="{{route('buyer.bookings','ongoing')}}">
       <span class="user-icon bookings-icon">
       </span>
       My Bookings

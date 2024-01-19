@@ -45,9 +45,9 @@
             </a>
           <ul class="dropdown-menu text-small ssss" id="seller_dropdown">
             
-            <li class = "dropdown-item {{ (request()->is('dealer/my-profile*')) ? 'active' : '' }}"><a class="dropdown-item" href="{{route('buyer.my-profile')}}">My Profile</a></li>
-            <li><a class="dropdown-item" href="{{route('buyer.change-password')}}">Change Password</a></li>
-            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a class="dropdown-item " href="{{route('buyer.logout')}}">Sign out</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer/my-profile*')) ? 'active' : '' }}"><a href="{{route('buyer.my-profile')}}">My Profile</a></li>
+            <li class="dropdown-item" ><a href="{{route('buyer.change-password')}}">Change Password</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a href="{{route('buyer.logout')}}">Sign out</a></li>
           </ul>
         </div>
       </div>

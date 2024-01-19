@@ -24,7 +24,14 @@
                <div class="properties-rent">
                 <div class="row align-items-center">
                   <div class="col-auto">
-                    <span class="for-rent">For rent</span>
+                    <span class="for-rent">For 
+                    @if($view_booking_data->property_type==1)
+                                    {{'Renting'}}
+                                    @else
+                                    {{'buying'}}
+                                    @endif
+
+                    </span>
                   </div>
                   <div class="col text-end">
                     <h3><span class="text-success">{{$view_booking_data->property_price}}</span>/day</h3>
@@ -37,7 +44,7 @@
                   <ul class="properties-detail-ul">
                     <li><span>Booking ID:{{$view_booking_data->booking_id}}</span></li>
                     
-                    <li><span>Booked on: {{date('M d, Y',strtotime($view_booking_data->created_at))}} </span></li>
+                    <li><span>Booked on: {{date('M d, Y',strtotime($view_booking_data->created_at))}}</span></li>
                                                                                       
                     
 
@@ -117,7 +124,14 @@
                 </div>
                 <div class="details-col-text">
                   <p>Garden</p>
-                  <strong>{{$view_booking_data->no_of_garden}}</strong>
+                  <strong>
+                  @if($view_booking_data->no_of_garden==1)
+                  {{'Yes'}}
+                  @else
+                  {{'No'}}
+                  @endif
+                  
+                  </strong>
                 </div>                    
               </div>
             </li>
@@ -135,7 +149,15 @@
                 </div>
                 <div class="details-col-text">
                   <p>Pool</p>
-                  <strong>{{$view_booking_data->no_of_pool}}</strong>
+                  <strong>
+                    @if($view_booking_data->no_of_garden==1)
+                  {{'Yes'}}
+                  @else
+                  {{'No'}}
+                  @endif
+
+                  
+                  </strong>
                 </div>                    
               </div>
             </li>
@@ -184,28 +206,51 @@
             <div class="col-sm-6 col-md-4">
               <div class="booking-detail-box">
                 <p class="mb-0">Check-In</p>
-                <strong>{{$view_booking_data->user_checkin_date}}</strong>
+                <strong>{{date('M d, Y',strtotime($view_booking_data->user_checkin_date))}}</strong>
+                  
               </div>
             </div>  
             <div class="col-sm-6 col-md-4">
               <div class="booking-detail-box">
                 <p class="mb-0">Check-Out</p>
-                <strong>{{$view_booking_data->user_checkout_date}}</strong>
+                <strong>{{date('M d, Y',strtotime($view_booking_data->user_checkout_date))}}</strong>
               </div>
             </div>  
             <div class="col-sm-6 col-md-4">
               <div class="booking-detail-box">
                 <p class="mb-0">Number of Nights/Months/Years</p>
-                <strong>5 Nights</strong>
+                <strong>{{$days}} Days</strong>
               </div>
-            </div>  
+            </div>
             <div class="col-sm-6 col-md-4">
               <div class="booking-detail-box">
-                <p class="mb-0">Number of guests</p>
-                <strong>{{$view_booking_data->guest_count}}</strong>
+                <p class="mb-0">Number of children</p>
+                <strong>{{$view_booking_data->user_children_count}}</strong>
+                </div>
+            </div>
+            @if($view_booking_data->booking_status==2)
+            <div class="col-sm-6 col-md-4">
+              <div class="booking-detail-box">
+                <p class="mb-0">Cancel Date</p>
+                <strong>{{date('M d, Y',strtotime($view_booking_data->cancel_date))}}</strong>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <div class="booking-detail-box">
+                <p class="mb-0">Cancel Reason</p>
+                <strong>{{$cancel_reason->reason_name}}</strong>
+                </div>
+            </div> 
+            
+            @endif   
+            <div class="col-sm-6 col-md-4">
+              <div class="booking-detail-box">
+                <p class="mb-0">Number of Adults</p>
+                <strong>{{$view_booking_data->user_adult_count}}</strong>
               </div>
             </div>                 
           </div>
+         
 
 
           <div class="sub-total-box">

@@ -5,11 +5,7 @@
 
 <div class="row">
 <div>
-        @if (session()->has('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        
     </div>
         <section class="signup-section pt-4 pb-4">
         <div class="container h-100">
@@ -20,6 +16,13 @@
                         <h1>Welcome!</h1>
                         <strong>Signin your account</strong>
                         <div>
+
+                            @if (session()->has('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+        
                                 @if (session()->has('error'))
                                     <div class="alert alert-danger">
                                         {{ session('error') }}

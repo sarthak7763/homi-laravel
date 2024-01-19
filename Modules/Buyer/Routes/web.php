@@ -32,7 +32,7 @@ Route::post('/dealer/verifyregisterotp','BuyerController@sellerregisterverifyema
 
 Route::post('/dealer/verifyloginotp','BuyerController@sellerloginverifyemailotp')->name('buyer.post.verifyloginotp');
 
-Route::post('/dealer/resendotp','BuyerController@sellerresendemailotp')->name('buyer.post.resendotp');
+Route::get('/dealer/resendotp','BuyerController@sellerresendemailotp')->name('buyer.resendotp');
 
 
 
@@ -66,7 +66,7 @@ Route::group(['middleware' => 'Isseller'], function ()
 
     Route::get('/dealer/bookings/', 'BookingController@booking')->name('buyer.bookings');
     Route::get('/dealer/bookings/{segment}', 'BookingController@booking')->name('buyer.bookings');
-    Route::post('/dealer/bookings-search', 'BookingController@booking')->name('buyer.bookings-search');
+    Route::any('/dealer/bookings-search', 'BookingController@booking')->name('buyer.bookings-search');
     Route::post('/dealer/bookings-status-change', 'BookingController@bookingstatus')->name('buyer.bookings-update-status');
     Route::post('/dealer/bookings-cancel-booiking', 'BookingController@cancelbooking')->name('buyer.bookings-cancel-booking');
 
@@ -75,9 +75,18 @@ Route::group(['middleware' => 'Isseller'], function ()
 
     //-------------------------------------- subscription--------------------------------------------// 
     Route::get('/dealer/subscription-plans', 'MysubscriptionController@allsubscriptions')->name('buyer.subscription-plans');
+    Route::get('/dealer/seller-subscription/{id}', 'MysubscriptionController@sellerSubscription')->name('seller.subscription-details');
+    Route::post('/dealer/seller-subscription-save//{id}', 'MysubscriptionController@sellerSubscriptionstore')->name('seller.subscription-details-save');
+
+
+    
+
+
     Route::post('/dealer/user-subscription-confirmation/{id}', 'MysubscriptionController@subscriptionconfirmation')->name('buyer.subscription-confirmation');
     
      Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
+
+
     // Route::get('/dealer/user-subscription/{id}', 'MysubscriptionController@usersubscription')->name('buyer.user-subscription');
 
 
@@ -87,7 +96,7 @@ Route::group(['middleware' => 'Isseller'], function ()
     Route::get('/dealer/manage-properties', 'PropertyController@index')->name('buyer.property');
      Route::get('/dealer/manage-properties/{segment}', 'PropertyController@index')->name('buyer.property');
      
-    Route::post('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
+    Route::any('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
     Route::get('/dealer/add-properties', 'PropertyController@add')->name('buyer.add-property');
     Route::post('/dealer/get-categorydata-property', 'PropertyController@getcategory')->name('buyer.get-category');
 

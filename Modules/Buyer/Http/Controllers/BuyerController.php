@@ -14,7 +14,7 @@ use App\Helpers\Helper;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Password;
-use Hash,Auth,Validator,Exception,DataTables,Mail,Str,Notification,Session,DB;
+use Hash,Auth,Validator,Exception,DataTables,Mail,Str,Notification,Redirect,Session,DB;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
@@ -77,35 +77,41 @@ class BuyerController extends Controller {
   public function buyerSubmitResetPassword(Request $request){
    try{
 
-    $request->validate([
-					'email'=>'required|email'
-    ],
-  [
-   
-    'email.required'=>'Email field can not be empty',
-    'email.email'=>'Please enter a valid email address',
-    
-  ]);
-        $user = User::where('email', $request->email)->select('email')->first();
-          if(!empty($user)){
-            $token = Str::random(64);
-            DB::table('password_resets')->insert([
-                  'email' => $request->email, 
-                  'token' => $token, 
-                  'created_at' => Carbon::now()
-                ]);
+          $validator = Validator::make($request->all(), [
+            'email'=>'required|email'
+            ],
+            
+            [
+          'email.required' => 'email is required.',
+          'email.email' => 'please enter valid email type',
+          ]);
+          if($validator->fails()){
 
-            $reset_password_link = 'https://homi.ezxdemo.com/dealer//dealer/reset-password/'.$token;
+          return Redirect::back()->withErrors($validator)->withInput();
+          }
 
-              Mail::send('emails.resetpassword', ['token' => $token ], function($message) use($user){
-                  $message->to($user->email);
-                  $message->subject('Reset Password');
-              });
-              return redirect()->back()->with('success', 'Email has been sent on your email id !');
-          }
-          else{
-            return redirect()->back()->with('error', 'please enter valid email id !');
-          }
+                $user = User::where('email', $request->email)->select('email')->first();
+                if(!empty($user)){
+                  $token = Str::random(64);
+                
+                
+                  DB::table('password_resets')->insert([
+                        'email' => $request->email, 
+                        'token' => $token, 
+                        'created_at' => Carbon::now()
+                      ]);
+
+                  
+
+                    Mail::send('emails.resetpassword', ['token' => $token ], function($message) use($user){
+                        $message->to($user->email);
+                        $message->subject('Reset Password');
+                    });
+                    return redirect()->back()->with('success', 'Email has been sent on your email id !');
+                }
+                else{
+                  return redirect()->back()->with('error', 'please enter valid email id !');
+                }
       }
       catch(Exception $e){ 
      return redirect()->back()->with('error', $e->getmessage());     
@@ -115,6 +121,7 @@ class BuyerController extends Controller {
 
   public function showResetPasswordForm($token) { 
    try{
+
     return view('buyer::auth.passwords.reset',['token' => $token]);
    }
     catch(Exception $e){ 
@@ -126,12 +133,12 @@ class BuyerController extends Controller {
 
  public function submitResetPasswordForm(Request $request)
       {
-      
-          $request->validate([
+       $request->validate([
               'email' => 'required|email',
-              'password' => 'required|string|min:6|confirmed',
-              'password_confirmation' => 'required'
+              'password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+              'password_confirmation' => 'required|same:password'
           ]);
+          
   
           $updatePassword = DB::table('password_resets')
                               ->where([
@@ -179,7 +186,8 @@ class BuyerController extends Controller {
                     'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
                     'max:25'
               ],
-            'confirm_password' => 'required|same:password',     
+            'confirm_password' => 'required|same:password', 
+            'mycheckbox' =>'required'    
           ],
           [
             'name.required' => 'Name field can’t be left blank.',
@@ -192,6 +200,8 @@ class BuyerController extends Controller {
             'password.regex'=>'Password should contain a Capital Letter, small letter, number and special characters',
             'confirm_password.required'=>'Confirm Password field can’t be left blank',
             'confirm_password.same'=>'Password and confirm password doesn’t match',
+            'mycheckbox.required'=>'please accept terms and condition',
+
           ]);
 
           $checkuseremail=User::where('email',$data['email'])->where('user_type','3')->get()->first();
@@ -260,58 +270,62 @@ class BuyerController extends Controller {
   {
    try
     {
-       $request->validate([
-            'email' => 'required|email',
-            'password' => [
-              'required',
-              'min:8',
-              'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
-              'max:25'
-        ],
-      ],
-      [
-        'email.required' => 'email is required.',
-        'email.email' => 'please enter valid email type',
-        'password.required' => 'password is required.',
-        'password.min' => 'password should be minimum 8 characters.',
-        'password.max' => 'password should be maximum 25 characters',
-        'password.regex' => 'password should be capital letter, small letter,special charcters and number .',
-         ]);
+          $validator = Validator::make($request->all(), [
+              'email' => 'required|email',
+              'password' => [
+                'required',
+                'min:8',
+                'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+                'max:25'
+               ],
+              ],
+          [
+            'email.required' => 'email is required.',
+            'email.email' => 'please enter valid email type',
+            'password.required' => 'password is required.',
+            'password.min' => 'password should be minimum 8 characters.',
+            'password.max' => 'password should be maximum 25 characters',
+            'password.regex' => 'password should be capital letter, small letter,special charcters and number .',
+
+          ]);
+            if($validator->fails()){
+
+            return Redirect::back()->withErrors($validator)->withInput();
+            }
         
    
-        $credentials = $request->only('email', 'password');
-       
-        if (Auth::attempt($credentials)) {
+          $credentials = $request->only('email', 'password');
+              if (Auth::attempt($credentials)) {
 
-          $user=auth()->user();
-          if($user->user_type=="3")
-          {
-            if($user->status=="1")
-            {
-              $email_verified=$user->email_verified;
-              if($email_verified==1)
+              $user=auth()->user();
+              if($user->user_type=="3")
               {
-                Session::put('user_id', $user->id);
-                return redirect()->route('buyer.my-profile');
+                if($user->status=="1")
+                {
+                  $email_verified=$user->email_verified;
+                  if($email_verified==1)
+                  {
+                    Session::put('user_id', $user->id);
+                    return redirect()->route('buyer.my-profile');
+                  }
+                  else{
+                    Session::put('email', $user->email);
+                    Session::put('type', 'login');
+                    return redirect('dealer/verify-email/')->with('error', 'Please verify your email.');
+                  }
+                }
+                else{
+                  return redirect("dealer/login")->with('error','Your account has been suspended.');
+                }
               }
               else{
-                Session::put('email', $user->email);
-                Session::put('type', 'login');
-                return redirect('dealer/verify-email/')->with('error', 'Please verify your email.');
+                return redirect("dealer/login")->with('error','Unauthorised User');
               }
+            
             }
             else{
-              return redirect("dealer/login")->with('error','Your account has been suspended.');
+              return redirect("dealer/login")->withSuccess('Oppes! You have entered invalid credentials');
             }
-          }
-          else{
-            return redirect("dealer/login")->with('error','Unauthorised User');
-          }
-        
-        }
-        else{
-          return redirect("dealer/login")->withSuccess('Oppes! You have entered invalid credentials');
-        }
      }
     catch(\Exception $e)
     {
@@ -419,6 +433,43 @@ class BuyerController extends Controller {
       }
   }
 
+  public function sellerresendemailotp(Request $request)
+  {
+    $data=$request->all();
+    $resend_otp = 5678;
+    if(session()->has('email') && session()->has('type'))
+          {
+            $seller_email=Session::get('email');
+          }
+          else{
+
+            return response()->json(['status'=>'error_email','message'=>'please enter correct email','routeurl'=>'dealer/login/']);
+            
+          }
+
+         $checkuseremail=Tempuser::where('email',$seller_email)->where('user_type','3')->orderBy('id', 'DESC')->get()->first();
+        
+          if($checkuseremail)
+          {
+                  if($checkuseremail->email_verified==0)
+                    {
+                    $otp_update = Tempuser::where('email',$seller_email)->where('user_type','3')->orderBy('id', 'DESC')->update(
+                                                                                                        ['email_verification_token'=>$resend_otp],
+                                                                                                            );
+                    return response()->json(['status'=>'success','message'=>'you are successfully updated rsend otp']);
+                    }
+                  else
+                  {
+                    return response()->json(['status'=>'error','message'=>'something wrong']);
+                  }
+          }
+          else{
+            return response()->json(['status'=>'error','message'=>'please enter correct email']);
+          }
+    }
+
+  
+
   public function sellerloginverifyemailotp(Request $request)
   {
       try{
@@ -511,50 +562,47 @@ class BuyerController extends Controller {
   public function submitchangePassword(Request $request) {
     try
     {
-      $request->validate([
-                'current_password' => 'required',
-                  'new_password' => 'required|min:6',
-                  'confirm_password' => 'required'
-                  
-        ],
-        [
-          'current_password.required' => 'current passsword is required.',
-          'new_password.required' => 'new password is required.',
-          'new_password.min' => ' new password should be minimum 6 characters.',
-          'new_password.regex' => 'password should be capital letter, small letter,special charcters and number .',
-          
-        ]);
 
-          $curr_password = $request->current_password;
-          $new_password  = $request->new_password;
-
-          
+          $validator = Validator::make($request->all(), [
+                        'current_password' => 'required',
+                        'new_password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+                        'confirm_password' => 'required|same:password'
+          ],
+            [
+            'current_password.required' => 'current passsword is required.',
+            'new_password.required' => 'new password is required.',
+            'new_password.min' => ' new password should be minimum 6 characters.',
+            'new_password.max' => 'The new password must not be greater than 12 characters.',
+            'new_password.regex' => 'password should be capital letter, small letter,special charcters and number .',
+            'confirm_password.required'=>'Confirm Password field can’t be left blank',
+            'confirm_password.same'=>'Password and confirm password doesn’t match',
             
-          if(!Hash::check($curr_password,Auth::user()->password)){
-              return redirect()->route('buyer.change-password')->with('error', 'Please enter correct password');
-            }
-          else{
-                $user_id = Auth::user()->id;
-                $update_password = DB::table('users')->where('id',$user_id)->update(
-                                                                          [
-                                                                            'password'=> Hash::make($new_password),
-                                                                          ]);
-                return redirect()->route('buyer.my-profile')->with('success', 'Password has been updated !');
+          ]);
+          if($validator->fails()){
+
+            return Redirect::back()->withErrors($validator)->withInput();
+         }
+         else {
+                $curr_password = $request->current_password;
+                $new_password  = $request->new_password;
+                    if(!Hash::check($curr_password,Auth::user()->password)){
+                        return redirect()->route('buyer.change-password')->with('error', 'Please enter correct password');
+                      }
+                    else{
+                          $user_id = Auth::user()->id;
+                          $update_password = DB::table('users')->where('id',$user_id)->update(
+                                                                                    [
+                                                                                      'password'=> Hash::make($new_password),
+                                                                                    ]);
+                          return redirect()->route('buyer.my-profile')->with('success', 'Password has been updated !');
+                    }
           }
       }
       catch(Exception $e){ 
-        return redirect()->back()->with('error', $e->getmessage());     
+            return redirect()->back()->with('error', $e->getmessage());     
      }
- }
-
-      
-
-      
-  
-                                 
-
-    
   }
+}
 
  
 

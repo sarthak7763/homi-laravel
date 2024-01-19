@@ -1,5 +1,5 @@
 <?php 
-use App\Models\{User,IntrestedCity,SystemSetting,CmsPage,Property,FavProperty,Userbooking,Category};
+use App\Models\{User,IntrestedCity,SystemSetting,CmsPage,Property,FavProperty,Userbooking,Category,UserSubscription};
 use Auth as Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -588,6 +588,27 @@ function getconditionnamebylang($lang,$id)
 
     return $condition_name;
 
+}
+
+
+
+ function sellermoduleaccess(){
+    $user_id = Auth::User()->id;
+
+    $current_date  = date('Y-m-d');
+    
+    $check_subscription = UserSubscription::where('user_id',$user_id)->where('subscription_status',1);
+    
+    $check_subscription_expire_time = $check_subscription->where("user_subscriptions.starting_date",'<=',$current_date)
+                                                        ->where("user_subscriptions.ending_date",'>=',$current_date)
+                                                        ->first();
+
+            if($check_subscription_expire_time){ 
+                    return 'true';
+            }
+            else{
+                    return 'false';
+            }
 }
 
 

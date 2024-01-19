@@ -37,7 +37,8 @@
                 </ul>
               
                 @if($user_subscription_plan_id!=$subscription->id)
-                <button button type ="submit" class="btn-2 btn-primary">Purchase Plan</button>
+                <!-- <button button type ="submit" class="btn-2 btn-primary">Purchase Plan</button> -->
+                <a href="{{route('seller.subscription-details',$subscription->id)}}" class="btn-2 btn-primary">Purchase Plan</a>
                 @endif
               </div>
                    

@@ -45,6 +45,7 @@ span.messages strong{
   $email_error="";
   $password_error="";
   $confirm_password_error="";
+  $mycheckbox_error="";
 @endphp
 
 @if (session()->has('valid_error'))
@@ -72,6 +73,13 @@ span.messages strong{
       @php $confirm_password_error=$validationmessage['confirm_password']; @endphp
       @else
       @php $confirm_password_error=""; @endphp
+      @endif
+
+
+      @if($validationmessage!="" && isset($validationmessage['mycheckbox']))
+      @php $mycheckbox_error=$validationmessage['mycheckbox']; @endphp
+      @else
+      @php $mycheckbox_error=""; @endphp
       @endif
 
 @endif
@@ -124,7 +132,6 @@ span.messages strong{
                         <div class="mb-3">
                             <input type="email" name="email" class="form-control" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID">
-
                         @if($email_error!="")
                           <span class="messages">
                               <strong>{{ $email_error }}</strong>
@@ -192,13 +199,15 @@ span.messages strong{
                           </span>
                         @endif
                         </div>
-
-
-
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="mycheckbox">
                             <label class="form-check-label" for="exampleCheck1">I Accept <a href="#">Terms and
                                     Conditions</a></label>
+                                    @if($mycheckbox_error!="")
+                          <span class="messages">
+                              <strong>{{ $mycheckbox_error }}</strong>
+                          </span>
+                        @endif
                         </div>
                         <button type="submit"  id="btnSignup" class="btn btn-primary">Signup</button>
                         <div class="signup-footer mt-4 text-center">

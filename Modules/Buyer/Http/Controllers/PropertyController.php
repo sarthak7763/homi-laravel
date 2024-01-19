@@ -7,6 +7,8 @@ use App\Models\Property;
 use App\Models\Category;
 use App\Models\Country;
 use App\Models\PropertyGallery;
+use App\Models\UserSubscription;
+use App\Models\Subcription;
 use App\Models\User;
 use Illuminate\Validation\Rule;
 use Stichoza\GoogleTranslate\GoogleTranslate;
@@ -19,6 +21,12 @@ class PropertyController extends Controller
     //
     public function index(Request $request)
     {
+      $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
+        
        try
        {                                        
         $user_id = Auth::User()->id;
@@ -77,7 +85,7 @@ class PropertyController extends Controller
         	}
         }
 
-        return view('buyer::property',compact('propertyData'));
+        return view('buyer::property',compact('propertyData','search_title','search_status'));
       }
       catch(Exception $e){  
         return redirect()->back()->with('error', 'something wrong');     
@@ -88,6 +96,13 @@ class PropertyController extends Controller
     
     public function add(Request $request)
     {
+
+        $property_access  =$this->propertyAccess();
+        if($property_access=='true')
+        {
+          return redirect()->route('buyer.property','all')->with('you cant add new property');
+        }
+
       try{
         $country_list=getcountrylist();
         $propertyDetail = Property::all();
@@ -96,10 +111,12 @@ class PropertyController extends Controller
                                        ->select('users.email','users.mobile')
                                        ->get()
                                        ->first();
+      $property_condition = PropertyCondition::where('status',1)->get();
 
 
+      
 
-        $property_condition = PropertyCondition::where('status',1)->get();
+
         return view('buyer::add-property',compact('propertyDetail','property_condition','country_list','userData'));
       }
       catch (\Exception $e){
@@ -160,6 +177,12 @@ class PropertyController extends Controller
 
 
     public function store(Request $request) {
+
+      $property_access  =$this->propertyAccess();
+        if($property_access=='true')
+        {
+          return redirect()->route('buyer.property','all')->with('error',"Property cant be add more.");;
+        }
       $data=$request->all();
 
       $request->validate([
@@ -676,14 +699,21 @@ class PropertyController extends Controller
     public function view($id)
     {
       try {
+                                                          
+
       $propertyData = Property::where('id',$id)->get()->first();
+      $my_property_features = $propertyData->property_features;
+      $featuresArray = json_decode($my_property_features, true);
+    
+     
+      
       $property_gallery = PropertyGallery :: where('property_id',$id)->get()->toArray();
       $property_conditionData = DB::table('tbl_property')->join('property_condition','property_condition.id','=','tbl_property.property_condition')
                                                           ->select('property_condition.name')
                                                           ->where('tbl_property.id',$id)
                                                           ->get()
                                                           ->first();
-        return view('buyer::viewproperty',compact('propertyData','property_gallery','property_conditionData')); 
+        return view('buyer::viewproperty',compact('propertyData','property_gallery','property_conditionData','featuresArray')); 
       }
       catch (\Exception $e){
         return response()->json(["status" => 'error','message'=>'Something went wrong.']);
@@ -709,6 +739,35 @@ class PropertyController extends Controller
                     $finaldata=json_encode($data);
                     return $finaldata;
             }
+          }
+
+
+          public function propertyAccess()
+          {
+             $user_id = Auth::User()->id;
+             
+             
+             $product_listing =   DB::table('user_subscriptions')->leftjoin('subscriptions','subscriptions.id','=','user_subscriptions.plan_id')
+                                                                ->where('user_id',$user_id)
+                                                                ->where('user_subscriptions.subscription_status',1) 
+                                                                ->first();
+
+                                                                
+            $total_property = Property::where('add_by',$user_id)->count();
+
+          
+            if($total_property >$product_listing->product_listing)
+            {
+              return true;
+            }
+            else
+            {
+              return false;
+
+            }
+
+
+
           }
 
 }

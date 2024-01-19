@@ -34,7 +34,7 @@ img {max-width: 100%;}
 .text-warning{color: var(--text-warning) !important;}
 .text-success{color: var(--text-success) !important;}
 .text-danger{color: var(--text-danger) !important;}
-.btn-primary{background: var(--text-green); border-color: var(--text-green);border-radius: 4px;height: 50px;font-weight: 400;font-size: 18px;line-height: 30px;display: block;}
+.btn-primary{background: var(--text-green); border-color: var(--text-green);border-radius: 4px;height: 50px;font-weight: 400;font-size: 18px;line-height: 46px;display: block;}
 .btn-primary:hover, .btn-primary:focus{background: var(--text-green); border-color: var(--text-green);}
 .btn-secondary{background: var(--dark-gray2); border-color: var(--dark-gray2);border-radius: 6px;height: 60px;font-weight: 400;font-size: 20px;line-height: 30px;display: block;}
 .btn-secondary:hover, .btn-secondary:focus{background: var(--text-green); border-color: var(--text-green);}
@@ -59,7 +59,9 @@ img {max-width: 100%;}
 .signup-form .form-check {padding-top: 10px;margin-bottom: 30px !important;} 
 .signup-form .form-check-input {background-color: transparent;box-shadow: none;border: 1px solid var(--bs-white);}
 .signup-form .input-group .form-control {border-right: none;}  
-.signup-form .input-group .input-group-text {background-color: transparent;border: 1px solid var(--bs-white);border-left: none;cursor: pointer;}
+.signup-form .input-group .input-group-text {background-color: transparent;border: 1px solid var(--bs-white);border-left: none;cursor: pointer;position: absolute;right: 0;height: 42px;}
+.signup-form .input-group input.form-control {border-radius: 4px !important;padding-right: 40px;} 
+.input-group label#password-error {position: unset;width: 100%;bottom: unset;} 
 .signup-form .input-group .input-group-text.fa-eye-slash:before{display: none;} 
 
 .signup-footer p {font-size: 16px;font-weight: 400;margin-bottom: 0;}
@@ -96,7 +98,7 @@ footer {width: 100%;position: absolute;}
 .profile-form .row {margin-left: -6px;margin-right: -6px;}
 .profile-form .row>* {padding-left: 6px;padding-right: 6px;}
 .profile-form  strong {font-size: 16px;line-height: 24px;color: var(--text-blue);display: inline-block;margin-bottom: 23px;}
-.profile-div {background: url(../images/profile-bg.jpg);text-align: center;padding: 51px 15px 47px;}
+.profile-div {background: url(../images/profile-bg.jpg);text-align: center;padding: 25px 15px 30px;}
 .main-profile {width: 79px;height: 79px;margin: 0 auto;overflow: hidden;    border: 2px solid #ECECEC;}
 .main-profile img.rounded-pill-box {height: 100%;width: 100%;object-fit: cover;} 
 .profile-text{ color: var(--bs-white);}
@@ -204,7 +206,7 @@ line-height: 18px;color: var(--dark-gray2);margin-bottom: 17px;padding-top: 4px;
 .search-input-group .form-outline input {height: 40px;border-radius: 0;border: 1px solid #C2C2C2;width: 100%;}
 .col.date-box {max-width: 100%;} 
 .col.date-box input {font-size: 16px;} 
-.search-input-group .form-outline select {background: var(--bs-white);border: 1px solid #C2C2C2;height: 40px;border-radius: 0;padding: 0 15px 0 10px;border-left: none;font-family: Poppins;line-height: 21px;letter-spacing: 0em;text-align: left;color: var(--dark-gray2);font-size: 14px;font-weight: 400;}
+.search-input-group .form-outline select {background: var(--bs-white);border: 1px solid #C2C2C2;height: 40px;border-radius: 0;padding: 0 15px 0 10px;border-left: none;font-family: Poppins;line-height: 21px;letter-spacing: 0em;text-align: left;color: var(--dark-gray2);font-size: 14px;font-weight: 400;outline: none;}
 .search-input-group button.btn-search {background: #124868;border-radius: 0px 5px 5px 0px;height: 40px;width: 88px;box-shadow: none;border: 1px solid #124868;color: #F7FCFF;}
 
 .total-bookings th {font-weight: 500;font-size: 16px;line-height: 24px;color: #485763;}
@@ -285,12 +287,12 @@ button.active-button {background: #8DC83E;border-radius: 2px;padding: 3px 12px;f
 .modal-footer:before, .modal-footer:after {display: table;content: "";line-height: 0;}
 .modal-footer:after {clear: both;}
 .modal-footer .btn + .btn {margin-left: 5px;margin-bottom: 0;}
-.modal-footer .btn.btn-primary {margin-top: 0;} 
+.modal-footer .btn.btn-primary {margin-top: 0;padding: 0 62px;} 
 .modal-footer .btn-group .btn + .btn {  margin-left: -1px;}
 .modal-footer .btn-block + .btn-block {  margin-left: 0;}
 .modal-header .modal-title {font-size: 20px;line-height: 30px;margin-top: 0;font-weight: 500;color: var(--text-blue);} 
 .modal .modal-footer .btn-secondary {margin-left: 0;}
-.modal .modal-footer .btn-secondary {margin-left: 0;background: var(--text-green);border-color: var(--text-green);font-weight: 400;font-size: 18px;height: 50px;line-height: initial;width: auto;min-width: auto;}
+.modal .modal-footer .btn-secondary {color: #fff;margin-left: 0;background: var(--text-green);border-color: var(--text-green);font-weight: 400;font-size: 18px;height: 50px;line-height: initial;width: auto;min-width: auto;}
 .modal-footer .btn+.btn {font-size: 18px;font-weight: 400;height: 50px;line-height: initial;width: auto;min-width: auto;} 
 .modal-body li {list-style: none;}
 .modal-body input[type=radio] {margin-right: 10px;} 
@@ -327,8 +329,11 @@ button.button-like.status_change {border-radius: 6px;background: #828282;color: 
 button.button-like.cancel_booking {border-radius: 6px;background: #124868;color: #fff;border: 1px solid #124868;min-width: 104px;padding: 5px;font-size: 12px;}  
 .subscription-plan table {min-width: 640px;} 
 .profile-box a.btn.back-btn {margin: 0;padding: 3px 25px;height: auto;width: auto;min-width: auto;}
-
-
+.group-property-row.row {margin-left: -10px;margin-right: -10px;} 
+.profile-nav > .item.active > a, .profile-nav > .item:hover > a {
+    background: var(--text-green);
+    color: #fff;
+}
 
 @media (min-width: 576px) {
     .modal-dialog {max-width: 450px;}
@@ -338,6 +343,7 @@ button.button-like.cancel_booking {border-radius: 6px;background: #124868;color:
     .search-input-group .form-outline {
         flex-wrap: wrap;
     }
+.search-input-group.input-group-property .form-outline {flex-wrap: nowrap;width: 100%;} 
 }
 @media (max-width: 991px) { 
 
@@ -362,6 +368,8 @@ header .logo img {max-width: 100px;}
 .modal.in .modal-dialog {margin: 0 auto;}  
 .colbox-img{max-width: 100%;margin-bottom: 10px;}  
 .manage-list-img img {width: 100%;}
+.modal .modal-footer .btn-secondary, .modal-footer .btn.btn-primary {padding-left: 30px;padding-right: 30px;} 
+
 }
  @media (max-width: 575px) {
 
@@ -374,6 +382,33 @@ header .logo img {max-width: 100px;}
 .modal  .btn-secondary{  margin: 0 auto;  padding:0 62px;}
 .form-change-password .form-control {background: transparent;color: var(--bs-white);border: 1px solid #C2C2C2;box-shadow: none;border-radius: 6px;height: 48px;font-family: 'Poppins', sans-serif;color: var(--dark-gray2);}
 .profile-form .form-control:focus {
-    outline: navajowhite;
+    outline: none;
     box-shadow: none;
+}
+
+.plan-btn {
+    padding: 0 40px;
+}
+
+span.file-input {
+    border: 0;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    margin-top: 15px;
+    height: 26px;
+    display: inline-block;
+}
+
+.fund-label input {
+    position: absolute;
+    right: 0;
+    bottom: 14px;
+    width: 100%;
+    border: 0;
+    text-indent: -110px;
+    padding-left: 0;
+}
+
+.fund-label {
+    position: relative;
 }

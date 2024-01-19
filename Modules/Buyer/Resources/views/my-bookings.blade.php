@@ -5,49 +5,62 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <div class="col-lg-9">
     <div class="profile-box">
         <div class="profile-box-form">
             <h1 class="mb-3">Total Bookings</h1>
            
-             
-                    
-                    @if (session()->has('success'))
+            @if (session()->has('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
-          
-             
-                    <form action = "{{route('buyer.bookings-search')}}" method="Post">
+
+    <form action = "{{route('buyer.bookings-search')}}" method="Post" autocomplete="off">
                         @csrf
                         <div class="search-input-group">
                             <div class="row form-outline ">
-                                <div class="col-12 col-lg-6 form-outline-box1">                                   
-                                            <input type="text" id="form1" class="form-control" name = "title_search" placeholder="Search Property Name" >                                      
-                                       
-                                            <input type="text" id="form1" class="form-control" name = "booking_id_search" placeholder="Search Booking ID">                                      
-                                                                     
-                                </div>                                
+
+                            <div class="col name-box">
+                                    <label>Property Name</label>
+                                    <input type="text" id="form1" class="form-control" name = "title_search" placeholder="Search Property Name" value="{{$search_title}}" >
+                                </div>
+                                <div class="col booking-box">
+                                     <label>BookingID</label>
+                                     <input type="text" id="form1" class="form-control" name = "booking_id_search" placeholder="Search Booking ID" value="{{$search_booking_id}}">
+                                </div>
+                                <div class="col status-box">
+                                    <label>Booking Status</label>
+                                    <select name="booking_status_search">
+                                  <option value ="" >select status</option> 
+                                  <option value ="0" {{ $search_booking_status == 0 ? 'selected' : '' }}>Ongoing</option>
+                                  <option value ="1" {{ $search_booking_status == 1 ? 'selected' : '' }}>Completed</option>
+                                  <option value ="2" {{ $search_booking_status == 2 ? 'selected' : '' }} >Cancel</option>
+                                 </select> 
+                                </div>
+
                                 <div class="col date-box">
                                     <label>Checkin Date</label>
-                                    <input type="text" id="datepicker1" name = "check_in_search">
-                                </div>
-                                <div class="col date-box">
+                                    <input type="text" id="datepicker1" name = "check_in_search" value="{{$search_checkin}}" >
+                                </div>                         
+                                    <div class="col date-box">
                                      <label>Checkout Date</label>
-                                     <input type="text" id="datepicker2" name = "check_out_search">
+                                     <input type="text" id="datepicker2" name = "check_out_search" value="{{$search_checkout}}">
                                 </div>
                                 <div class="col-auto date-box-submit">
                                      <button type="submit" class="btn-search">
                             Search
                             </button>
                                 </div> 
-                                
+                               
                                 </div>                           
                             
                         </div>
                     </form>
-     
+                    
+
+          @if(!empty($bookingData))
             <div class="total-bookings">
                 <table class="table mb-0">
                     <thead>
@@ -64,6 +77,7 @@
                     </thead>
                     <tbody>
                         @foreach($bookingData as $booking)
+                        
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$booking->title}}</td>
@@ -98,7 +112,9 @@
                             @endif
                             </td>
                         </tr>
-                        @endforeach    
+                        
+                        @endforeach 
+                          
                     </tbody>
                 </table>
                 <form action = "{{route('buyer.bookings-update-status')}}" method ="Post">
@@ -150,10 +166,18 @@
                                     </li>
                                     @endforeach
                                 </div>
+                                
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                                     <button type="submit" class="btn btn-primary" id="update_data" >Yes</button>
                                 </div>
+                                @else
+                                <div class ="no-data-box">
+                                            <center>
+                                    <h2>{{'No Data Found '}}</h2>
+                                </center>
+                                </div>
+                              @endif
                             </div>
                         </div>
                     </div>
@@ -167,6 +191,7 @@
 </div>
 </main>
 @endsection
+
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
@@ -184,3 +209,4 @@
     $( "#datepicker2" ).datepicker();
   } );
   </script>
+

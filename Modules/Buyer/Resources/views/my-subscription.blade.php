@@ -1,3 +1,5 @@
+
+
 @extends('buyer::layouts.master')
 @section('content')
 <div class="col-lg-9">
