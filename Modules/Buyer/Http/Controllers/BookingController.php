@@ -48,6 +48,11 @@ class BookingController extends Controller
             if($search_title!= "" || $search_booking_id!="" || $search_booking_status!="" || $search_checkin!="" || $search_checkout!="" || $segmentvalue!=""  ) {
             $bookingDataquery->where(function($query) use ($search_title, $search_booking_id,$search_booking_status,$search_checkin,$search_checkout,$search_status,$segmentvalue)
               {
+                $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
                
                 if($search_title!=""){
                       $query->where('tbl_property.title', 'like', '%' . $search_title . '%');
@@ -107,6 +112,12 @@ class BookingController extends Controller
 
     public function bookingview($booking_id)
     {
+      $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
+
         try {
             $view_booking_data = DB::table('user_booking')->leftjoin('tbl_property','tbl_property.id','=','user_booking.property_id')                          
                                                               ->where('user_booking.booking_id',$booking_id)
@@ -134,6 +145,11 @@ class BookingController extends Controller
 
 
     public function bookingstatus(Request $request){
+      $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
         
         try {
           $data=$request->all();
@@ -169,6 +185,11 @@ class BookingController extends Controller
 
 
     public function cancelbooking(Request $request){
+      $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
         try {
           $current_cancel_date = Carbon::today();
           $data=$request->all();

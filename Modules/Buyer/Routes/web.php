@@ -77,14 +77,8 @@ Route::group(['middleware' => 'Isseller'], function ()
     Route::get('/dealer/subscription-plans', 'MysubscriptionController@allsubscriptions')->name('buyer.subscription-plans');
     Route::get('/dealer/seller-subscription/{id}', 'MysubscriptionController@sellerSubscription')->name('seller.subscription-details');
     Route::post('/dealer/seller-subscription-save//{id}', 'MysubscriptionController@sellerSubscriptionstore')->name('seller.subscription-details-save');
-
-
-    
-
-
     Route::post('/dealer/user-subscription-confirmation/{id}', 'MysubscriptionController@subscriptionconfirmation')->name('buyer.subscription-confirmation');
-    
-     Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
+    Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
 
 
     // Route::get('/dealer/user-subscription/{id}', 'MysubscriptionController@usersubscription')->name('buyer.user-subscription');
@@ -94,21 +88,13 @@ Route::group(['middleware' => 'Isseller'], function ()
 
 // --------------------------------------------------property---------------------------------------------//
     Route::get('/dealer/manage-properties', 'PropertyController@index')->name('buyer.property');
-     Route::get('/dealer/manage-properties/{segment}', 'PropertyController@index')->name('buyer.property');
-     
+    Route::get('/dealer/manage-properties/{segment}', 'PropertyController@index')->name('buyer.property');
     Route::any('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
     Route::get('/dealer/add-properties', 'PropertyController@add')->name('buyer.add-property');
     Route::post('/dealer/get-categorydata-property', 'PropertyController@getcategory')->name('buyer.get-category');
-
     Route::post('/dealer/save-propertiesData', 'PropertyController@store')->name('buyer.store-property');
     Route::get('/dealer/edit-propertiesData/{id}', 'PropertyController@edit')->name('buyer.edit-property');
-    
-    
-     Route::get('/dealer/delete-propertiesData','PropertyController@ajaxdelete')->name('buyer.delete-propertyGallery');
-
-    
-   
-
+    Route::get('/dealer/delete-propertiesData','PropertyController@ajaxdelete')->name('buyer.delete-propertyGallery');
     Route::post('/dealer/update-propertiesData/{id}', 'PropertyController@update')->name('buyer.update-property');
     Route::post('/dealer/update-propertiesDatastatus', 'PropertyController@updatePropertyStatus')->name('buyer.status-update-property');
     Route::get('/dealer/view-propertiesData/{id}', 'PropertyController@view')->name('buyer.view-property');

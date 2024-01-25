@@ -173,6 +173,7 @@ class BuyerController extends Controller {
       }//BUYER SIGN UP REGISTER POST 
   public function sellerSignupPost(Request $request){
     try{
+      
           $data=$request->all();
           $request->validate([
             'email'=>'required|email:rfc,dns',

@@ -1,81 +1,82 @@
-@extends('buyer::layouts.master')
-@section('content')
+@extends('buyer::layouts.master') @section('content')
 <style>
-  .card.box h6 {
+    .card.box h6 {
     background: #174c6c !important;
- }
- input{border: 0;border-bottom: 1px solid #ddd;width: 100%;margin-top: 15px}
- input:focus{outline: none;}
-
+    }
+    input{border: 0;border-bottom: 1px solid #ddd;width: 100%;margin-top: 15px}
+    input:focus{outline: none;}
 </style>
-  <div class="col-lg-9">
-    <div class="profile-box">          
-      <div class="profile-box-form">
-        <h1 class="mb-3"> Seller Subscription Details</h1>
-        <section class="section-subscription">
-          <div class="row">
-            <div class="col-md-6 d-flex">
-                  <div class="card box mb-3 w-100">
-        <h6 class="rounded-top border-bottom p-3 mb-0 text-white">If you want to purchase this subscription then please transfer funds to below account  number </h6>
-        <div class="p-3">
-         <div class="border-bottom py-2 d-sm-flex justify-content-between ">
-        <strong><label> Account Number</label></strong> 
-        <p class="mb-0">{{$homi_account_number->option_value}}</p> 
+<div class="col-md-12 col-lg-9">
+    <div class="profile-box">
+        <div class="profile-box-form">
+            <h1 class="mb-3"> Seller Subscription Details</h1>
+            <section class="section-subscription">
+                <div class="row">
+                    <div class="col-md-6 d-flex">
+                        <div class="card box mb-3 w-100">
+                            <h6 class="rounded-top border-bottom p-3 mb-0 text-white">If you want to purchase this subscription then please transfer funds to below account  number </h6>
+                            <div class="p-3">
+                                <div class="border-bottom py-2 d-sm-flex justify-content-between ">
+                                    <strong><label> Account Number</label></strong>
+                                    <p class="mb-0">{{$homi_account_number->option_value}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex">
+                        <div class="card box mb-3 w-100">
+                            <h6 class="rounded-top border-bottom p-3 mb-0 text-white">  Also send proof of transfer to homi using one of the options given below </h6>
+                            <div class="p-3">
+                                <div class="border-bottom py-2 d-sm-flex justify-content-between ">
+                                    <strong><label> Homi Whatsapp No</label></strong>
+                                    <p class="mb-0">{{$homi_whatsapp_number->option_value}}</p>
+                                </div>
+                                <div class="border-bottom py-2 d-sm-flex justify-content-between ">
+                                    <strong><label> Homi Email</label></strong>
+                                    <p class="mb-0">{{$homi_email->option_value}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card box mb-3">
+                    <form method="post" action="{{route('seller.subscription-details-save',$subscription_plan_details->id)}}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-sec">
+                            <h6 class="rounded-top border-bottom p-3 mb-0 text-white">If you want to take subscription then please fill below details:- </h6>
+                            <div class="p-3">
+                                <div class="row">
+                                    <div class="py-2 col-sm-6">
+                                        <strong><label>Fund Amount</label></strong>
+                                        <input type="number" name=f und_amount class="form-control @error('fund_amount') is-invalid @enderror" id="fund_amount" value=""> @error('fund_amount')
+                                        <div class="invalid-feedback" style="display:block;">
+                                            {{$message}}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="py-2 col-sm-6 fund-label">
+                                        <label><strong> Fund Image</strong></label>
+                                        <span class="file-input"></span>
+                                        <input type="file" name=fund_image src="" class="form-control @error('fund_image') is-invalid @enderror"> @error('fund_image')
+                                        <div class="invalid-feedback" style="display:block;">
+                                            {{$message}}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button button type="submit" class="btn-2 btn-primary mx-auto mt-4 plan-btn text-white">Activate Plan</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
         </div>
-        </div>
-      </div>
-            </div>
-            <div class="col-md-6 d-flex">
-              
-       <div class="card box mb-3 w-100">
-        <h6 class="rounded-top border-bottom p-3 mb-0 text-white">  Also send proof of transfer to homi using one of the options given below </h6>
-        <div class="p-3">
-        <div class="border-bottom py-2 d-sm-flex justify-content-between ">
-        <strong><label> Homi Whatsapp No</label></strong>
-        <p class="mb-0">{{$homi_whatsapp_number->option_value}}</p>
-        </div>  
-      <div class="border-bottom py-2 d-sm-flex justify-content-between ">
-      <strong><label> Homi Email</label></strong>
-      <p class="mb-0">{{$homi_email->option_value}}</p>
+        </section>
     </div>
-      </div>   
-      </div>
-            </div>
-          </div>
-
-    
-      <div class="card box mb-3">   
-      <form method ="post" action= "{{route('seller.subscription-details-save',$subscription_plan_details->id)}}" enctype = "multipart/form-data">
-          @csrf
-        <div class="form-sec">
-        <h6 class="rounded-top border-bottom p-3 mb-0 text-white">If you want to take subscription then please fill below details:- </h6>
-        <div class="p-3">
-        <div class="row">
-        <div class="py-2 col-sm-6">
-        <strong><label>Fund Amount</label></strong>  
-        <input type = "number" name = fund_amount  id="fund_amount" value="">
-        </div>
-        <div class="py-2 col-sm-6 fund-label">
-        <label><strong> Fund Image</strong></label>  
-        <span class="file-input"></span>
-        <input type = "file" name = fund_image  src="" id="fund_image">
-       </div>
-       <div class="col-md-12">
-         <button button type ="submit" class="btn-2 btn-primary mx-auto mt-4 plan-btn text-white">Activate Plan</button>
-         </div>
-         </div>
-         </div>
-         </div>
-    </form> 
-        </div> 
-  </div>
-    </section>
-    </div>
-    </div>
-  </div>
+</div>
+</div>
 </div>
 </div>
 </div>
 @endsection
-
-

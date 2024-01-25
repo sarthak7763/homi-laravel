@@ -1,6 +1,6 @@
 @extends('buyer::layouts.master')
 @section('content')
-<div class="col-lg-9">
+<div class="col-md-8 col-lg-9">
    <div class="profile-box">
       <div class="profile-box-form">
          <h1 class="mb-3">Edit Profile</h1>
@@ -23,7 +23,7 @@
                            @if($userInfo->profile_pic)
                            <img class="rounded-pill-box" src="{{url('/')}}/images/{{$userInfo->profile_pic}}">
                            @else
-                           <img class="rounded-pill-box" src="{{url('/')}}/images/user-image-01.jpg}}">
+                           <img class="rounded-pill-box" src="{{url('/')}}/images/1699333958.jpg">
                            @endif    
                             </div>
                            <input type="file" id="my-profile_pic" class="opacity-0 position-absolute bottom-0" name="profile_pic">
@@ -43,7 +43,7 @@
                   </div>
                   <div class="col-12 col-sm-6">
                      <div class="mb-4">
-                        <input type="text" class="form-control @error('name') is-invalid @enderror"  aria-describedby="" name="name"   value="{{$userInfo->name}}">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror"  aria-describedby="" name="name"   value="{{$userInfo->name}}" placeholder="Please Enter Ower Name">
                         @if($errors->has('name'))
                         <div class="invalid-feedback">
                            {{$errors->first('name')}}
@@ -53,7 +53,7 @@
                   </div>
                  <div class="col-12 col-sm-6">
                      <div class="mb-4"> 
-                        <input type="text" class="form-control @error('email') is-invalid @enderror"  aria-describedby="" name="email" readonly  value="{{$userInfo->email}}">   
+                        <input type="text" class="form-control @error('email') is-invalid @enderror"  aria-describedby="" name="email" readonly  value="{{$userInfo->email}}" placeholder="Please Enter Email">   
                      </div>
                      @if($errors->has('email'))
                      <div class="invalid-feedback">
@@ -64,7 +64,7 @@
                </div>
                <div class="row" >
                   <div class="col-12" >
-                     <input type="text"   class="form-control @error('mobile') is-invalid @enderror"  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}">   
+                     <input type="text"   class="form-control @error('mobile') is-invalid @enderror"  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}" placeholder="Please Enter Mobile No">   
                   </div>
                   @error('mobile')
                   <div class="invalid-feedback" style="display:block;">

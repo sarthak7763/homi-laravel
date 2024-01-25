@@ -1,13 +1,12 @@
 
-
 @extends('buyer::layouts.master')
 @section('content')
-<div class="col-lg-9">
+<div class="col-md-8 col-lg-9">
     <div class="profile-box">
         <div class="profile-box-form">
              <h1 class="mb-3">My Subscription Plan History</h1>
-                        
-            <div class="table-responsive total-bookings">
+             @if(!empty($user_subscription_plan_array))         
+            <div class="table-responsive total-bookings p-0">
                 <table class="table mb-0">
                     <thead>
                         <tr>
@@ -45,7 +44,13 @@
                 </table>
                 
             </div>
- 
+            @else
+            <div class ="no-data-box">
+            <center>
+    <h2>{{'No Data Found '}}</h2>
+</center>
+</div>
+ @endif
 </div>
 </div>
 </div>

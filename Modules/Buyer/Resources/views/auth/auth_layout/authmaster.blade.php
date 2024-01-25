@@ -19,7 +19,7 @@
 <body>
 
   <div class="wrapper h-100">
-        <div class="container-fluid mx-0 h-100">
+        <div class="mx-0 h-100">
             @yield('content')
         </div>        
     </div>

@@ -1,76 +1,89 @@
 @extends('buyer::layouts.master')
 @section('content')
-<div class="col-lg-9">  
+<div class="col-md-8 col-lg-9">  
 <div class="profile-box">
     <div class="profile-box-form">
         <h1 class="mb-3">My Profile</h1>
         <div>
-        @if (session()->has('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-    </div>
-        <form class="profile-form ">
-            <div class="user-box-img">
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <div class="user-box overflow-visible position-relative">
-                            <div class="user-box2-img">
-                          @if($userInfo->profile_pic)
-                            <img class="rounded-pill-box" src="{{url('/')}}/images/{{$userInfo->profile_pic}}">
-                            @else
-                            <img class="rounded-pill-box" src="{{url('/')}}/assets_front/images/user-icon.jpg">
-                            @endif    
-                            </div>        
-                            <div class="useravtarIcon">
-                                <input type="file" id="myFile" class="opacity-0 position-absolute bottom-0" name="filename">
-                            </div>
-                        </div>
-                    </div>
+            @if (session()->has('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <strong>Owner Type</strong>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="mb-4">            
-                            <input type="text" class="form-control"  aria-describedby="" value="{{$userInfo->name}}" readonly>            
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <div class="mb-4"> 
-                            <input type="email" class="form-control"  aria-describedby="" value="{{$userInfo->email}}" readonly>   
-                        </div>
-                    </div>
-                </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <input type="integer" class="form-control " readonly  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}">   
-                        </div>
-                    </div>
-                
-                <div class="row mt-3">
-                    <label class="font-weight-bold mb-1">Owner Type</label>
-                    <div class="col-sm-6 mb-4">
-                        <div class="form-group">                            
-                            <input type="text" class="form-control" readonly  aria-describedby="" name="owner_type"  value="<?php if ($userInfo->owner_type == 1) echo "Agency"; else echo "Indiviuals" ; ?>">   
-                        </div>
-                    </div>
-                    @if($userInfo->owner_type == 1)
-                    
-                    <div class="col-sm-6 mb-4"  style="display:block ;">
-                        <div class="form-group" >
-                            <input type="text" class="form-control" readonly  value = "{{$userInfo->agency_name}}">
-                        </div>
-                    </div>
-                    @else
-                    <div class="col-sm-6 mb-4"  style="display:none;">
-                        @endif
-                    </div>
-                </div>
-        </form>
+            @endif
         </div>
+       
+    </div>
+    <div class="ox-auto uinfo-table">
+<table class="table-responsive table-striped table w-100 table-bordered">
+<thead>
+    <tr>
+        <th colspan="2">Owner Information</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        
+        <td><strong>Owner Name : </strong> 
+            @if(!empty($userInfo->name))
+            <span> {{$userInfo->name}}</span>
+            @else
+            <span> 
+            {{'NA'}}</span>
+            @endif
+
+        </td>
+        <td><strong>Owner Email Id : </strong> 
+        @if(!empty($userInfo->email))
+            <span> {{$userInfo->email}}</span>
+            @else
+            <span> 
+            {{'NA'}}</span>
+            @endif
+    
+    </td>
+    </tr>
+    <tr>
+        <td><strong>Contact No. : </strong>
+        @if(!empty($userInfo->mobile))
+            <span> {{$userInfo->mobile}}</span>
+            @else
+            <span> 
+            {{'NA'}}</span>
+            @endif
+    
+    </td>
+        <td><strong>Registration Date : </strong> 
+        @if(!empty($userInfo->created_at))
+            <span>{{date('d M , Y',strtotime($userInfo->created_at))}}</span>
+            @else
+            <span> 
+            {{'NA'}}</span>
+            @endif
+    </td>
+
+    </tr>
+</tbody>
+
+<tbody>
+<tr>
+<td><strong>Owner Type : </strong> <span> <?php if ($userInfo->owner_type == 1) echo "Agency"; else echo "Indiviuals" ; ?></span></td>
+<td>
+
+              
+<strong>Agency Name : </strong>
+
+@if($userInfo->owner_type == 1)
+    <span> {{$userInfo->agency_name}}</span>
+    @else
+    <span> 
+    {{'NA'}}</span>
+    @endif
+</td>
+</tr>
+</tbody>
+</table>
+</div>
     </div>
 </div>
+
 @endsection

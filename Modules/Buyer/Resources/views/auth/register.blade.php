@@ -84,7 +84,7 @@ span.messages strong{
 
 @endif
 
-<div class="row">
+<div class="">
 
     @if($message = Session::get('success'))
                     <div class="row">
@@ -150,7 +150,7 @@ span.messages strong{
                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                         d="M1.25317 7.00001C2.42125 3.28098 5.89569 0.583344 10.0002 0.583344C14.1046 0.583344 17.5791 3.28101 18.7472 7.00001C17.5791 10.719 14.1046 13.4167 10.0002 13.4167C5.89568 13.4167 2.42124 10.719 1.25317 7.00001Z"
                                         stroke="white" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
+                                </svg>                                                                                              
 
 
                                 <svg class="eyeclose" width="20" height="18" viewBox="0 0 20 18" fill="none"
@@ -171,7 +171,7 @@ span.messages strong{
 
 
                         <div class="mb-3 input-group">
-                            <input type="password" name="confirm_password" class="form-control" id="confirm_password" placeholder="Password">
+                            <input type="password" name="confirm_password" class="form-control" name="confirm_password"  placeholder="Password">
                             <span toggle="#confirm_password" class="input-group-text togglePassword2" id="">
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -193,7 +193,7 @@ span.messages strong{
 
                             </span>
 
-                        @if($confirm_password_error!="")
+                            @if($confirm_password_error!="")
                           <span class="messages">
                               <strong>{{ $confirm_password_error }}</strong>
                           </span>
@@ -253,6 +253,7 @@ $.ajaxSetup({
                 minlength: 8
             },
             confirm_password: {
+                required: true,
                 minlength: 8,
                 equalTo: "#password"
             },
@@ -273,7 +274,7 @@ $.ajaxSetup({
             },
             password: {
                 required: "Password field is required",
-                minlength: "Password must be atleast 5 characters long"
+                minlength: "Password must be atleast 5 characters long",
 
             },
             confirm_password: {

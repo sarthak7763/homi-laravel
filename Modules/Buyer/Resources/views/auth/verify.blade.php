@@ -36,6 +36,12 @@ label#confirm_password-error {
 span.messages strong{
     color: red;
 }
+form#signupBuyerForm label.error {
+    font-size: 14px;
+}
+form#signupBuyerForm button {
+    line-height: 26px;
+}
 </style>
 @endsection
 @section('content')
@@ -57,7 +63,22 @@ span.messages strong{
 
 <div class="row">
 
-    @if($message = Session::get('success'))
+    
+
+    <section class="signup-section pt-4 pb-4">
+        <div class="container h-100">
+            <div class="row align-items-center justify-content-center h-100">
+                <div class="col-12">
+                    @if(session()->get('type')=="login")
+                        <form  name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.verifyloginotp')}}" method="POST" class="signup-form p-5">
+                    @else
+                        <form  name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.verifyregisterotp')}}" method="POST" class="signup-form p-5">
+                    @endif
+
+                        @csrf
+                        <h1>Welcome!</h1>
+                        <strong>Verify your account</strong>
+                        @if($message = Session::get('success'))
                     <div class="row">
                         <div class="col-md-12">
                           <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -83,20 +104,6 @@ span.messages strong{
                     </div>
                 @endif
 
-    <section class="signup-section pt-4 pb-4">
-        <div class="container h-100">
-            <div class="row align-items-center justify-content-center h-100">
-                <div class="col-12">
-                    @if(session()->get('type')=="login")
-                        <form  name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.verifyloginotp')}}" method="POST" class="signup-form p-5">
-                    @else
-                        <form  name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.verifyregisterotp')}}" method="POST" class="signup-form p-5">
-                    @endif
-
-                        @csrf
-                        <h1>Welcome!</h1>
-                        <strong>Verify your account</strong>
-
                        
                         
                        
@@ -111,7 +118,7 @@ span.messages strong{
                         </div>   
 
                         <button type="submit"  id="btnSignup" class="btn btn-primary">Verify</button>
-                        <button type = "button" class="btn btn-warning" id="verifyresendotp">Resend OTP</a>
+                        <button type = "button" class="btn btn-warning mt-3" id="verifyresendotp">Resend OTP</a>
                          </form>
 
                 </div>

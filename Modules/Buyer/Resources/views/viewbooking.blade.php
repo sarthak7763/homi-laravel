@@ -1,6 +1,6 @@
 @extends('buyer::layouts.master')
 @section('content')
-<div class="col-lg-9">
+<div class="col-md-8 col-lg-9">
   <div class="profile-box">          
     <div class="profile-box-form">
       <div class="row">
@@ -185,57 +185,57 @@
         <div class="booking-detail">
           <h2 class="mb-3">Booking Detail</h2>
           <div class="row">
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Full name</p>
                 <strong>{{$view_booking_data->user_name}}</strong>
               </div>
             </div>
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Email</p>
                 <strong>{{$view_booking_data->user_email}}</strong>
               </div>
             </div>
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Phone number</p>
                 <strong>{{$view_booking_data->user_number}}</strong>
               </div>
             </div> 
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Check-In</p>
                 <strong>{{date('M d, Y',strtotime($view_booking_data->user_checkin_date))}}</strong>
                   
               </div>
             </div>  
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Check-Out</p>
                 <strong>{{date('M d, Y',strtotime($view_booking_data->user_checkout_date))}}</strong>
               </div>
             </div>  
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Number of Nights/Months/Years</p>
                 <strong>{{$days}} Days</strong>
               </div>
             </div>
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Number of children</p>
                 <strong>{{$view_booking_data->user_children_count}}</strong>
                 </div>
             </div>
             @if($view_booking_data->booking_status==2)
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Cancel Date</p>
                 <strong>{{date('M d, Y',strtotime($view_booking_data->cancel_date))}}</strong>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Cancel Reason</p>
                 <strong>{{$cancel_reason->reason_name}}</strong>
@@ -243,7 +243,7 @@
             </div> 
             
             @endif   
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Number of Adults</p>
                 <strong>{{$view_booking_data->user_adult_count}}</strong>

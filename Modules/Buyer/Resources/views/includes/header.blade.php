@@ -13,6 +13,7 @@
   <!-- Bootstrap CSS -->
   <link href="{{url('/')}}/assets_front/css/bootstrap.min.css" rel="stylesheet"> 
   <link href="{{url('/')}}/assets_front/css/custom.css" rel="stylesheet">  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   @php $favicon=getFavicon(); @endphp
   <link rel="icon" href="{{asset('storage'.$favicon)}}" type="image/x-icon">
   <title>Homi Seller Panel</title>
@@ -34,8 +35,14 @@
             <div class="account-box">
               @php $sellerinfo=getSellerinfo(auth()->user()->id); @endphp
               <div class="header-profile">
-                
+
+              @if($sellerinfo->profile_pic)
                 <img class="rounded-pill-box" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
+                           
+                           @else
+                           <img class="rounded-pill-box" src="{{url('/')}}/images/1699333958.jpg">
+                           @endif   
+                
               </div>
               <div class="account-down">
                 <span>Welcome</span>
@@ -45,9 +52,9 @@
             </a>
           <ul class="dropdown-menu text-small ssss" id="seller_dropdown">
             
-            <li class = "dropdown-item {{ (request()->is('dealer/my-profile*')) ? 'active' : '' }}"><a href="{{route('buyer.my-profile')}}">My Profile</a></li>
-            <li class="dropdown-item" ><a href="{{route('buyer.change-password')}}">Change Password</a></li>
-            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a href="{{route('buyer.logout')}}">Sign out</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer/my-profile*')) ? 'active' : '' }}"><a href="{{route('buyer.my-profile')}}"><i class="fa-regular fa-user"></i> My Profile</a></li>
+            <li class="dropdown-item" ><a href="{{route('buyer.change-password')}}"> <i class="fa-solid fa-unlock"></i> Change Password</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a href="{{route('buyer.logout')}}"><i class="fa-solid fa-arrow-right-from-bracket"></i>  Sign out</a></li>
           </ul>
         </div>
       </div>

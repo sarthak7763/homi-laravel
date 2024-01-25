@@ -71,7 +71,7 @@ class PropertyController extends Controller
               });
             }
 
-        $propertyData = $propertyDetail->get()->toArray();
+        $propertyData = $propertyDetail->paginate(6);
         //dd(DB::getQueryLog());
         foreach($propertyData as $key=>$list)
         {
@@ -96,14 +96,15 @@ class PropertyController extends Controller
     
     public function add(Request $request)
     {
+      
+      $access_module= sellermoduleaccess();
+      $property_access  =$this->propertyAccess();
 
-        $property_access  =$this->propertyAccess();
-        if($property_access=='true')
-        {
-          return redirect()->route('buyer.property','all')->with('you cant add new property');
-        }
-
-      try{
+    if( $access_module && $property_access=='true' )
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
+        try{
         $country_list=getcountrylist();
         $propertyDetail = Property::all();
         $user_id = Auth::User()->id;
@@ -112,12 +113,7 @@ class PropertyController extends Controller
                                        ->get()
                                        ->first();
       $property_condition = PropertyCondition::where('status',1)->get();
-
-
-      
-
-
-        return view('buyer::add-property',compact('propertyDetail','property_condition','country_list','userData'));
+      return view('buyer::add-property',compact('propertyDetail','property_condition','country_list','userData'));
       }
       catch (\Exception $e){
         return response()->json(["status" => 'error','message'=>'Something went wrong.']);
@@ -206,7 +202,10 @@ class PropertyController extends Controller
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
                 
-                'property_image' => 'required|mimes:jpeg,png,jpg'
+                'property_image' => 'required|mimes:jpeg,png,jpg',
+                
+                'property_gallery_image' => 'array|max:8'
+
                 
 
 
@@ -239,7 +238,13 @@ class PropertyController extends Controller
                       'property_price.numeric'=>'Property price field only allows number',
                       'property_price_type.required'=>'Property price type is required.',
                       'property_image.required'=>'Image field can not be empty',
-                      'property_image.mimes'=>'Image extension should be jpg,jpeg,png'
+                      'property_image.mimes'=>'Image extension should be jpg,jpeg,png',
+                    
+                      'property_gallery_image.max'=>'Image should not be greater than 8.',
+                      //  'property_gallery_image.mimes'=>'Image extension should be jpg,jpeg,png',
+
+
+
             ]);
                   
             $checkpropertycategory=Category::where('id',$data['property_category'])->where('category_type',$data['property_type'])->where('status',1)->get()->first();
@@ -325,18 +330,44 @@ class PropertyController extends Controller
                           $property->property_image=$imageName;
                           $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
+                          print_r($property);
                           $property->save();
                           $property_id = $property->id;
+
+
+    
                           
                           if($request->hasFile('property_gallery_image')){
+                          $allowedfileExtension = ['jpeg','jpg','png'];
+
+
                             foreach ($data['property_gallery_image'] as $key => $value ){
-                                  $property_gallery_image = time().'.'.$value->extension();
-                                  $image = $value->move(public_path('images/property/gallery/'), $property_gallery_image);
+
+
+                              
+                                  // $property_gallery_image = time().'.'.$value->extension();
+                                  // $property_gallery_image= uniqid().$value->extension();
+                                  $property_gallery_image = time() . rand(1, 100) . '.' .$value->extension();
+                                  
+
+
+                                  $image_extension= $value->getClientOriginalExtension();
+
+                                  
+
+                                  $check = in_array($image_extension, $allowedfileExtension);
+                                  // Checking the image extension
+                                  if (!$check) {
+                                      return redirect()->back();
+                                  }
+                                  
                                     $gallery = new PropertyGallery;
                                         $gallery->property_id = $property_id;
                                         $gallery->type = 1;
                                         $gallery->status = 1;
                                         $gallery->image = $property_gallery_image;
+                                        
+                                      
                                         $gallery->save();
                                   }
                           }
@@ -351,6 +382,12 @@ class PropertyController extends Controller
 
 
     public function edit($id){
+      $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
+
       try{
         $country_list=getcountrylist();
         $propertyDetail = Property::where('id',$id)->get()->first();
@@ -369,6 +406,12 @@ class PropertyController extends Controller
 
 
     public function update(Request $request,$id){
+          $access_module= sellermoduleaccess();
+        if($access_module=='false')
+        {
+          return redirect()->route('buyer.subscription-plans');
+        }
+
         $data=$request->all();
        
         $request->validate([
@@ -470,6 +513,7 @@ class PropertyController extends Controller
             {
               if($request->hasFile('property_image')){      
                 $imageName = time().'.'.$request->property_image->extension();
+                
                 $image = $request->property_image->move(public_path('images/property/thumbnail/'), $imageName);
                           
                           $property->property_type=$data['property_type'];
@@ -636,8 +680,22 @@ class PropertyController extends Controller
                         $property->save();
                         $property_id = $property->id;
                           if($request->hasFile('property_gallery_image')){
+                            $allowedfileExtension = ['jpeg','jpg','png'];
                             foreach ($data['property_gallery_image'] as $key => $value ){
-                                  $property_gallery_image = time().'.'.$value->extension();
+                                  // $property_gallery_image = time().'.'.$value->extension();
+                                  $image_extension= $value->getClientOriginalExtension();
+                                  // $property_gallery_image= uniqid().$value->extension();
+
+                                  $property_gallery_image = time() . rand(1, 100) . '.' .$value->extension();
+
+                                  
+
+                                  $check = in_array($image_extension, $allowedfileExtension);
+                                  // Checking the image extension
+                                  if (!$check) {
+                                      return redirect()->back()->with('error', 'Images must be png, jpeg or jpg!');
+                                  }
+                                  
                                    $image = $value->move(public_path('images/property/gallery/'), $property_gallery_image);
                                         $gallery = new PropertyGallery;
                                         $gallery->property_id = $property_id;
@@ -661,6 +719,12 @@ class PropertyController extends Controller
 
            public function updatePropertyStatus(Request $request){
             try {
+              $access_module= sellermoduleaccess();
+              if($access_module=='false')
+              {
+                return redirect()->route('buyer.subscription-plans');
+              }
+
               $data=$request->all();
               $request->validate([
                   'property_id'=>'required',
@@ -698,6 +762,12 @@ class PropertyController extends Controller
 
     public function view($id)
     {
+      $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
+
       try {
                                                           
 
@@ -727,6 +797,12 @@ class PropertyController extends Controller
 
     public function ajaxdelete(Request $request)
     {
+      $access_module= sellermoduleaccess();
+    if($access_module=='false')
+    {
+      return redirect()->route('buyer.subscription-plans');
+    }
+
           $data = $request->all();
           $deleted_gallery  = PropertyGallery::where('property_id',$data['id'])->where('id',$data['gallery_id'])->where('status',1)->delete();
             if($data){
@@ -745,34 +821,35 @@ class PropertyController extends Controller
           public function propertyAccess()
           {
              $user_id = Auth::User()->id;
-             
-             
              $product_listing =   DB::table('user_subscriptions')->leftjoin('subscriptions','subscriptions.id','=','user_subscriptions.plan_id')
-                                                                ->where('user_id',$user_id)
-                                                                ->where('user_subscriptions.subscription_status',1) 
-                                                                ->first();
+                                        ->select('product_listing')
+                                          ->where('user_id',$user_id)
+                                          ->where('user_subscriptions.subscription_status',1) 
+                                          ->first();
+                  $total_property = Property::where('add_by',$user_id)->count();
 
-                                                                
-            $total_property = Property::where('add_by',$user_id)->count();
+                  if($product_listing==''){
+                
+                    return true;
+                  } 
+                  else{
+                      if($total_property >= $product_listing->product_listing){
+                        return true;
+                    }
+                    else{
+                      return false;
+                    }
+                  }
+                   
 
-          
-            if($total_property >$product_listing->product_listing)
-            {
-              return true;
-            }
-            else
-            {
-              return false;
-
-            }
+           }
+                 
+      }
 
 
-
-          }
-
-}
     
   
         
     
  
+        

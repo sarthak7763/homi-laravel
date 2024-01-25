@@ -1,6 +1,6 @@
 @extends('buyer::layouts.master')
 @section('content')
-  <div class="col-lg-9">
+  <div class="col-md-12 col-lg-9">
     <div class="profile-box">          
       <div class="profile-box-form">
         <h1 class="mb-3"> All Subscription Plans</h1>
@@ -8,8 +8,8 @@
           <div class="row ">
           @foreach($subscription_plan as $subscription)
            
-            <div class="col-12 col-md-4">
-            <form action ="{{route('buyer.subscription-confirmation',($subscription->id))}}" method = "Post">
+            <div class="col-12 col-md-4 mt-4 mt-md-0">
+            <form class="mx-auto mx-md-0" action ="{{route('buyer.subscription-confirmation',($subscription->id))}}" method = "Post">
              @csrf   
                <div class="subscription-box">
                 <div class="subscription-box-inner">

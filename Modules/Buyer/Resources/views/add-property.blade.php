@@ -70,8 +70,11 @@
                      </div>
                   </div>
                   <div class="col-sm-6">
+
                      <div class="mb-4">
-                        <input type="date" name="built_in_year" class="form-control datepicker @error('built_in_year') is-invalid @enderror" value="" placeholder="Enter Built In Year"  id="built_in_year" >            
+                  <label> Property Built In Year</label>
+
+                        <input type="date" name="built_in_year" class="form-control datepicker @error('built_in_year') is-invalid @enderror" value=""   id="built_in_year" >            
                         @if($errors->has('built_in_year'))
                         <div class="invalid-feedback">
                            {{$errors->first('built_in_year')}}
@@ -80,7 +83,7 @@
                      </div>
                   </div>
                   <div class="col-sm-6">
-                     <div class="mb-4">
+                     <div class="mb-4 pt-4">
                         <input type="text" class="form-control @error('no_of_kitchen') is-invalid @enderror" name = "no_of_kitchen"  aria-describedby="" placeholder="Enter No of Kitchen">            
                         @if($errors->has('no_of_kitchen'))
                         <div class="invalid-feedback">
@@ -227,6 +230,7 @@
 
                   <div class="row">
                      <div class="col-12">
+                        <label> Property Features</label>
                         <div class="mb-4">
                            <select class="form-control js-example-tokenizer" placeholder="Add Features" name="property_features[]" multiple="multiple">
                               <option value="">Add Features</option>
@@ -289,8 +293,12 @@
                    </div>
             <div class="col-sm-6">
                      <div class="mb-4">
-                        <input type="file" id="property_gallery_image" class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple">            
-                        
+                        <input type="file" id="property_gallery_image"  class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple">            
+                        @if($errors->has('property_gallery_image'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_gallery_image')}}
+                        </div>
+                        @endif
                      </div>
                   </div>
                   <div class="col-md-12">

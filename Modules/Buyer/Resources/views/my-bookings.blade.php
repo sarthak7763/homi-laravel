@@ -6,8 +6,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-<div class="col-lg-9">
-    <div class="profile-box">
+<div class="col-md-8 col-lg-9">
+    <div class="profile-box booking_page">
         <div class="profile-box-form">
             <h1 class="mb-3">Total Bookings</h1>
            
@@ -103,15 +103,13 @@
                                 @else
                                 <button type="button" class="button-like status_change" data-toggle="modal" data-target="#myModal" data-id="{{$booking->booking_id}}" data-status="{{$booking->booking_status}}">Change Status</button>
                                  @endif
-                             </td>
-                            <td>
-                            @if($booking->booking_status==1 || $booking->booking_status==2 )
+                                                         @if($booking->booking_status==1 || $booking->booking_status==2 )
                                 <button type="button" class="button-like cancel_booking" data-toggle="modal" data-target="#cancelModal" data-id="{{$booking->booking_id}}" style = "display:none";>Cancel Booking</button>
                             @else
                             <button type="button" class="button-like cancel_booking" data-toggle="modal" data-target="#cancelModal" data-id="{{$booking->booking_id}}">Cancel Booking</button>
                             @endif
-                            </td>
-                        </tr>
+                             </td>
+                         </tr>
                         
                         @endforeach 
                           

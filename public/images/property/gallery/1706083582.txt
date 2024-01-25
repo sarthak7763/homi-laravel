@@ -1,0 +1,3096 @@
+-- phpMyAdmin SQL Dump
+-- version 4.6.6deb5ubuntu0.5
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Dec 05, 2023 at 04:10 PM
+-- Server version: 10.3.38-MariaDB-1:10.3.38+maria~ubu1804
+-- PHP Version: 5.6.40-52+ubuntu18.04.1+deb.sury.org+1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `foodbank`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `addons`
+--
+
+CREATE TABLE `addons` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `version` varchar(191) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `author` varchar(191) DEFAULT NULL,
+  `files` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `purchase_username` varchar(191) DEFAULT NULL,
+  `purchase_code` varchar(191) DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `label` tinyint(3) UNSIGNED NOT NULL,
+  `label_name` varchar(191) DEFAULT NULL,
+  `address` varchar(255) NOT NULL,
+  `apartment` varchar(255) DEFAULT NULL,
+  `latitude` varchar(191) DEFAULT NULL,
+  `longitude` varchar(191) DEFAULT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `backend_menus`
+--
+
+CREATE TABLE `backend_menus` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `link` varchar(191) NOT NULL,
+  `icon` varchar(191) NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `parent_id` int(11) NOT NULL DEFAULT 0,
+  `priority` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `backend_menus`
+--
+
+INSERT INTO `backend_menus` (`id`, `name`, `link`, `icon`, `status`, `parent_id`, `priority`, `created_at`, `updated_at`) VALUES
+(1, 'dashboard', 'dashboard', 'fas fa-laptop', 1, 0, 100, NULL, NULL),
+(2, 'restaurants', 'restaurants', 'fa fa-store fa-fw', 1, 0, 99, NULL, NULL),
+(3, 'manage_restaurants', '#', 'fas fa-utensils', 1, 0, 98, NULL, NULL),
+(4, 'categories', 'category', 'fas fa-th-large', 1, 3, 97, NULL, NULL),
+(5, 'menu_items', 'menu-items', 'fas fa-th', 1, 3, 96, NULL, NULL),
+(6, 'cuisines', 'cuisine', 'fas fa-grip-horizontal', 1, 3, 95, NULL, NULL),
+(7, 'time_slots', 'time-slots', 'fas fa-calendar-alt', 1, 3, 94, NULL, NULL),
+(8, 'tables', 'tables', 'fas fa-table', 1, 3, 93, NULL, NULL),
+(9, 'rating', 'rating', 'fas fa-star', 1, 3, 92, NULL, NULL),
+(10, 'qr_builder', 'qr-code', 'fas fa-barcode', 1, 3, 91, NULL, NULL),
+(11, 'sales', '#', 'fa fa-chart-bar', 1, 0, 90, NULL, NULL),
+(12, 'reservations', 'reservation', 'fas fa-calendar-check', 1, 11, 89, NULL, NULL),
+(13, 'orders', 'orders', 'fas fa-cart-plus', 1, 11, 88, NULL, NULL),
+(14, 'pending_orders', 'order-notification', 'fas fa-cubes', 1, 0, 87, NULL, NULL),
+(15, 'live_orders', 'live-orders', 'fas fa-cubes', 1, 0, 87, NULL, NULL),
+(16, 'complaints', 'complaints', 'fas fa-flag-checkered', 1, 0, 87, NULL, NULL),
+(17, 'coupons', 'coupon', 'fas fa-ticket-alt', 1, 0, 88, NULL, NULL),
+(18, 'finance', '#', 'fas fa-th-large', 1, 0, 86, NULL, NULL),
+(19, 'transactions', 'transaction', 'fas fa-wallet', 1, 18, 85, NULL, NULL),
+(20, 'collections', 'collection', 'fas fa-credit-card', 1, 18, 84, NULL, NULL),
+(21, 'request_withdraws', 'request-withdraw', 'fas fa-money-bill-alt', 1, 18, 83, NULL, NULL),
+(22, 'withdraw', 'withdraw', 'fas fa-cash-register', 1, 18, 82, NULL, NULL),
+(23, 'bank_details', 'bank', 'fas fa-university', 1, 18, 81, NULL, NULL),
+(24, 'administrator', '#', 'fas fa-id-card ', 1, 0, 80, NULL, NULL),
+(25, 'user', 'user', 'fas fa-users\"', 1, 24, 79, NULL, NULL),
+(26, 'role', 'role', 'fas fa-users-cog', 1, 24, 79, NULL, NULL),
+(27, 'customers', 'customers', 'fas fa-user', 1, 24, 78, NULL, NULL),
+(28, 'restaurant_owners', 'restaurant-owners', 'fas fa-user-tie', 1, 24, 77, NULL, NULL),
+(29, 'delivery_boys', 'delivery-boys', 'fas fa-truck-loading', 1, 24, 76, NULL, NULL),
+(30, 'update', 'update', 'fas fa-sync-alt', 1, 24, 76, NULL, NULL),
+(31, 'report', '#', 'fas fa-chart-pie', 1, 0, 75, NULL, NULL),
+(32, 'restaurant_owner_sales_report', 'restaurant-owner-sales-report', 'fas fa-file-invoice', 1, 31, 74, NULL, NULL),
+(33, 'admin_commission', 'admin-commission-report', 'fas fa-file-invoice-dollar', 1, 31, 73, NULL, NULL),
+(34, 'credit_balance', 'credit-balance-report', 'fas fa-wallet', 1, 31, 72, NULL, NULL),
+(35, 'delivery_order_balance', 'cash-on-delivery-order-balance-report', 'fas fa-chart-bar', 1, 31, 71, NULL, NULL),
+(36, 'customer_report', 'customer-report', 'fas fa-chart-line', 1, 31, 70, NULL, NULL),
+(37, 'withdraw_report', 'withdraw-report', 'fas fa-money-check', 1, 31, 69, NULL, NULL),
+(38, 'collection_report', 'delivery-boy-collection-report', 'fas fa-money-check-alt', 1, 31, 68, NULL, NULL),
+(39, 'reservation_report', 'reservation-report', 'fas fa-address-book', 1, 31, 71, NULL, NULL),
+(40, 'frontend_cms', '#', 'fas fa-braille', 1, 0, 70, NULL, NULL),
+(41, 'banners', 'banner', 'fas fa-film', 1, 40, 69, NULL, NULL),
+(42, 'pages', 'page', 'fas fa-sticky-note', 1, 40, 68, NULL, NULL),
+(43, 'push_notification', 'push-notification', 'far fa-bell', 1, 0, 415, NULL, NULL),
+(44, 'language', 'language', 'fas fa-globe', 1, 0, 9000, NULL, NULL),
+(45, 'settings', 'setting', 'fas fa-cogs', 1, 0, 67, NULL, NULL),
+(46, 'addons', 'addons', 'fa fa-crosshairs', 1, 24, 88, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `balances`
+--
+
+CREATE TABLE `balances` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) DEFAULT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT 1,
+  `balance` decimal(13,2) NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `balances`
+--
+
+INSERT INTO `balances` (`id`, `name`, `type`, `balance`, `creator_type`, `creator_id`, `editor_type`, `editor_id`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 1, '0.00', '1', 1, '1', 1, '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(2, 'dine-in', 1, '0.00', '1', 1, '1', 1, '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(3, 'rahuldave1906358302', 1, '0.00', '1', 1, '1', 1, '2023-10-18 06:37:45', '2023-10-18 06:37:45'),
+(4, 'test123578954905', 1, '0.00', '1', 1, '1', 1, '2023-10-18 07:15:14', '2023-10-18 07:15:14'),
+(5, 'rdowner1714879574', 1, '0.00', '1', 1, '1', 1, '2023-10-18 11:56:59', '2023-10-18 11:56:59'),
+(6, 'admin', 1, '0.00', '1', 1, '1', 1, '2023-11-09 06:23:40', '2023-11-09 06:23:40'),
+(7, 'admin', 1, '0.00', '1', 1, '1', 1, '2023-11-09 06:25:12', '2023-11-09 06:25:12'),
+(8, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 06:37:07', '2023-11-09 06:37:07'),
+(9, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 08:06:40', '2023-11-09 08:06:40'),
+(10, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 09:00:30', '2023-11-09 09:00:30'),
+(11, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 10:12:59', '2023-11-09 10:12:59'),
+(12, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 10:13:18', '2023-11-09 10:13:18'),
+(13, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 10:13:27', '2023-11-09 10:13:27'),
+(14, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 10:13:38', '2023-11-09 10:13:38'),
+(15, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 10:17:17', '2023-11-09 10:17:17'),
+(16, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 10:27:37', '2023-11-09 10:27:37'),
+(17, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 10:38:48', '2023-11-09 10:38:48'),
+(18, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 11:12:14', '2023-11-09 11:12:14'),
+(19, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 11:36:16', '2023-11-09 11:36:16'),
+(20, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 11:50:49', '2023-11-09 11:50:49'),
+(21, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 11:57:50', '2023-11-09 11:57:50'),
+(22, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 12:20:20', '2023-11-09 12:20:20'),
+(23, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 13:11:06', '2023-11-09 13:11:06'),
+(24, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 13:12:12', '2023-11-09 13:12:12'),
+(25, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-09 13:12:57', '2023-11-09 13:12:57'),
+(26, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 12:30:35', '2023-11-16 12:30:35'),
+(27, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 12:57:40', '2023-11-16 12:57:40'),
+(28, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 12:57:53', '2023-11-16 12:57:53'),
+(29, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 12:58:30', '2023-11-16 12:58:30'),
+(30, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 12:58:32', '2023-11-16 12:58:32'),
+(31, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 12:59:01', '2023-11-16 12:59:01'),
+(32, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 12:59:19', '2023-11-16 12:59:19'),
+(33, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:13:17', '2023-11-16 13:13:17'),
+(34, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:13:19', '2023-11-16 13:13:19'),
+(35, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:13:45', '2023-11-16 13:13:45'),
+(36, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:13:46', '2023-11-16 13:13:46'),
+(37, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:13:47', '2023-11-16 13:13:47'),
+(38, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:13:53', '2023-11-16 13:13:53'),
+(39, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:13:55', '2023-11-16 13:13:55'),
+(40, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:14:21', '2023-11-16 13:14:21'),
+(41, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:15:04', '2023-11-16 13:15:04'),
+(42, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:15:06', '2023-11-16 13:15:06'),
+(43, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:15:11', '2023-11-16 13:15:11'),
+(44, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:15:18', '2023-11-16 13:15:18'),
+(45, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:16:06', '2023-11-16 13:16:06'),
+(46, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:18:48', '2023-11-16 13:18:48'),
+(47, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:19:15', '2023-11-16 13:19:15'),
+(48, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:19:29', '2023-11-16 13:19:29'),
+(49, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:19:44', '2023-11-16 13:19:44'),
+(50, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:19:45', '2023-11-16 13:19:45'),
+(51, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:19:46', '2023-11-16 13:19:46'),
+(52, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:20:12', '2023-11-16 13:20:12'),
+(53, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:20:14', '2023-11-16 13:20:14'),
+(54, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:20:35', '2023-11-16 13:20:35'),
+(55, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:20:49', '2023-11-16 13:20:49'),
+(56, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:21:58', '2023-11-16 13:21:58'),
+(57, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:25:41', '2023-11-16 13:25:41'),
+(58, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:26:04', '2023-11-16 13:26:04'),
+(59, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:26:26', '2023-11-16 13:26:26'),
+(60, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:32:48', '2023-11-16 13:32:48'),
+(61, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:34:56', '2023-11-16 13:34:56'),
+(62, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:35:29', '2023-11-16 13:35:29'),
+(63, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:35:51', '2023-11-16 13:35:51'),
+(64, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:35:57', '2023-11-16 13:35:57'),
+(65, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:36:10', '2023-11-16 13:36:10'),
+(66, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-16 13:48:55', '2023-11-16 13:48:55'),
+(67, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 05:18:44', '2023-11-17 05:18:44'),
+(68, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 05:49:12', '2023-11-17 05:49:12'),
+(69, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 05:53:15', '2023-11-17 05:53:15'),
+(70, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 05:54:44', '2023-11-17 05:54:44'),
+(71, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 05:56:47', '2023-11-17 05:56:47'),
+(72, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 05:57:04', '2023-11-17 05:57:04'),
+(73, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 06:09:14', '2023-11-17 06:09:14'),
+(74, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 06:29:06', '2023-11-17 06:29:06'),
+(75, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 06:30:02', '2023-11-17 06:30:02'),
+(76, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 07:02:23', '2023-11-17 07:02:23'),
+(77, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-17 07:05:29', '2023-11-17 07:05:29'),
+(78, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-20 11:52:58', '2023-11-20 11:52:58'),
+(79, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-28 06:14:07', '2023-11-28 06:14:07'),
+(80, 'john-win', 1, '0.00', '1', 1, '1', 1, '2023-11-28 14:25:26', '2023-11-28 14:25:26'),
+(81, 'john-win', 1, '0.00', '1', 1, '1', 1, '2023-11-28 14:27:54', '2023-11-28 14:27:54'),
+(82, 'john-win', 1, '0.00', '1', 1, '1', 1, '2023-11-28 14:29:25', '2023-11-28 14:29:25'),
+(83, 'john-win', 1, '0.00', '1', 1, '1', 1, '2023-11-28 14:31:00', '2023-11-28 14:31:00'),
+(84, 'xekegak-doe', 1, '0.00', '1', 1, '1', 1, '2023-11-28 14:33:24', '2023-11-28 14:33:24'),
+(85, 'vepapec-doe', 1, '0.00', '1', 1, '1', 1, '2023-11-28 14:40:52', '2023-11-28 14:40:52'),
+(86, 'vepapec-doe', 1, '0.00', '1', 1, '1', 1, '2023-11-28 14:42:11', '2023-11-28 14:42:11'),
+(87, 'heheha-doe', 1, '0.00', '1', 1, '1', 1, '2023-11-29 06:01:48', '2023-11-29 06:01:48'),
+(88, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-29 06:42:54', '2023-11-29 06:42:54'),
+(89, 'pahohem-doe', 1, '0.00', '1', 1, '1', 1, '2023-11-30 08:50:40', '2023-11-30 08:50:40'),
+(90, NULL, 1, '0.00', '1', 1, '1', 1, '2023-11-30 12:31:59', '2023-11-30 12:31:59'),
+(91, 'wegiyit-doe', 1, '0.00', '1', 1, '1', 1, '2023-11-30 13:46:18', '2023-11-30 13:46:18'),
+(92, NULL, 1, '0.00', '1', 1, '1', 1, '2023-12-01 07:46:08', '2023-12-01 07:46:08'),
+(93, 'manap-doe', 1, '0.00', '1', 1, '1', 1, '2023-12-01 08:17:43', '2023-12-01 08:17:43'),
+(94, NULL, 1, '0.00', '1', 1, '1', 1, '2023-12-01 11:11:35', '2023-12-01 11:11:35'),
+(95, NULL, 1, '0.00', '1', 1, '1', 1, '2023-12-01 11:53:44', '2023-12-01 11:53:44'),
+(96, NULL, 1, '0.00', '1', 1, '1', 1, '2023-12-01 12:00:59', '2023-12-01 12:00:59'),
+(97, 'lewiyof-doe', 1, '0.00', '1', 1, '1', 1, '2023-12-01 12:18:03', '2023-12-01 12:18:03'),
+(98, NULL, 1, '0.00', '1', 1, '1', 1, '2023-12-01 13:10:39', '2023-12-01 13:10:39'),
+(99, 'tefote-doe', 1, '0.00', '1', 1, '1', 1, '2023-12-05 07:20:17', '2023-12-05 07:20:17');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `banks`
+--
+
+CREATE TABLE `banks` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `bank_name` varchar(191) NOT NULL,
+  `bank_code` varchar(191) DEFAULT NULL,
+  `recipient_name` varchar(191) DEFAULT NULL,
+  `account_number` bigint(20) UNSIGNED DEFAULT NULL,
+  `mobile_agent_name` varchar(191) DEFAULT NULL,
+  `mobile_agent_number` int(10) UNSIGNED DEFAULT NULL,
+  `paypal_id` varchar(191) DEFAULT NULL,
+  `upi_id` varchar(191) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `banners`
+--
+
+CREATE TABLE `banners` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(191) DEFAULT NULL,
+  `short_description` text DEFAULT NULL,
+  `link` varchar(191) DEFAULT NULL,
+  `sort` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `best_selling_category`
+--
+
+CREATE TABLE `best_selling_category` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `category_id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `counter` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `depth` int(10) UNSIGNED NOT NULL,
+  `left` int(10) UNSIGNED NOT NULL,
+  `right` int(10) UNSIGNED NOT NULL,
+  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `requested` tinyint(3) UNSIGNED NOT NULL DEFAULT 5,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `name`, `slug`, `description`, `depth`, `left`, `right`, `parent_id`, `status`, `requested`, `creator_type`, `creator_id`, `editor_type`, `editor_id`, `created_at`, `updated_at`) VALUES
+(1, 'Eli D\'Amore', 'laboriosam-ab-quo-laudantium-praesentium-eum-aut', 'Accusantium et quidem modi qui ullam fuga. Sint enim eum qui et quo.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(2, 'Ernie Schneider', 'magnam-rerum-autem-nihil-animi-alias', 'Eligendi dignissimos labore fuga. Id numquam repellat eum. Ut eum non unde ex est quo.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(3, 'Mr. Scottie Hackett', 'id-rerum-officia-rerum-explicabo-quia', 'Suscipit ab sit excepturi qui et alias minima. Beatae deserunt numquam quos unde ut adipisci animi.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(4, 'Gino O\'Keefe', 'praesentium-ipsam-aut-doloribus-voluptas-aperiam-quod-nihil', 'Minus consequatur possimus cum cum. Et sit qui quaerat. Earum dolore laudantium voluptatem.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(5, 'Elliott Witting', 'qui-exercitationem-aut-ullam-dolorum-consequuntur', 'Ullam et dolore voluptatem. Fugit et animi adipisci dolor possimus nulla.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(6, 'Nora Durgan II', 'illum-odit-possimus-aperiam-sit-ipsa-quae-praesentium', 'Laboriosam temporibus placeat porro maxime. Voluptatem praesentium ut maxime sit et omnis.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(7, 'Macey Dare', 'voluptate-ab-dignissimos-aut-maiores', 'Quam rerum illum et quia. Enim voluptates ut dolor sit voluptatibus saepe.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(8, 'Dominic Hackett', 'exercitationem-veniam-recusandae-blanditiis-blanditiis-sit-est-ut', 'Perspiciatis et unde odio. Illum et architecto molestiae qui nam iste maiores.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(9, 'Lane O\'Hara V', 'veniam-ducimus-quis-et-placeat-molestiae-expedita-ut', 'Aut reprehenderit quis ad qui enim. Et sit cum incidunt molestiae eos voluptatem at.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44'),
+(10, 'Santa Franecki I', 'itaque-odio-occaecati-ut-perspiciatis-ducimus-sint-illo', 'Sequi consectetur est doloremque. Amet tenetur repellendus deleniti.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:44', '2023-11-09 06:24:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category_menu_items`
+--
+
+CREATE TABLE `category_menu_items` (
+  `category_id` bigint(20) UNSIGNED NOT NULL,
+  `menu_item_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `collection`
+--
+
+CREATE TABLE `collection` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `delivery_charge` decimal(13,2) DEFAULT NULL,
+  `amount` decimal(13,2) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `discount_type` int(10) UNSIGNED NOT NULL,
+  `coupon_type` int(10) UNSIGNED NOT NULL,
+  `restaurant_id` int(10) UNSIGNED NOT NULL,
+  `limit` int(10) UNSIGNED NOT NULL,
+  `user_limit` int(10) UNSIGNED DEFAULT NULL,
+  `amount` decimal(13,2) NOT NULL,
+  `minimum_order_amount` decimal(13,2) DEFAULT NULL,
+  `from_date` datetime NOT NULL,
+  `to_date` datetime NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cuisines`
+--
+
+CREATE TABLE `cuisines` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `depth` int(10) UNSIGNED NOT NULL,
+  `left` int(10) UNSIGNED NOT NULL,
+  `right` int(10) UNSIGNED NOT NULL,
+  `parent_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `requested` tinyint(3) UNSIGNED NOT NULL DEFAULT 5,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cuisines`
+--
+
+INSERT INTO `cuisines` (`id`, `name`, `slug`, `description`, `depth`, `left`, `right`, `parent_id`, `status`, `requested`, `creator_type`, `creator_id`, `editor_type`, `editor_id`, `created_at`, `updated_at`) VALUES
+(1, 'Pearlie Stoltenberg', 'adipisci-aspernatur-assumenda-quam', 'Ad ea tempore atque animi. Ipsa soluta voluptatum itaque quis. Et aut atque ut rerum ipsam.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:58', '2023-11-09 06:24:58'),
+(2, 'Destini Harris', 'iste-itaque-temporibus-voluptas', 'Excepturi in sequi quis voluptatem perspiciatis saepe. Aut ut corrupti in.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:58', '2023-11-09 06:24:58'),
+(3, 'Dawn Cole', 'ad-eum-porro-minus', 'Doloremque commodi debitis laboriosam repellat. Et unde et maiores. Omnis sed et est.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59'),
+(4, 'Eldridge Toy', 'voluptatem-iure-excepturi-et-quam-reprehenderit-quia', 'Quisquam modi deserunt corrupti vel hic et. Ratione tempora est nisi cupiditate exercitationem.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59'),
+(5, 'Price Doyle', 'id-qui-nulla-officia-inventore-aut-quasi-consequuntur', 'Qui voluptatem id similique at vitae neque officiis ea. Odio ad illum voluptas sed quae distinctio.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59'),
+(6, 'Alfred Breitenberg', 'error-ea-quo-corrupti-repellat-doloremque-facilis-recusandae', 'Ullam culpa corporis possimus asperiores. Ratione consequatur neque aut laudantium.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59'),
+(7, 'Pete Schmitt', 'ratione-ut-aperiam-rerum-odit', 'Illum eum ea incidunt omnis. Aut sit sit maiores ut sit.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59'),
+(8, 'Mr. Ari Schumm', 'delectus-et-quo-necessitatibus-temporibus-ea-veniam-voluptas', 'Animi maiores molestias et. Eligendi quisquam repellendus quo hic.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59'),
+(9, 'Vida Schulist III', 'possimus-ut-distinctio-corporis-sint-deleniti-sed', 'Voluptates ut est velit. Perspiciatis recusandae velit laboriosam nesciunt unde distinctio.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59'),
+(10, 'Emma Kuphal', 'similique-voluptate-quia-incidunt-ad-quasi', 'Voluptatum adipisci ut voluptatem repellendus. Fugiat praesentium fuga eos quae sunt.', 1, 2, 3, NULL, 5, 5, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:24:59', '2023-11-09 06:24:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `delivery_boy_accounts`
+--
+
+CREATE TABLE `delivery_boy_accounts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `delivery_charge` decimal(13,2) NOT NULL,
+  `balance` decimal(13,2) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `delivery_status_histories`
+--
+
+CREATE TABLE `delivery_status_histories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `discounts`
+--
+
+CREATE TABLE `discounts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `coupon_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `amount` decimal(13,2) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` varchar(191) NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `footer_menu_sections`
+--
+
+CREATE TABLE `footer_menu_sections` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `footer_menu_sections`
+--
+
+INSERT INTO `footer_menu_sections` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'About', NULL, NULL),
+(2, 'Services', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gateways`
+--
+
+CREATE TABLE `gateways` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `invoices`
+--
+
+CREATE TABLE `invoices` (
+  `id` char(36) NOT NULL,
+  `meta` text DEFAULT NULL,
+  `remarks` varchar(191) DEFAULT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `queue` varchar(191) NOT NULL,
+  `payload` longtext NOT NULL,
+  `attempts` tinyint(3) UNSIGNED NOT NULL,
+  `reserved_at` int(10) UNSIGNED DEFAULT NULL,
+  `available_at` int(10) UNSIGNED NOT NULL,
+  `created_at` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `languages`
+--
+
+CREATE TABLE `languages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `code` varchar(191) NOT NULL,
+  `flag_icon` varchar(191) DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `languages`
+--
+
+INSERT INTO `languages` (`id`, `name`, `code`, `flag_icon`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'English', 'en', '🇬🇧', 5, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ledgers`
+--
+
+CREATE TABLE `ledgers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `balance_id` bigint(20) UNSIGNED NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT 1,
+  `amount` decimal(13,2) NOT NULL,
+  `balance` decimal(13,2) NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ltm_translations`
+--
+
+CREATE TABLE `ltm_translations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 0,
+  `locale` varchar(191) NOT NULL,
+  `group` varchar(191) NOT NULL,
+  `key` text NOT NULL,
+  `value` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `media`
+--
+
+CREATE TABLE `media` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) DEFAULT NULL,
+  `collection_name` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `file_name` varchar(191) NOT NULL,
+  `mime_type` varchar(191) DEFAULT NULL,
+  `disk` varchar(191) NOT NULL,
+  `conversions_disk` varchar(191) DEFAULT NULL,
+  `size` bigint(20) UNSIGNED NOT NULL,
+  `manipulations` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `custom_properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `generated_conversions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `responsive_images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `order_column` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_items`
+--
+
+CREATE TABLE `menu_items` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `cuisine_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `name` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `unit_price` decimal(13,2) DEFAULT NULL,
+  `discount_price` decimal(13,2) NOT NULL DEFAULT 0.00,
+  `counter` double NOT NULL DEFAULT 0,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `tags` longtext DEFAULT NULL,
+  `order` int(10) UNSIGNED NOT NULL DEFAULT 1,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `menu_number` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `menu_items`
+--
+
+INSERT INTO `menu_items` (`id`, `restaurant_id`, `cuisine_id`, `name`, `slug`, `description`, `unit_price`, `discount_price`, `counter`, `status`, `tags`, `order`, `creator_type`, `creator_id`, `editor_type`, `editor_id`, `created_at`, `updated_at`, `menu_number`) VALUES
+(1, 1, NULL, 'Koelpin, Hagenes and Turcotte', 'koelpin-hagenes-and-turcotte', 'Asperiores adipisci culpa qui deleniti. Facilis saepe iste quo.', '20.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(2, 1, NULL, 'Haley-Osinski', 'haley-osinski', 'Aspernatur quibusdam repellat error iure. Adipisci commodi aspernatur nihil placeat.', '54.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 5, 'App\\Models\\User', 3, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(3, 1, NULL, 'Beier, Koss and Schulist', 'beier-koss-and-schulist', 'Optio quis accusamus dolores quia. Sint molestiae hic qui id aut.', '58.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 1, 'App\\Models\\User', 3, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(4, 1, NULL, 'Keebler-Abshire', 'keebler-abshire', 'Et quo voluptatem architecto sint vero. Reiciendis et est et libero laborum ea.', '13.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 3, 'App\\Models\\User', 2, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(5, 1, NULL, 'Walter, Marquardt and Hickle', 'walter-marquardt-and-hickle', 'In nesciunt ea ratione ea. Ut autem repellat tempora odit at pariatur.', '27.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 3, 'App\\Models\\User', 1, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(6, 1, NULL, 'Gaylord-Marquardt', 'gaylord-marquardt', 'Aut non est ex eaque. Totam odio ut nihil quia maiores aspernatur. Quis eligendi ea nam ut.', '79.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 3, 'App\\Models\\User', 3, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(7, 1, NULL, 'Kris, Cummerata and Wolf', 'kris-cummerata-and-wolf', 'Ipsum ratione accusamus libero cumque perspiciatis atque. Cumque doloremque repellat quam minima.', '65.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 5, 'App\\Models\\User', 2, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(8, 1, NULL, 'Mueller and Sons', 'mueller-and-sons', 'Quidem ea minus soluta blanditiis tempore quos voluptas quae. Eum at et nam occaecati.', '96.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 3, 'App\\Models\\User', 5, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0),
+(9, 1, NULL, 'Lindgren-Konopelski', 'lindgren-konopelski', 'Ipsam accusantium itaque aliquid. Hic quasi est non. Vitae fuga ullam esse.', '81.00', '0.00', 0, 5, NULL, 1, 'App\\Models\\User', 4, 'App\\Models\\User', 4, '2023-11-09 06:25:26', '2023-11-09 06:25:26', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_item_options`
+--
+
+CREATE TABLE `menu_item_options` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `menu_item_id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `price` decimal(13,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_item_variations`
+--
+
+CREATE TABLE `menu_item_variations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `menu_item_id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `price` decimal(13,2) NOT NULL,
+  `discount_price` decimal(13,2) NOT NULL DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(191) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2014_04_02_193005_create_translations_table', 1),
+(2, '2014_10_12_000000_create_users_table', 1),
+(3, '2014_10_12_100000_create_password_resets_table', 1),
+(4, '2019_08_19_000000_create_failed_jobs_table', 1),
+(5, '2019_12_14_000001_create_personal_access_tokens_table', 1),
+(6, '2020_04_16_055437_create_categories_table', 1),
+(7, '2020_04_16_055951_create_restaurants_table', 1),
+(8, '2020_04_16_061409_create_menu_items_table', 1),
+(9, '2020_04_16_062121_create_category_menu_items_table', 1),
+(10, '2020_04_16_062315_create_orders_table', 1),
+(11, '2020_04_16_063024_create_order_line_items_table', 1),
+(12, '2020_04_16_063722_create_settings_table', 1),
+(13, '2020_04_16_070938_create_order_histories_table', 1),
+(14, '2020_04_16_113855_create_jobs_table', 1),
+(15, '2020_04_30_105431_create_gateways_table', 1),
+(16, '2020_05_03_074532_create_balances_table', 1),
+(17, '2020_05_03_074808_create_invoices_table', 1),
+(18, '2020_05_03_074929_create_ledgers_table', 1),
+(19, '2020_05_03_075008_create_transactions_table', 1),
+(20, '2020_05_07_111209_create_notifications_table', 1),
+(21, '2020_05_19_061437_create_delivery_status_histories_table', 1),
+(22, '2020_07_07_141444_create_menu_item_variations_table', 1),
+(23, '2020_07_07_142259_create_menu_item_options_table', 1),
+(24, '2020_07_14_221338_create_sliders_table', 1),
+(25, '2020_07_16_114819_create_otp_table', 1),
+(26, '2020_09_09_043116_create_permission_tables', 1),
+(27, '2020_09_10_080029_create_backend_menus_table', 1),
+(28, '2020_09_24_141335_create_banners_table', 1),
+(29, '2020_10_08_111835_create_user_deposits_table', 1),
+(30, '2020_10_08_140504_create_withdraws_table', 1),
+(31, '2020_10_11_145937_create_collection_payments_table', 1),
+(32, '2020_10_12_110558_create_best_selling_category_table', 1),
+(33, '2020_10_12_122641_create_delivery_boy_accounts_table', 1),
+(34, '2020_10_12_155325_create_request_withdraw_table', 1),
+(35, '2020_10_15_071733_create_restaurant_ratings_table', 1),
+(36, '2020_10_20_171007_create_footer_menu_sections', 1),
+(37, '2020_10_20_171044_create_pages', 1),
+(38, '2020_11_16_115104_create_discounts_table', 1),
+(39, '2020_11_16_115104_create_templates_table', 1),
+(40, '2021_01_03_162509_create_qr_codes_table', 1),
+(41, '2021_02_04_150801_create_tables_table', 1),
+(42, '2021_02_04_151350_create_time_slots_table', 1),
+(43, '2021_03_07_162908_create_addresses_table', 1),
+(44, '2021_04_10_183151_create_cuisines_table', 1),
+(45, '2021_04_11_110236_create_restaurant_cuisines_table', 1),
+(46, '2021_04_11_175528_add_cuisine_id_to_menu_items_table', 1),
+(47, '2021_04_18_183151_create_addons_table', 1),
+(48, '2021_04_18_183151_create_reservations_table', 1),
+(49, '2022_01_01_133631_add_waiter_status_field_to_restaurants', 1),
+(50, '2022_01_02_131938_add_menu_number_field_to_menu_items_table', 1),
+(51, '2022_01_24_135409_create_banks_table', 1),
+(52, '2022_01_25_130122_add_payment_method_to_withdraws', 1),
+(53, '2022_02_13_121315_create_languages_table', 1),
+(54, '2022_02_15_122629_create_push_notifications_table', 1),
+(55, '2022_03_02_174656_add_provider_to_users', 1),
+(56, '2022_03_02_174657_update_settings_add_envato_key', 1),
+(57, '2022_03_02_174658_update_settings_add_support_key', 1),
+(58, '2022_05_17_155917_create_reports_table', 1),
+(59, '2022_05_26_155053_add_web_token_to_users', 1),
+(60, '2022_10_13_125844_create_coupons_table', 1),
+(61, '2022_10_24_051740_create_media_table', 1),
+(62, '2023_10_19_133527_add_delivery_charge_in_restaurants_table', 2),
+(63, '2023_11_01_175647_add_signup_column_to_users', 2),
+(64, '2023_11_28_115921_add_signupform_colum_to_users', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `model_has_permissions`
+--
+
+CREATE TABLE `model_has_permissions` (
+  `permission_id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `model_has_permissions`
+--
+
+INSERT INTO `model_has_permissions` (`permission_id`, `model_type`, `model_id`) VALUES
+(1, 'App\\Models\\User', 1),
+(2, 'App\\Models\\User', 1),
+(3, 'App\\Models\\User', 1),
+(4, 'App\\Models\\User', 1),
+(5, 'App\\Models\\User', 1),
+(6, 'App\\Models\\User', 1),
+(7, 'App\\Models\\User', 1),
+(8, 'App\\Models\\User', 1),
+(9, 'App\\Models\\User', 1),
+(10, 'App\\Models\\User', 1),
+(11, 'App\\Models\\User', 1),
+(12, 'App\\Models\\User', 1),
+(13, 'App\\Models\\User', 1),
+(14, 'App\\Models\\User', 1),
+(15, 'App\\Models\\User', 1),
+(16, 'App\\Models\\User', 1),
+(17, 'App\\Models\\User', 1),
+(18, 'App\\Models\\User', 1),
+(19, 'App\\Models\\User', 1),
+(20, 'App\\Models\\User', 1),
+(21, 'App\\Models\\User', 1),
+(22, 'App\\Models\\User', 1),
+(23, 'App\\Models\\User', 1),
+(24, 'App\\Models\\User', 1),
+(25, 'App\\Models\\User', 1),
+(26, 'App\\Models\\User', 1),
+(27, 'App\\Models\\User', 1),
+(28, 'App\\Models\\User', 1),
+(29, 'App\\Models\\User', 1),
+(30, 'App\\Models\\User', 1),
+(32, 'App\\Models\\User', 1),
+(33, 'App\\Models\\User', 1),
+(34, 'App\\Models\\User', 1),
+(35, 'App\\Models\\User', 1),
+(36, 'App\\Models\\User', 1),
+(38, 'App\\Models\\User', 1),
+(39, 'App\\Models\\User', 1),
+(40, 'App\\Models\\User', 1),
+(41, 'App\\Models\\User', 1),
+(42, 'App\\Models\\User', 1),
+(43, 'App\\Models\\User', 1),
+(45, 'App\\Models\\User', 1),
+(46, 'App\\Models\\User', 1),
+(47, 'App\\Models\\User', 1),
+(48, 'App\\Models\\User', 1),
+(49, 'App\\Models\\User', 1),
+(50, 'App\\Models\\User', 1),
+(51, 'App\\Models\\User', 1),
+(52, 'App\\Models\\User', 1),
+(53, 'App\\Models\\User', 1),
+(54, 'App\\Models\\User', 1),
+(55, 'App\\Models\\User', 1),
+(56, 'App\\Models\\User', 1),
+(57, 'App\\Models\\User', 1),
+(58, 'App\\Models\\User', 1),
+(59, 'App\\Models\\User', 1),
+(60, 'App\\Models\\User', 1),
+(61, 'App\\Models\\User', 1),
+(62, 'App\\Models\\User', 1),
+(63, 'App\\Models\\User', 1),
+(64, 'App\\Models\\User', 1),
+(65, 'App\\Models\\User', 1),
+(66, 'App\\Models\\User', 1),
+(67, 'App\\Models\\User', 1),
+(68, 'App\\Models\\User', 1),
+(69, 'App\\Models\\User', 1),
+(70, 'App\\Models\\User', 1),
+(71, 'App\\Models\\User', 1),
+(72, 'App\\Models\\User', 1),
+(73, 'App\\Models\\User', 1),
+(74, 'App\\Models\\User', 1),
+(75, 'App\\Models\\User', 1),
+(76, 'App\\Models\\User', 1),
+(77, 'App\\Models\\User', 1),
+(78, 'App\\Models\\User', 1),
+(79, 'App\\Models\\User', 1),
+(80, 'App\\Models\\User', 1),
+(81, 'App\\Models\\User', 1),
+(82, 'App\\Models\\User', 1),
+(83, 'App\\Models\\User', 1),
+(84, 'App\\Models\\User', 1),
+(85, 'App\\Models\\User', 1),
+(86, 'App\\Models\\User', 1),
+(87, 'App\\Models\\User', 1),
+(88, 'App\\Models\\User', 1),
+(89, 'App\\Models\\User', 1),
+(90, 'App\\Models\\User', 1),
+(91, 'App\\Models\\User', 1),
+(92, 'App\\Models\\User', 1),
+(93, 'App\\Models\\User', 1),
+(94, 'App\\Models\\User', 1),
+(95, 'App\\Models\\User', 1),
+(96, 'App\\Models\\User', 1),
+(97, 'App\\Models\\User', 1),
+(98, 'App\\Models\\User', 1),
+(99, 'App\\Models\\User', 1),
+(100, 'App\\Models\\User', 1),
+(101, 'App\\Models\\User', 1),
+(102, 'App\\Models\\User', 1),
+(103, 'App\\Models\\User', 1),
+(104, 'App\\Models\\User', 1),
+(105, 'App\\Models\\User', 1),
+(106, 'App\\Models\\User', 1),
+(107, 'App\\Models\\User', 1),
+(108, 'App\\Models\\User', 1),
+(109, 'App\\Models\\User', 1),
+(110, 'App\\Models\\User', 1),
+(111, 'App\\Models\\User', 1),
+(112, 'App\\Models\\User', 1),
+(113, 'App\\Models\\User', 1),
+(114, 'App\\Models\\User', 1),
+(115, 'App\\Models\\User', 1),
+(116, 'App\\Models\\User', 1),
+(117, 'App\\Models\\User', 1),
+(118, 'App\\Models\\User', 1),
+(119, 'App\\Models\\User', 1),
+(120, 'App\\Models\\User', 1),
+(121, 'App\\Models\\User', 1),
+(122, 'App\\Models\\User', 1),
+(123, 'App\\Models\\User', 1),
+(124, 'App\\Models\\User', 1),
+(125, 'App\\Models\\User', 1),
+(126, 'App\\Models\\User', 1),
+(127, 'App\\Models\\User', 1),
+(128, 'App\\Models\\User', 1),
+(129, 'App\\Models\\User', 1),
+(130, 'App\\Models\\User', 1),
+(131, 'App\\Models\\User', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `model_has_roles`
+--
+
+CREATE TABLE `model_has_roles` (
+  `role_id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(191) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `model_has_roles`
+--
+
+INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
+(1, 'App\\Models\\User', 1),
+(2, 'App\\Models\\User', 2),
+(2, 'App\\Models\\User', 4),
+(3, 'App\\Models\\User', 3),
+(3, 'App\\Models\\User', 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` char(36) NOT NULL,
+  `type` varchar(191) NOT NULL,
+  `notifiable_type` varchar(191) NOT NULL,
+  `notifiable_id` bigint(20) UNSIGNED NOT NULL,
+  `data` text NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `total` decimal(13,2) NOT NULL,
+  `sub_total` decimal(13,2) NOT NULL,
+  `delivery_charge` decimal(13,2) NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `platform` tinyint(3) UNSIGNED DEFAULT NULL,
+  `order_type` tinyint(3) UNSIGNED NOT NULL DEFAULT 1,
+  `device_id` varchar(191) DEFAULT NULL,
+  `ip` varchar(191) DEFAULT NULL,
+  `payment_status` tinyint(3) UNSIGNED NOT NULL,
+  `paid_amount` decimal(13,2) NOT NULL,
+  `address` longtext NOT NULL,
+  `mobile` varchar(191) NOT NULL,
+  `lat` varchar(191) NOT NULL,
+  `long` varchar(191) NOT NULL,
+  `misc` longtext DEFAULT NULL,
+  `invoice_id` char(36) DEFAULT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `delivery_boy_id` bigint(20) DEFAULT NULL,
+  `product_received` tinyint(4) NOT NULL DEFAULT 10,
+  `payment_method` tinyint(3) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_histories`
+--
+
+CREATE TABLE `order_histories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `previous_status` int(10) UNSIGNED DEFAULT NULL,
+  `current_status` int(10) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_line_items`
+--
+
+CREATE TABLE `order_line_items` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `menu_item_id` bigint(20) UNSIGNED NOT NULL,
+  `quantity` int(10) UNSIGNED NOT NULL,
+  `unit_price` decimal(13,2) NOT NULL,
+  `discounted_price` decimal(13,2) NOT NULL DEFAULT 0.00,
+  `item_total` decimal(13,2) NOT NULL,
+  `menu_item_variation_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `options` longtext DEFAULT NULL,
+  `instructions` longtext DEFAULT NULL,
+  `options_total` double UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `otp`
+--
+
+CREATE TABLE `otp` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `phone` varchar(191) DEFAULT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `code` varchar(191) NOT NULL,
+  `expire_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pages`
+--
+
+CREATE TABLE `pages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `description` longtext NOT NULL,
+  `footer_menu_section_id` bigint(20) UNSIGNED NOT NULL,
+  `template_id` bigint(20) UNSIGNED NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT 5,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `pages`
+--
+
+INSERT INTO `pages` (`id`, `title`, `slug`, `description`, `footer_menu_section_id`, `template_id`, `status`, `creator_type`, `creator_id`, `editor_type`, `editor_id`, `created_at`, `updated_at`) VALUES
+(1, 'Terms & Conditions', 'terms-and-condition', 'Terms Conditions Description', 1, 1, 5, 'Database\\Seeders\\User', 1, 'Database\\Seeders\\User', 1, NULL, NULL),
+(2, 'Privacy', 'privacy', 'Privacy Description', 2, 2, 5, 'Database\\Seeders\\User', 1, 'Database\\Seeders\\User', 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `email` varchar(191) NOT NULL,
+  `token` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `permissions`
+--
+
+CREATE TABLE `permissions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `guard_name` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `permissions`
+--
+
+INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
+(1, 'dashboard', 'web', NULL, NULL),
+(2, 'category', 'web', NULL, NULL),
+(3, 'category_create', 'web', NULL, NULL),
+(4, 'category_edit', 'web', NULL, NULL),
+(5, 'category_delete', 'web', NULL, NULL),
+(6, 'coupon', 'web', NULL, NULL),
+(7, 'coupon_create', 'web', NULL, NULL),
+(8, 'coupon_edit', 'web', NULL, NULL),
+(9, 'coupon_show', 'web', NULL, NULL),
+(10, 'coupon_delete', 'web', NULL, NULL),
+(11, 'cuisine', 'web', NULL, NULL),
+(12, 'cuisine_create', 'web', NULL, NULL),
+(13, 'cuisine_edit', 'web', NULL, NULL),
+(14, 'cuisine_delete', 'web', NULL, NULL),
+(15, 'menu-items', 'web', NULL, NULL),
+(16, 'menu-items_create', 'web', NULL, NULL),
+(17, 'menu-items_edit', 'web', NULL, NULL),
+(18, 'menu-items_delete', 'web', NULL, NULL),
+(19, 'menu-items_show', 'web', NULL, NULL),
+(20, 'reservation', 'web', NULL, NULL),
+(21, 'reservation_create', 'web', NULL, NULL),
+(22, 'reservation_edit', 'web', NULL, NULL),
+(23, 'reservation_show', 'web', NULL, NULL),
+(24, 'reservation_delete', 'web', NULL, NULL),
+(25, 'orders', 'web', NULL, NULL),
+(26, 'orders_create', 'web', NULL, NULL),
+(27, 'orders_edit', 'web', NULL, NULL),
+(28, 'orders_delete', 'web', NULL, NULL),
+(29, 'orders_show', 'web', NULL, NULL),
+(30, 'rating', 'web', NULL, NULL),
+(31, 'order-notification', 'web', NULL, NULL),
+(32, 'request-products', 'web', NULL, NULL),
+(33, 'request-products_create', 'web', NULL, NULL),
+(34, 'request-products_edit', 'web', NULL, NULL),
+(35, 'request-products_delete', 'web', NULL, NULL),
+(36, 'request-products_show', 'web', NULL, NULL),
+(37, 'live-orders', 'web', NULL, NULL),
+(38, 'complaints', 'web', NULL, NULL),
+(39, 'restaurants', 'web', NULL, NULL),
+(40, 'restaurants_create', 'web', NULL, NULL),
+(41, 'restaurants_edit', 'web', NULL, NULL),
+(42, 'restaurants_delete', 'web', NULL, NULL),
+(43, 'restaurants_show', 'web', NULL, NULL),
+(44, 'qr-code', 'web', NULL, NULL),
+(45, 'transaction', 'web', NULL, NULL),
+(46, 'customers', 'web', NULL, NULL),
+(47, 'customers_create', 'web', NULL, NULL),
+(48, 'customers_edit', 'web', NULL, NULL),
+(49, 'customers_delete', 'web', NULL, NULL),
+(50, 'customers_show', 'web', NULL, NULL),
+(51, 'restaurant-owners', 'web', NULL, NULL),
+(52, 'restaurant-owners_create', 'web', NULL, NULL),
+(53, 'restaurant-owners_edit', 'web', NULL, NULL),
+(54, 'restaurant-owners_delete', 'web', NULL, NULL),
+(55, 'restaurant-owners_show', 'web', NULL, NULL),
+(56, 'restaurant-owner-sales-report', 'web', NULL, NULL),
+(57, 'admin-commission-report', 'web', NULL, NULL),
+(58, 'credit-balance-report', 'web', NULL, NULL),
+(59, 'cash-on-delivery-order-balance-report', 'web', NULL, NULL),
+(60, 'customer-report', 'web', NULL, NULL),
+(61, 'withdraw-report', 'web', NULL, NULL),
+(62, 'delivery-boy-collection-report', 'web', NULL, NULL),
+(63, 'reservation-report', 'web', NULL, NULL),
+(64, 'banner', 'web', NULL, NULL),
+(65, 'banner_create', 'web', NULL, NULL),
+(66, 'banner_edit', 'web', NULL, NULL),
+(67, 'banner_delete', 'web', NULL, NULL),
+(68, 'page', 'web', NULL, NULL),
+(69, 'page_create', 'web', NULL, NULL),
+(70, 'page_edit', 'web', NULL, NULL),
+(71, 'page_delete', 'web', NULL, NULL),
+(72, 'setting', 'web', NULL, NULL),
+(73, 'collection', 'web', NULL, NULL),
+(74, 'collection_create', 'web', NULL, NULL),
+(75, 'collection_delete', 'web', NULL, NULL),
+(76, 'withdraw', 'web', NULL, NULL),
+(77, 'withdraw_create', 'web', NULL, NULL),
+(78, 'role', 'web', NULL, NULL),
+(79, 'role_create', 'web', NULL, NULL),
+(80, 'role_edit', 'web', NULL, NULL),
+(81, 'role_delete', 'web', NULL, NULL),
+(82, 'role_show', 'web', NULL, NULL),
+(83, 'rating', 'web', NULL, NULL),
+(84, 'time-slots', 'web', NULL, NULL),
+(85, 'time-slots_create', 'web', NULL, NULL),
+(86, 'time-slots_edit', 'web', NULL, NULL),
+(87, 'time-slots_delete', 'web', NULL, NULL),
+(88, 'time-slots_show', 'web', NULL, NULL),
+(89, 'tables', 'web', NULL, NULL),
+(90, 'tables_create', 'web', NULL, NULL),
+(91, 'tables_edit', 'web', NULL, NULL),
+(92, 'tables_delete', 'web', NULL, NULL),
+(93, 'tables_show', 'web', NULL, NULL),
+(94, 'request-withdraw', 'web', NULL, NULL),
+(95, 'request-withdraw_create', 'web', NULL, NULL),
+(96, 'request-withdraw_edit', 'web', NULL, NULL),
+(97, 'request-withdraw_delete', 'web', NULL, NULL),
+(98, 'withdraw', 'web', NULL, NULL),
+(99, 'withdraw_create', 'web', NULL, NULL),
+(100, 'withdraw_delete', 'web', NULL, NULL),
+(101, 'administrators', 'web', NULL, NULL),
+(102, 'administrators_create', 'web', NULL, NULL),
+(103, 'administrators_edit', 'web', NULL, NULL),
+(104, 'administrators_delete', 'web', NULL, NULL),
+(105, 'administrators_show', 'web', NULL, NULL),
+(106, 'delivery-boys', 'web', NULL, NULL),
+(107, 'delivery-boys_create', 'web', NULL, NULL),
+(108, 'delivery-boys_edit', 'web', NULL, NULL),
+(109, 'delivery-boys_delete', 'web', NULL, NULL),
+(110, 'delivery-boys_show', 'web', NULL, NULL),
+(111, 'addons', 'web', NULL, NULL),
+(112, 'addons_create', 'web', NULL, NULL),
+(113, 'addons_delete', 'web', NULL, NULL),
+(114, 'bank', 'web', NULL, NULL),
+(115, 'bank_create', 'web', NULL, NULL),
+(116, 'bank_edit', 'web', NULL, NULL),
+(117, 'bank_show', 'web', NULL, NULL),
+(118, 'bank_delete', 'web', NULL, NULL),
+(119, 'language', 'web', NULL, NULL),
+(120, 'language_create', 'web', NULL, NULL),
+(121, 'language_edit', 'web', NULL, NULL),
+(122, 'language_delete', 'web', NULL, NULL),
+(123, 'push-notification', 'web', NULL, NULL),
+(124, 'push-notification_create', 'web', NULL, NULL),
+(125, 'push-notification_delete', 'web', NULL, NULL),
+(126, 'update', 'web', NULL, NULL),
+(127, 'user', 'web', NULL, NULL),
+(128, 'user_create', 'web', NULL, NULL),
+(129, 'user_edit', 'web', NULL, NULL),
+(130, 'user_delete', 'web', NULL, NULL),
+(131, 'user_show', 'web', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `personal_access_tokens`
+--
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `tokenable_type` varchar(191) NOT NULL,
+  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `push_notifications`
+--
+
+CREATE TABLE `push_notifications` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(191) NOT NULL,
+  `description` longtext NOT NULL,
+  `customer_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `restaurant_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `type` tinyint(4) DEFAULT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `qr_codes`
+--
+
+CREATE TABLE `qr_codes` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `style` varchar(15) DEFAULT 'square',
+  `eye_style` varchar(15) DEFAULT 'square',
+  `color` varchar(191) DEFAULT '0,0,0',
+  `background_color` varchar(191) DEFAULT '255,255,255',
+  `mode` varchar(191) DEFAULT NULL,
+  `qrcode_text` varchar(191) DEFAULT NULL,
+  `qrcode_logo` longtext DEFAULT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `qr_codes`
+--
+
+INSERT INTO `qr_codes` (`id`, `restaurant_id`, `style`, `eye_style`, `color`, `background_color`, `mode`, `qrcode_text`, `qrcode_logo`, `creator_type`, `creator_id`, `editor_type`, `editor_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(2, 2, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(3, 3, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(4, 4, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(5, 5, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(6, 6, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(7, 7, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(8, 8, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(9, 9, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29'),
+(10, 10, 'square', 'square', '0,0,0', '255,255,255', NULL, NULL, NULL, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reports`
+--
+
+CREATE TABLE `reports` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `request_withdraw`
+--
+
+CREATE TABLE `request_withdraw` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `amount` double NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `date` datetime NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reservations`
+--
+
+CREATE TABLE `reservations` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `first_name` varchar(191) NOT NULL,
+  `last_name` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `ip_address` varchar(191) DEFAULT NULL,
+  `reservation_date` date NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `time_slot_id` bigint(20) UNSIGNED NOT NULL,
+  `table_id` bigint(20) UNSIGNED NOT NULL,
+  `guest_number` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `waiter_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `user_agent` varchar(191) DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED DEFAULT NULL,
+  `notes` longtext DEFAULT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurants`
+--
+
+CREATE TABLE `restaurants` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `lat` varchar(191) DEFAULT NULL,
+  `long` varchar(191) DEFAULT NULL,
+  `opening_time` time DEFAULT NULL,
+  `closing_time` time DEFAULT NULL,
+  `address` longtext DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `current_status` tinyint(3) UNSIGNED NOT NULL,
+  `delivery_status` tinyint(3) UNSIGNED NOT NULL,
+  `delivery_charge` varchar(191) DEFAULT NULL,
+  `pickup_status` tinyint(3) UNSIGNED NOT NULL,
+  `table_status` tinyint(3) UNSIGNED NOT NULL,
+  `applied` tinyint(1) DEFAULT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `waiter_status` tinyint(3) UNSIGNED NOT NULL,
+  `max_tables_count` int(11) NOT NULL DEFAULT 0,
+  `max_seats_count` int(11) NOT NULL DEFAULT 0,
+  `max_guests_count` int(11) NOT NULL DEFAULT 0,
+  `restaurant_image` text DEFAULT NULL,
+  `restaurant_type` int(11) NOT NULL COMMENT '1: veg 2: nonveg',
+  `restaurant_category` int(11) NOT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `contact_number` int(11) DEFAULT NULL,
+  `restaurant_event` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `restaurants`
+--
+
+INSERT INTO `restaurants` (`id`, `user_id`, `name`, `slug`, `description`, `lat`, `long`, `opening_time`, `closing_time`, `address`, `status`, `current_status`, `delivery_status`, `delivery_charge`, `pickup_status`, `table_status`, `applied`, `creator_type`, `creator_id`, `editor_type`, `editor_id`, `created_at`, `updated_at`, `waiter_status`, `max_tables_count`, `max_seats_count`, `max_guests_count`, `restaurant_image`, `restaurant_type`, `restaurant_category`, `contact_email`, `contact_number`, `restaurant_event`) VALUES
+(1, 5, 'Blanda and Sons', 'blanda-and-sons', 'Autem quia iste aut deleniti. Minima nihil aliquam ducimus. Et cum aperiam incidunt velit.', '-78.434006', '75.990784', '21:48:19', '17:01:05', '874 Adams Bypass\nWymanbury, SD 26863-9886', 5, 5, 5, '91', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(2, 5, 'Hermiston, Pfannerstill and Hodkiewicz', 'hermiston-pfannerstill-and-hodkiewicz', 'Perspiciatis id et labore. Rem omnis quo unde non.', '-17.181386', '117.866673', '17:15:18', '21:36:20', '24321 Wiza Mews Apt. 592\nHoweview, NY 58726', 5, 5, 5, '74', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(3, 3, 'Gutkowski, Ward and Collier', 'gutkowski-ward-and-collier', 'Voluptates voluptatem odio ut omnis ex. Suscipit rerum dignissimos voluptas.', '23.715846', '-112.818277', '00:17:08', '06:52:39', '393 Pink Route Suite 908\nVincenzomouth, CT 68423', 5, 5, 5, '75', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(4, 3, 'Harber-Hickle', 'harber-hickle', 'Eos minima rerum reprehenderit odio et placeat aut. Quia vel aut aut architecto quisquam ipsa quo.', '-80.384052', '-151.849137', '16:10:45', '01:29:22', '32053 Irwin Island Suite 035\nEmelymouth, VA 19772-1992', 5, 5, 5, '77', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(5, 5, 'Lang, Nienow and Deckow', 'lang-nienow-and-deckow', 'Commodi eaque omnis dolore deserunt. Quo sed quisquam illum modi natus.', '72.341234', '-169.637069', '07:29:25', '20:18:50', '143 Kathleen Trail\nCalibury, VT 26679', 5, 5, 5, '67', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(6, 5, 'Hartmann-Mann', 'hartmann-mann', 'Possimus nam quo ex quod quia officia vel earum. Nihil quia illum quibusdam praesentium error.', '-38.89939', '47.454937', '14:41:33', '00:09:26', '56723 Bailey Courts\nSchimmelton, UT 44592-4722', 5, 5, 5, '83', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(7, 3, 'Oberbrunner Group', 'oberbrunner-group', 'Ut eos asperiores aut fuga est minus. Molestiae et est rerum quaerat vel autem.', '-78.595617', '142.771901', '05:04:38', '18:15:40', '6722 Julie Grove Suite 276\nLake Dallasland, DE 89929', 5, 5, 5, '66', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(8, 3, 'Jacobson Ltd', 'jacobson-ltd', 'Expedita quia possimus omnis. Nisi explicabo et sit possimus. Explicabo earum vitae tenetur aut.', '32.624716', '75.361903', '13:30:56', '19:55:30', '59605 Lera Groves Apt. 932\nNew Alan, CA 29083-2108', 5, 5, 5, '20', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(9, 3, 'Wiza, Prosacco and Nader', 'wiza-prosacco-and-nader', 'Sit iste fugit cum harum. Corporis quasi libero cumque.', '85.767751', '-45.879631', '23:08:40', '22:24:14', '36430 Glen Avenue Suite 941\nHettiehaven, CT 36676', 5, 5, 5, '61', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(10, 3, 'Berge Ltd', 'berge-ltd', 'Vero hic est facere impedit. Fugit voluptatibus neque qui nulla consequuntur.', '41.906888', '-41.490884', '09:39:06', '18:42:50', '88513 Jaskolski Grove\nBrianview, NE 89908', 5, 5, 5, '41', 5, 5, 0, 'App\\Models\\User', 1, 'App\\Models\\User', 1, '2023-11-09 06:26:29', '2023-11-09 06:26:29', 5, 0, 0, 0, NULL, 0, 0, '', 0, ''),
+(11, 87, 'rest name', 'rest-name', 'restaurant description', '26.8834513', '75.75552789999999', '08:30:00', '21:15:00', 'Pandit TN Mishra Marg, Nirman Nagar, Ranisati Nagar, Jaipur, Rajasthan 302019', 1, 0, 0, NULL, 0, 0, NULL, '', 0, '', 0, '2023-11-29 10:29:09', '2023-11-29 10:29:09', 0, 20, 20, 20, 'restaurant_image_1701251949pexels-pixabay-221540.jpg', 0, 0, '', 0, ''),
+(12, 87, 'rest test name', 'rest-test-name', 'restaurant description', '26.8834513', '75.75552789999999', '09:00:00', '22:00:00', 'Pandit TN Mishra Marg, Nirman Nagar, Ranisati Nagar, Jaipur, Rajasthan 302019', 1, 0, 0, NULL, 0, 0, NULL, '', 0, '', 0, '2023-11-29 10:41:11', '2023-11-29 10:41:11', 0, 15, 15, 15, 'restaurant_image_1701252671pexels-pixabay-221540.jpg', 0, 0, '', 0, ''),
+(13, 89, 'pahohem restaurant', 'pahohem-restaurant', 'pahohem restaurant details', '26.8834513', '75.75552789999999', '09:45:00', '22:30:00', 'Pandit TN Mishra Marg, Nirman Nagar, Ranisati Nagar, Jaipur, Rajasthan 302019', 1, 0, 0, NULL, 0, 0, NULL, '', 0, '', 0, '2023-11-30 08:52:12', '2023-11-30 08:52:12', 0, 20, 20, 20, 'restaurant_image_1701332532pexels-binyamin-mellish-106399.jpg', 0, 0, '', 0, ''),
+(14, 93, 'manap new restaurant', 'manap-new-restaurant', 'manap restaurant description new', '26.8834513', '75.75552789999999', '09:30:00', '20:45:00', 'Pandit TN Mishra Marg, Nirman Nagar, Ranisati Nagar, Jaipur, Rajasthan 302019', 1, 0, 0, NULL, 0, 0, NULL, '', 0, 'App\\Models\\User', 93, '2023-12-01 08:35:07', '2023-12-05 10:21:29', 0, 20, 30, 20, 'restaurant_image_1701430079pexels-julia-kuzenkov-1974596.jpg', 1, 3, 'manap63160@frandin.com', 1234567862, '2,3,4'),
+(15, 99, 'rest test name test', 'rest-test-name-test', 'fff', '26.8834513', '75.75552789999999', '10:30:00', '22:30:00', 'Pandit TN Mishra Marg, Nirman Nagar, Ranisati Nagar, Jaipur, Rajasthan 302019', 1, 0, 0, NULL, 0, 0, NULL, '', 0, '', 0, '2023-12-05 07:23:46', '2023-12-05 07:23:46', 0, 20, 20, 20, 'restaurant_image_1701759226pexels-pixabay-209315.jpg', 1, 1, 'tefote7320@gyxmz.com', 1234567899, '2');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_category`
+--
+
+CREATE TABLE `restaurant_category` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `restaurant_category`
+--
+
+INSERT INTO `restaurant_category` (`id`, `name`, `description`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'QSR, aka Fast Food Restaurants', 'QSR, aka Fast Food Restaurants', 1, '2023-11-30 22:39:27', '2023-12-01 02:40:28'),
+(2, 'Casual Dining Restaurants', 'Casual Dining Restaurants', 1, '2023-11-30 22:39:27', '2023-12-01 02:40:28'),
+(3, 'Fast-Casual Dining', 'Fast-Casual Dining', 1, '2023-11-30 22:39:27', '2023-12-01 02:40:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_cuisines`
+--
+
+CREATE TABLE `restaurant_cuisines` (
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `cuisine_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_dishes`
+--
+
+CREATE TABLE `restaurant_dishes` (
+  `id` int(11) NOT NULL,
+  `restaurant_id` int(11) NOT NULL,
+  `day_name` varchar(255) NOT NULL,
+  `dish_name` varchar(255) NOT NULL,
+  `dish_image` varchar(255) NOT NULL,
+  `dish_status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `restaurant_dishes`
+--
+
+INSERT INTO `restaurant_dishes` (`id`, `restaurant_id`, `day_name`, `dish_name`, `dish_image`, `dish_status`, `created_at`, `updated_at`) VALUES
+(1, 14, 'Tuesday', 'Dish12', 'dish_image_17016921291538685780055.jpeg', 1, '2023-12-04 12:45:29', '2023-12-04 13:13:41'),
+(2, 14, 'Monday', 'Dish22', 'dish_image_1701694452download.jpeg', 1, '2023-12-04 12:51:34', '2023-12-04 13:24:18');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_events`
+--
+
+CREATE TABLE `restaurant_events` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `restaurant_events`
+--
+
+INSERT INTO `restaurant_events` (`id`, `name`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Birthday Party', 1, '2023-12-05 02:47:17', '2023-12-05 02:47:31'),
+(2, 'Wedding Anniversary', 1, '2023-12-05 02:47:17', '2023-12-05 02:47:31'),
+(3, 'Seminar', 1, '2023-12-05 02:47:17', '2023-12-05 02:47:31'),
+(4, 'Music Festival', 1, '2023-12-05 02:47:17', '2023-12-05 02:47:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_gallery`
+--
+
+CREATE TABLE `restaurant_gallery` (
+  `id` int(11) NOT NULL,
+  `restaurant_id` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `restaurant_gallery`
+--
+
+INSERT INTO `restaurant_gallery` (`id`, `restaurant_id`, `image`, `status`, `created_at`, `updated_at`) VALUES
+(2, 14, '17014360077.jpg', 1, '2023-12-01 13:36:47', '2023-12-01 13:36:47'),
+(3, 14, '170143600733.jpg', 1, '2023-12-01 13:36:47', '2023-12-01 13:36:47'),
+(4, 14, '170143600732.jpg', 1, '2023-12-01 13:36:47', '2023-12-01 13:36:47'),
+(5, 14, '170143855244.jpg', 1, '2023-12-01 14:19:12', '2023-12-01 14:19:12'),
+(7, 14, '17014385521.jpg', 1, '2023-12-01 14:19:12', '2023-12-01 14:19:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_menu_items`
+--
+
+CREATE TABLE `restaurant_menu_items` (
+  `id` int(11) NOT NULL,
+  `restaurant_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `restaurant_menu_items`
+--
+
+INSERT INTO `restaurant_menu_items` (`id`, `restaurant_id`, `name`, `image`, `status`, `created_at`, `updated_at`) VALUES
+(1, 14, 'menu item12', 'menu_image_1701682939975609af5670b59992c26181aa720359.png', 0, '2023-12-04 10:39:33', '2023-12-04 11:09:33'),
+(2, 14, 'menu item24', 'menu_image_1701682965restaurant-menu-poster-design-template-ccb82796ecfb043b3b85385713c496a2_screen.jpg', 1, '2023-12-04 10:39:28', '2023-12-04 11:09:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_ratings`
+--
+
+CREATE TABLE `restaurant_ratings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `restaurant_id` bigint(20) NOT NULL,
+  `rating` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `review` text DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `restaurant_seating_category`
+--
+
+CREATE TABLE `restaurant_seating_category` (
+  `id` int(11) NOT NULL,
+  `restaurant_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `restaurant_seating_category`
+--
+
+INSERT INTO `restaurant_seating_category` (`id`, `restaurant_id`, `name`, `image`, `status`, `created_at`, `updated_at`) VALUES
+(1, 14, 'Indoor12', 'menu_image_1701761900pexels-pixabay-210617.jpg', 1, '2023-12-05 08:04:02', '2023-12-05 08:10:36'),
+(2, 14, 'Rooftop', 'menu_image_1701762055pexels-pixabay-210538.jpg', 0, '2023-12-05 08:10:55', '2023-12-05 08:11:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `guard_name` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
+(1, 'Admin', 'web', '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(2, 'Customer', 'web', '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(3, 'Restaurant Owner', 'web', '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(4, 'Delivery Boy', 'web', '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(5, 'Waiter', 'web', '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(6, 'Admin', 'web', '2023-11-09 06:23:40', '2023-11-09 06:23:40'),
+(7, 'Customer', 'web', '2023-11-09 06:23:40', '2023-11-09 06:23:40'),
+(8, 'Restaurant Owner', 'web', '2023-11-09 06:23:40', '2023-11-09 06:23:40'),
+(9, 'Delivery Boy', 'web', '2023-11-09 06:23:40', '2023-11-09 06:23:40'),
+(10, 'Waiter', 'web', '2023-11-09 06:23:40', '2023-11-09 06:23:40'),
+(11, 'Admin', 'web', '2023-11-09 06:25:12', '2023-11-09 06:25:12'),
+(12, 'Customer', 'web', '2023-11-09 06:25:12', '2023-11-09 06:25:12'),
+(13, 'Restaurant Owner', 'web', '2023-11-09 06:25:12', '2023-11-09 06:25:12'),
+(14, 'Delivery Boy', 'web', '2023-11-09 06:25:12', '2023-11-09 06:25:12'),
+(15, 'Waiter', 'web', '2023-11-09 06:25:12', '2023-11-09 06:25:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role_has_permissions`
+--
+
+CREATE TABLE `role_has_permissions` (
+  `permission_id` bigint(20) UNSIGNED NOT NULL,
+  `role_id` bigint(20) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `role_has_permissions`
+--
+
+INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
+(1, 1),
+(1, 3),
+(1, 4),
+(2, 1),
+(2, 3),
+(3, 1),
+(3, 3),
+(4, 1),
+(4, 3),
+(5, 1),
+(5, 3),
+(6, 1),
+(6, 3),
+(7, 1),
+(7, 3),
+(8, 1),
+(8, 3),
+(9, 1),
+(9, 3),
+(10, 1),
+(10, 3),
+(11, 1),
+(11, 3),
+(12, 1),
+(12, 3),
+(13, 1),
+(13, 3),
+(14, 1),
+(14, 3),
+(15, 1),
+(15, 3),
+(16, 1),
+(16, 3),
+(17, 1),
+(17, 3),
+(18, 1),
+(18, 3),
+(19, 1),
+(19, 3),
+(20, 1),
+(20, 3),
+(21, 1),
+(21, 3),
+(22, 1),
+(22, 3),
+(23, 1),
+(23, 3),
+(24, 1),
+(24, 3),
+(25, 1),
+(25, 3),
+(25, 4),
+(26, 1),
+(26, 3),
+(27, 1),
+(27, 3),
+(27, 4),
+(28, 1),
+(28, 3),
+(29, 1),
+(29, 3),
+(29, 4),
+(30, 1),
+(30, 3),
+(31, 4),
+(32, 1),
+(33, 1),
+(34, 1),
+(35, 1),
+(36, 1),
+(37, 3),
+(38, 1),
+(39, 1),
+(39, 3),
+(40, 1),
+(41, 1),
+(42, 1),
+(43, 1),
+(43, 3),
+(44, 3),
+(45, 1),
+(45, 3),
+(45, 4),
+(46, 1),
+(47, 1),
+(48, 1),
+(49, 1),
+(50, 1),
+(51, 1),
+(52, 1),
+(53, 1),
+(54, 1),
+(55, 1),
+(56, 1),
+(56, 3),
+(57, 1),
+(58, 1),
+(59, 1),
+(60, 1),
+(61, 1),
+(62, 1),
+(63, 1),
+(64, 1),
+(65, 1),
+(66, 1),
+(67, 1),
+(68, 1),
+(69, 1),
+(70, 1),
+(71, 1),
+(72, 1),
+(73, 1),
+(74, 1),
+(75, 1),
+(76, 1),
+(76, 3),
+(76, 4),
+(77, 1),
+(78, 1),
+(79, 1),
+(80, 1),
+(81, 1),
+(82, 1),
+(83, 1),
+(83, 3),
+(84, 1),
+(84, 3),
+(85, 1),
+(85, 3),
+(86, 1),
+(86, 3),
+(87, 1),
+(87, 3),
+(88, 1),
+(88, 3),
+(89, 1),
+(89, 3),
+(90, 1),
+(90, 3),
+(91, 1),
+(91, 3),
+(92, 1),
+(92, 3),
+(93, 1),
+(93, 3),
+(94, 1),
+(94, 3),
+(94, 4),
+(95, 1),
+(95, 3),
+(95, 4),
+(96, 1),
+(96, 3),
+(96, 4),
+(97, 1),
+(98, 1),
+(98, 3),
+(98, 4),
+(99, 1),
+(100, 1),
+(101, 1),
+(102, 1),
+(103, 1),
+(104, 1),
+(105, 1),
+(106, 1),
+(107, 1),
+(108, 1),
+(109, 1),
+(110, 1),
+(111, 1),
+(112, 1),
+(113, 1),
+(114, 1),
+(115, 1),
+(116, 1),
+(117, 1),
+(118, 1),
+(119, 1),
+(120, 1),
+(121, 1),
+(122, 1),
+(123, 1),
+(124, 1),
+(125, 1),
+(126, 1),
+(127, 1),
+(128, 1),
+(129, 1),
+(130, 1),
+(131, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `key` varchar(191) NOT NULL,
+  `value` text DEFAULT NULL,
+  `purchase_code` varchar(80) DEFAULT NULL,
+  `supported_until` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `key`, `value`, `purchase_code`, `supported_until`) VALUES
+(1, 'site_name', 'Food Bank', NULL, NULL),
+(2, 'site_email', 'info@food-bank.xyz', NULL, NULL),
+(3, 'site_phone_number', '+8801777664555', NULL, NULL),
+(4, 'site_logo', 'logo.png', NULL, NULL),
+(5, 'fav_icon', 'favicon.png', NULL, NULL),
+(6, 'site_address', 'Dhaka', NULL, NULL),
+(7, 'site_footer', '@ All Rights Reserved', NULL, NULL),
+(8, 'site_description', 'FoodBank is the best online food order management system.', NULL, NULL),
+(9, 'currency_name', 'USD', NULL, NULL),
+(10, 'currency_code', '$', NULL, NULL),
+(11, 'locale', 'en', NULL, NULL),
+(12, 'geolocation_distance_radius', '20', NULL, NULL),
+(13, 'order_commission_percentage', '5', NULL, NULL),
+(14, 'free_delivery_radius', '5', NULL, NULL),
+(15, 'charge_per_kilo', '0', NULL, NULL),
+(16, 'basic_delivery_charge', '0', NULL, NULL),
+(17, 'frontend_theme', 'default', NULL, NULL),
+(18, 'twilio_disabled', '1', NULL, NULL),
+(19, 'stripe_key', 'pk_test_Kqmq6XXBwdoYJFLV1CSDnaxz', NULL, NULL),
+(20, 'stripe_secret', 'sk_test_JLeo9KvVZvhgsMzQ7KCl43in', NULL, NULL),
+(21, 'razorpay_key', 'razorpay_key', NULL, NULL),
+(22, 'razorpay_secret', 'razorpay_secret', NULL, NULL),
+(23, 'paystack_key', 'paystack_key', NULL, NULL),
+(24, 'delivery_boy_order_amount_limit', '10000', NULL, NULL),
+(25, 'mail_disabled', '1', NULL, NULL),
+(26, 'google_map_api_key', 'AIzaSyBAAS4mcYl5qr5HzBwXFCDwqw3PnQDl7ZQ', NULL, NULL),
+(27, 'otp_type_checking', 'email', NULL, NULL),
+(28, 'otp_digit_limit', '6', NULL, NULL),
+(29, 'otp_expire_time', '10', NULL, NULL),
+(31, 'billing-type', '10', NULL, NULL),
+(32, 'support_phone', '+9901555555', NULL, NULL),
+(33, 'customer_app_name', 'Customer', NULL, NULL),
+(34, 'customer_app_logo', 'logo.png', NULL, NULL),
+(35, 'customer_splash_screen_logo', 'logo.png', NULL, NULL),
+(36, 'vendor_app_name', 'Vendor', NULL, NULL),
+(37, 'vendor_app_logo', 'logo.png', NULL, NULL),
+(38, 'vendor_splash_screen_logo', 'logo.png', NULL, NULL),
+(39, 'delivery_app_name', 'Delivery', NULL, NULL),
+(40, 'delivery_app_logo', 'logo.png', NULL, NULL),
+(41, 'delivery_splash_screen_logo', 'logo.png', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sliders`
+--
+
+CREATE TABLE `sliders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(191) NOT NULL,
+  `path` varchar(191) NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT 10,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subscription_plans`
+--
+
+CREATE TABLE `subscription_plans` (
+  `id` int(11) NOT NULL,
+  `plan_name` varchar(255) NOT NULL,
+  `plan_description` text NOT NULL,
+  `plan_price` int(11) NOT NULL,
+  `plan_validation_date` int(11) NOT NULL,
+  `plan_validation_time` varchar(255) NOT NULL,
+  `booking_count` int(11) NOT NULL,
+  `plan_status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `subscription_plans`
+--
+
+INSERT INTO `subscription_plans` (`id`, `plan_name`, `plan_description`, `plan_price`, `plan_validation_date`, `plan_validation_time`, `booking_count`, `plan_status`, `created_at`, `updated_at`) VALUES
+(1, 'Plan A', 'Plan A description include Either paid or free booking accept', 20, 3, 'months', 50, 1, '2023-11-30 07:43:48', '2023-11-28 20:36:13'),
+(2, 'Plan B', 'Plan B description include Either paid or free booking accept', 30, 4, 'months', 100, 1, '2023-11-28 22:46:18', '2023-11-28 20:36:13'),
+(3, 'Plan C', 'Plan C description include Either paid or free booking accept', 50, 5, 'months', 150, 1, '2023-11-28 23:43:18', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tables`
+--
+
+CREATE TABLE `tables` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `templates`
+--
+
+CREATE TABLE `templates` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `templates`
+--
+
+INSERT INTO `templates` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'default', NULL, NULL),
+(2, 'about', NULL, NULL),
+(3, 'contact', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `time_slots`
+--
+
+CREATE TABLE `time_slots` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT 1,
+  `source_balance_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `destination_balance_id` bigint(20) UNSIGNED NOT NULL,
+  `amount` decimal(13,2) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `meta` text DEFAULT NULL,
+  `invoice_id` char(36) NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `restaurant_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `first_name` varchar(191) NOT NULL,
+  `last_name` varchar(191) NOT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  `username` varchar(191) DEFAULT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(191) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `gender` enum('1','2','3') DEFAULT NULL COMMENT '1=male,2=female,3=other',
+  `dob` date DEFAULT NULL,
+  `favourite_place` longtext DEFAULT NULL,
+  `address` longtext DEFAULT NULL,
+  `signup_type` enum('email','phone') DEFAULT NULL,
+  `otp` int(11) DEFAULT NULL,
+  `phone_number_verified` enum('0','1') DEFAULT NULL COMMENT '0=not verified,1=verified',
+  `email_verified` enum('0','1') DEFAULT NULL COMMENT '0=not verified,1=verified',
+  `balance_id` int(11) NOT NULL,
+  `device_token` longtext DEFAULT NULL,
+  `web_token` varchar(191) DEFAULT NULL,
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT 5,
+  `applied` tinyint(3) UNSIGNED NOT NULL DEFAULT 10,
+  `last_login_at` timestamp NULL DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `provider` varchar(191) DEFAULT NULL,
+  `provider_id` varchar(191) DEFAULT NULL,
+  `profile_edit_request` int(11) NOT NULL DEFAULT 0,
+  `image` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `username`, `email_verified_at`, `password`, `phone`, `gender`, `dob`, `favourite_place`, `address`, `signup_type`, `otp`, `phone_number_verified`, `email_verified`, `balance_id`, `device_token`, `web_token`, `status`, `applied`, `last_login_at`, `remember_token`, `created_at`, `updated_at`, `provider`, `provider_id`, `profile_edit_request`, `image`) VALUES
+(1, 'John', 'Doe', 'admin@example.com', 'admin', NULL, '$2y$10$DhGKrXQgSwcD046hur1QiejS31TUw93F2hp9DH37V4mhk2UkU0Jae', '1', NULL, NULL, NULL, 'Dhaka, Bangladesh', NULL, NULL, NULL, NULL, 1, NULL, NULL, 5, 10, NULL, 'abyHy2NyUbbWf8evsbxqZ0h3gKW4Qsq5xpMHvZkine0yrV2CUyfYUzzovXOk', '2023-10-18 06:02:39', '2023-10-18 06:12:33', NULL, NULL, 1, NULL),
+(47, '', '', '', NULL, NULL, '', '5356131165', NULL, NULL, NULL, NULL, 'phone', 0, '0', NULL, 47, NULL, NULL, 5, 10, NULL, NULL, '2023-11-16 13:19:15', '2023-11-16 13:19:15', NULL, NULL, 1, NULL),
+(54, '', '', 'asd@gmail.com', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '0', 54, NULL, NULL, 5, 10, NULL, NULL, '2023-11-16 13:20:35', '2023-11-16 13:20:35', NULL, NULL, 1, NULL),
+(57, '', '', '653261655', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '0', 57, NULL, NULL, 5, 10, NULL, NULL, '2023-11-16 13:25:41', '2023-11-16 13:25:41', NULL, NULL, 1, NULL),
+(58, '', '', 'ddd@gmail.com', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '0', 58, NULL, NULL, 5, 10, NULL, NULL, '2023-11-16 13:26:04', '2023-11-16 13:26:04', NULL, NULL, 1, NULL),
+(62, '', '', 'ram@yopmail.com', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '0', 62, NULL, NULL, 5, 10, NULL, NULL, '2023-11-16 13:35:29', '2023-11-16 13:35:29', NULL, NULL, 1, NULL),
+(70, '', '', NULL, NULL, NULL, '', '9786585540', NULL, NULL, NULL, NULL, 'phone', 0, '0', NULL, 70, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 05:54:44', '2023-11-17 05:54:44', NULL, NULL, 1, NULL),
+(71, '', '', 'qwe@gmail.com', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '0', 71, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 05:56:47', '2023-11-17 05:56:47', NULL, NULL, 1, NULL),
+(72, '', '', NULL, NULL, NULL, '', '787878788', NULL, NULL, NULL, NULL, 'phone', 0, '0', NULL, 72, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 05:57:04', '2023-11-17 05:57:04', NULL, NULL, 1, NULL),
+(73, 'ram', 'krishan', NULL, NULL, NULL, '$2y$10$ss.t5DyP2PEjxfDCp/lJre31UDvBW0dSiAvXNXj2TUfdyj//EViHG', '546546546', '1', '1998-02-05', 'ludhiana', NULL, 'phone', 0, '0', NULL, 73, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 06:09:14', '2023-12-04 07:27:35', NULL, NULL, 1, NULL),
+(74, '', '', 'fdgdfbdfv@gmail.com', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '0', 74, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 06:29:06', '2023-11-17 06:29:06', NULL, NULL, 1, NULL),
+(75, '', '', 'wait@gmail.com', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '1', 75, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 06:30:02', '2023-11-17 07:03:38', NULL, NULL, 1, NULL),
+(76, 'ram', 'krishan', 'ram1@yopmail.com', NULL, NULL, '$2y$10$bzE8D7V/CoZSSB6YZnDakO2hi8xZewPy1pAexTl.w4USlx.WztXcy', NULL, '1', '1998-02-05', 'ludhiana', NULL, 'email', 0, NULL, '0', 76, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 07:02:23', '2023-11-28 11:45:25', NULL, NULL, 1, NULL),
+(77, '', '', NULL, NULL, NULL, '', '1122334455', NULL, NULL, NULL, NULL, 'phone', 0, '1', NULL, 77, NULL, NULL, 5, 10, NULL, NULL, '2023-11-17 07:05:29', '2023-11-17 07:05:58', NULL, NULL, 1, NULL),
+(78, 'Test', 'User', 'test@gmail.com', NULL, NULL, '$2y$10$A2bv95YeALTDfwL44D6w7utKcoeQY3ot19WJOLhHj4jkhmhkVsRmC', '1234567890', '1', '1998-02-05', 'ludhiana', NULL, 'email', 0, NULL, '1', 78, NULL, NULL, 5, 10, NULL, NULL, '2023-11-20 11:52:58', '2023-11-30 08:33:12', NULL, NULL, 1, NULL),
+(79, '', '', NULL, NULL, NULL, '', '2222222222', NULL, NULL, NULL, NULL, 'phone', 0, '1', NULL, 79, NULL, NULL, 5, 10, NULL, NULL, '2023-11-28 06:14:07', '2023-11-28 06:14:35', NULL, NULL, 1, NULL),
+(83, 'John', 'Win', 'johnuser@yopmail.com', 'john-win', NULL, '$2y$10$LUUTfUHuoyHZ01kVQdUMuufHjNjnhXQU1tkJFVn3OxMRY3ouYUD4.', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 83, NULL, NULL, 1, 10, NULL, NULL, '2023-11-28 14:31:00', '2023-11-28 14:31:00', NULL, NULL, 1, NULL),
+(84, 'xekegak', 'doe', 'xekegak516@frandin.com', 'xekegak-doe', NULL, '$2y$10$1MZtzhvjFut/4qwH.042AO0MbpdxldYXqPtby6QPjy5AtNYXSL4XC', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 84, NULL, NULL, 1, 10, NULL, NULL, '2023-11-28 14:33:24', '2023-11-28 14:33:24', NULL, NULL, 1, NULL),
+(86, 'vepapec', 'doe', 'vepapec122@cumzle.com', 'vepapec-doe', NULL, '$2y$10$ygQGT1kKXnTaqKN3To7hMOLG8XZKSKwcNyc2AAPH0YqE48mnRnrVu', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 86, NULL, NULL, 1, 10, NULL, NULL, '2023-11-28 14:42:11', '2023-11-28 14:42:11', NULL, NULL, 1, NULL),
+(87, 'heheha', 'doe', 'heheha3474@bustayes.com', 'heheha-doe', NULL, '$2y$10$4AcQiekFpvnteul4y1SrruuY8au3EOeIypOdJse3RNod4tYa/8.Ty', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 87, NULL, NULL, 1, 10, NULL, NULL, '2023-11-29 06:01:48', '2023-11-29 06:01:48', NULL, NULL, 1, NULL),
+(88, '', '', 'ert@gmail.com', NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, 'email', 0, NULL, '1', 88, NULL, NULL, 5, 10, NULL, NULL, '2023-11-29 06:42:54', '2023-11-29 06:43:13', NULL, NULL, 1, NULL),
+(89, 'pahohemuser name', 'doe', 'pahohem902@dpsols.com', 'pahohem-doe', NULL, '$2y$10$Htj86hbMC6TMsS7qjX5Si.2WuMMHcPlq0XM4vgInJRwjPSaJhilIa', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 89, NULL, NULL, 1, 10, NULL, NULL, '2023-11-30 08:50:40', '2023-12-01 07:20:21', NULL, NULL, 0, 'user_1701351283'),
+(90, 'kishan', 'choudhary', 'kishan@gmail.com', NULL, NULL, '$2y$10$ZCT.H2sLVX7a0oMFAszdTe3056W/Y9OJvUiGJeNcdna3aEiUzrpLq', '9898989898', '1', '1998-02-05', 'jaipur', NULL, 'email', 0, NULL, '0', 90, NULL, NULL, 5, 10, NULL, NULL, '2023-11-30 12:31:59', '2023-11-30 12:33:38', NULL, NULL, 0, NULL),
+(91, 'wegiyit', 'doe', 'wegiyit544@bustayes.com', 'wegiyit-doe', NULL, '$2y$10$/NLa/AZ8RP4O0NO4PI8nD.ulodtLxKRGD/yTU2iaMo7KbREDjQkkK', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 91, NULL, NULL, 2, 10, NULL, NULL, '2023-11-30 13:46:18', '2023-11-30 13:46:18', NULL, NULL, 0, NULL),
+(92, '', '', NULL, NULL, NULL, '', '1111111111', NULL, NULL, NULL, NULL, 'phone', 0, '1', NULL, 92, NULL, NULL, 5, 10, NULL, NULL, '2023-12-01 07:46:08', '2023-12-01 11:08:26', NULL, NULL, 0, NULL),
+(93, 'manap', 'doe', 'manap63160@frandin.com', 'manap-doe', NULL, '$2y$10$p2tSCQlVD9KJ7oxggPM7hec.QsJVt57gkNJv0KpH5dswN6oCWUNuC', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 93, NULL, NULL, 1, 10, NULL, NULL, '2023-12-01 08:17:43', '2023-12-01 14:31:56', NULL, NULL, 1, NULL),
+(94, '', '', NULL, NULL, NULL, '', '1212121212', NULL, NULL, NULL, NULL, 'phone', 0, '1', NULL, 94, NULL, NULL, 5, 10, NULL, NULL, '2023-12-01 11:11:35', '2023-12-01 11:11:47', NULL, NULL, 0, NULL),
+(95, '', '', NULL, NULL, NULL, '', '1212121213', NULL, NULL, NULL, NULL, 'phone', 0, '1', NULL, 95, NULL, NULL, 5, 10, NULL, NULL, '2023-12-01 11:53:44', '2023-12-01 11:53:50', NULL, NULL, 0, NULL),
+(96, '', '', NULL, NULL, NULL, '', '1212121211', NULL, NULL, NULL, NULL, 'phone', 0, '1', NULL, 96, NULL, NULL, 5, 10, NULL, NULL, '2023-12-01 12:00:59', '2023-12-01 12:01:08', NULL, NULL, 0, NULL),
+(97, 'lewiyof', 'doe', 'lewiyof367@bustayes.com', 'lewiyof-doe', NULL, '$2y$10$geLmoihNWm1zzDYxzuJ/VeN1erXoN4xyVo8m.wW0f82kgejkBFjly', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 97, NULL, NULL, 2, 10, NULL, NULL, '2023-12-01 12:18:03', '2023-12-01 12:18:03', NULL, NULL, 0, NULL),
+(98, '', '', NULL, NULL, NULL, '', '1111111112', NULL, NULL, NULL, NULL, 'phone', 0, '1', NULL, 98, NULL, NULL, 5, 10, NULL, NULL, '2023-12-01 13:10:39', '2023-12-01 13:10:46', NULL, NULL, 0, NULL),
+(99, 'tefote', 'doe', 'tefote7320@gyxmz.com', 'tefote-doe', NULL, '$2y$10$vNbSvUrN.HpEE/k4iiBsPemq06AlQVESi8YdQIQVjptXy2rBf6RCW', '1234567899', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 99, NULL, NULL, 1, 10, NULL, NULL, '2023-12-05 07:20:17', '2023-12-05 07:20:17', NULL, NULL, 0, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_deposits`
+--
+
+CREATE TABLE `user_deposits` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `deposit_amount` decimal(13,2) NOT NULL DEFAULT 0.00,
+  `limit_amount` decimal(13,2) NOT NULL DEFAULT 0.00,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `user_deposits`
+--
+
+INSERT INTO `user_deposits` (`id`, `user_id`, `deposit_amount`, `limit_amount`, `created_at`, `updated_at`) VALUES
+(1, 1, '0.00', '0.00', '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(2, 2, '0.00', '0.00', '2023-10-18 06:02:39', '2023-10-18 06:02:39'),
+(3, 3, '0.00', '0.00', '2023-10-18 06:37:45', '2023-10-18 06:37:45'),
+(4, 4, '0.00', '0.00', '2023-10-18 07:15:14', '2023-10-18 07:15:14'),
+(5, 5, '0.00', '0.00', '2023-10-18 11:56:59', '2023-10-18 11:56:59'),
+(6, 8, '0.00', '0.00', '2023-11-09 06:37:07', '2023-11-09 06:37:07'),
+(7, 16, '0.00', '0.00', '2023-11-09 10:27:37', '2023-11-09 10:27:37'),
+(8, 17, '0.00', '0.00', '2023-11-09 10:38:48', '2023-11-09 10:38:48'),
+(9, 18, '0.00', '0.00', '2023-11-09 11:12:14', '2023-11-09 11:12:14'),
+(10, 19, '0.00', '0.00', '2023-11-09 11:36:16', '2023-11-09 11:36:16'),
+(11, 20, '0.00', '0.00', '2023-11-09 11:50:49', '2023-11-09 11:50:49'),
+(12, 21, '0.00', '0.00', '2023-11-09 11:57:50', '2023-11-09 11:57:50'),
+(13, 22, '0.00', '0.00', '2023-11-09 12:20:20', '2023-11-09 12:20:20'),
+(14, 23, '0.00', '0.00', '2023-11-09 13:11:06', '2023-11-09 13:11:06'),
+(15, 24, '0.00', '0.00', '2023-11-09 13:12:12', '2023-11-09 13:12:12'),
+(16, 25, '0.00', '0.00', '2023-11-09 13:12:57', '2023-11-09 13:12:57'),
+(17, 26, '0.00', '0.00', '2023-11-16 12:30:35', '2023-11-16 12:30:35'),
+(18, 31, '0.00', '0.00', '2023-11-16 12:59:01', '2023-11-16 12:59:01'),
+(19, 46, '0.00', '0.00', '2023-11-16 13:18:48', '2023-11-16 13:18:48'),
+(20, 47, '0.00', '0.00', '2023-11-16 13:19:15', '2023-11-16 13:19:15'),
+(21, 54, '0.00', '0.00', '2023-11-16 13:20:35', '2023-11-16 13:20:35'),
+(22, 57, '0.00', '0.00', '2023-11-16 13:25:41', '2023-11-16 13:25:41'),
+(23, 58, '0.00', '0.00', '2023-11-16 13:26:04', '2023-11-16 13:26:04'),
+(24, 62, '0.00', '0.00', '2023-11-16 13:35:29', '2023-11-16 13:35:29'),
+(25, 70, '0.00', '0.00', '2023-11-17 05:54:45', '2023-11-17 05:54:45'),
+(26, 71, '0.00', '0.00', '2023-11-17 05:56:47', '2023-11-17 05:56:47'),
+(27, 72, '0.00', '0.00', '2023-11-17 05:57:04', '2023-11-17 05:57:04'),
+(28, 73, '0.00', '0.00', '2023-11-17 06:09:14', '2023-11-17 06:09:14'),
+(29, 74, '0.00', '0.00', '2023-11-17 06:29:06', '2023-11-17 06:29:06'),
+(30, 75, '0.00', '0.00', '2023-11-17 06:30:02', '2023-11-17 06:30:02'),
+(31, 76, '0.00', '0.00', '2023-11-17 07:02:23', '2023-11-17 07:02:23'),
+(32, 77, '0.00', '0.00', '2023-11-17 07:05:29', '2023-11-17 07:05:29'),
+(33, 78, '0.00', '0.00', '2023-11-20 11:52:58', '2023-11-20 11:52:58'),
+(34, 79, '0.00', '0.00', '2023-11-28 06:14:07', '2023-11-28 06:14:07'),
+(35, 80, '0.00', '0.00', '2023-11-28 14:25:26', '2023-11-28 14:25:26'),
+(36, 81, '0.00', '0.00', '2023-11-28 14:27:54', '2023-11-28 14:27:54'),
+(37, 82, '0.00', '0.00', '2023-11-28 14:29:25', '2023-11-28 14:29:25'),
+(38, 83, '0.00', '0.00', '2023-11-28 14:31:00', '2023-11-28 14:31:00'),
+(39, 84, '0.00', '0.00', '2023-11-28 14:33:24', '2023-11-28 14:33:24'),
+(40, 85, '0.00', '0.00', '2023-11-28 14:40:52', '2023-11-28 14:40:52'),
+(41, 86, '0.00', '0.00', '2023-11-28 14:42:11', '2023-11-28 14:42:11'),
+(42, 87, '0.00', '0.00', '2023-11-29 06:01:48', '2023-11-29 06:01:48'),
+(43, 88, '0.00', '0.00', '2023-11-29 06:42:54', '2023-11-29 06:42:54'),
+(44, 89, '0.00', '0.00', '2023-11-30 08:50:40', '2023-11-30 08:50:40'),
+(45, 90, '0.00', '0.00', '2023-11-30 12:31:59', '2023-11-30 12:31:59'),
+(46, 91, '0.00', '0.00', '2023-11-30 13:46:18', '2023-11-30 13:46:18'),
+(47, 92, '0.00', '0.00', '2023-12-01 07:46:08', '2023-12-01 07:46:08'),
+(48, 93, '0.00', '0.00', '2023-12-01 08:17:43', '2023-12-01 08:17:43'),
+(49, 94, '0.00', '0.00', '2023-12-01 11:11:35', '2023-12-01 11:11:35'),
+(50, 95, '0.00', '0.00', '2023-12-01 11:53:44', '2023-12-01 11:53:44'),
+(51, 96, '0.00', '0.00', '2023-12-01 12:00:59', '2023-12-01 12:00:59'),
+(52, 97, '0.00', '0.00', '2023-12-01 12:18:03', '2023-12-01 12:18:03'),
+(53, 98, '0.00', '0.00', '2023-12-01 13:10:39', '2023-12-01 13:10:39'),
+(54, 99, '0.00', '0.00', '2023-12-05 07:20:17', '2023-12-05 07:20:17');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_subscriptions`
+--
+
+CREATE TABLE `user_subscriptions` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `plan_id` int(11) NOT NULL,
+  `subscription_start` date NOT NULL,
+  `subscription_end` date NOT NULL,
+  `subscription_status` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `user_subscriptions`
+--
+
+INSERT INTO `user_subscriptions` (`id`, `user_id`, `plan_id`, `subscription_start`, `subscription_end`, `subscription_status`, `created_at`, `updated_at`) VALUES
+(1, 86, 1, '2023-11-30', '2024-03-01', 1, '2023-11-30 08:15:26', '2023-11-30 08:15:26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `withdraws`
+--
+
+CREATE TABLE `withdraws` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `payment_type` tinyint(3) UNSIGNED NOT NULL,
+  `amount` double(13,2) UNSIGNED NOT NULL,
+  `date` datetime NOT NULL,
+  `request_withdraw_id` bigint(20) UNSIGNED NOT NULL,
+  `creator_type` varchar(191) NOT NULL,
+  `creator_id` bigint(20) UNSIGNED NOT NULL,
+  `editor_type` varchar(191) NOT NULL,
+  `editor_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `addons`
+--
+ALTER TABLE `addons`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `addresses_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `addresses_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `backend_menus`
+--
+ALTER TABLE `backend_menus`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `balances`
+--
+ALTER TABLE `balances`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `balances_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `balances_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `banks`
+--
+ALTER TABLE `banks`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `banks_account_number_unique` (`account_number`);
+
+--
+-- Indexes for table `banners`
+--
+ALTER TABLE `banners`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `banners_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `banners_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `best_selling_category`
+--
+ALTER TABLE `best_selling_category`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `categories_slug_unique` (`slug`),
+  ADD KEY `categories_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `categories_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `collection`
+--
+ALTER TABLE `collection`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `collection_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `collection_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `coupons_slug_unique` (`slug`),
+  ADD KEY `coupons_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `coupons_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `cuisines`
+--
+ALTER TABLE `cuisines`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `cuisines_slug_unique` (`slug`),
+  ADD KEY `cuisines_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `cuisines_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `delivery_boy_accounts`
+--
+ALTER TABLE `delivery_boy_accounts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `delivery_status_histories`
+--
+ALTER TABLE `delivery_status_histories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `discounts`
+--
+ALTER TABLE `discounts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `footer_menu_sections`
+--
+ALTER TABLE `footer_menu_sections`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `gateways`
+--
+ALTER TABLE `gateways`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `invoices`
+--
+ALTER TABLE `invoices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invoices_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `invoices_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `jobs_queue_index` (`queue`);
+
+--
+-- Indexes for table `languages`
+--
+ALTER TABLE `languages`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `languages_name_unique` (`name`),
+  ADD UNIQUE KEY `languages_code_unique` (`code`);
+
+--
+-- Indexes for table `ledgers`
+--
+ALTER TABLE `ledgers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ledgers_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `ledgers_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `ltm_translations`
+--
+ALTER TABLE `ltm_translations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `media`
+--
+ALTER TABLE `media`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `media_uuid_unique` (`uuid`),
+  ADD KEY `media_model_type_model_id_index` (`model_type`,`model_id`),
+  ADD KEY `media_order_column_index` (`order_column`);
+
+--
+-- Indexes for table `menu_items`
+--
+ALTER TABLE `menu_items`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `menu_items_slug_unique` (`slug`),
+  ADD KEY `menu_items_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `menu_items_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `menu_item_options`
+--
+ALTER TABLE `menu_item_options`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menu_item_variations`
+--
+ALTER TABLE `menu_item_variations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `model_has_permissions`
+--
+ALTER TABLE `model_has_permissions`
+  ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
+  ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
+
+--
+-- Indexes for table `model_has_roles`
+--
+ALTER TABLE `model_has_roles`
+  ADD PRIMARY KEY (`role_id`,`model_id`,`model_type`),
+  ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `order_histories`
+--
+ALTER TABLE `order_histories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `order_line_items`
+--
+ALTER TABLE `order_line_items`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `otp`
+--
+ALTER TABLE `otp`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pages`
+--
+ALTER TABLE `pages`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `pages_slug_unique` (`slug`),
+  ADD KEY `pages_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `pages_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD KEY `password_resets_email_index` (`email`);
+
+--
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
+
+--
+-- Indexes for table `push_notifications`
+--
+ALTER TABLE `push_notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `push_notifications_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `push_notifications_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `qr_codes`
+--
+ALTER TABLE `qr_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `qr_codes_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `qr_codes_editor_type_editor_id_index` (`editor_type`,`editor_id`),
+  ADD KEY `qr_codes_restaurant_id_index` (`restaurant_id`);
+
+--
+-- Indexes for table `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reports_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `reports_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `request_withdraw`
+--
+ALTER TABLE `request_withdraw`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `request_withdraw_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `request_withdraw_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `reservations`
+--
+ALTER TABLE `reservations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reservations_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `reservations_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `restaurants`
+--
+ALTER TABLE `restaurants`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `restaurants_slug_unique` (`slug`),
+  ADD KEY `restaurants_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `restaurants_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `restaurant_category`
+--
+ALTER TABLE `restaurant_category`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `restaurant_dishes`
+--
+ALTER TABLE `restaurant_dishes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `restaurant_events`
+--
+ALTER TABLE `restaurant_events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `restaurant_gallery`
+--
+ALTER TABLE `restaurant_gallery`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `restaurant_menu_items`
+--
+ALTER TABLE `restaurant_menu_items`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `restaurant_ratings`
+--
+ALTER TABLE `restaurant_ratings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `restaurant_ratings_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `restaurant_ratings_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `restaurant_seating_category`
+--
+ALTER TABLE `restaurant_seating_category`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `role_has_permissions`
+--
+ALTER TABLE `role_has_permissions`
+  ADD PRIMARY KEY (`permission_id`,`role_id`),
+  ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
+
+--
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sliders`
+--
+ALTER TABLE `sliders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `subscription_plans`
+--
+ALTER TABLE `subscription_plans`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tables`
+--
+ALTER TABLE `tables`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tables_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `tables_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `templates`
+--
+ALTER TABLE `templates`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `time_slots`
+--
+ALTER TABLE `time_slots`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `time_slots_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `time_slots_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transactions_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `transactions_editor_type_editor_id_index` (`editor_type`,`editor_id`),
+  ADD KEY `transactions_invoice_id_index` (`invoice_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD UNIQUE KEY `users_username_unique` (`username`);
+
+--
+-- Indexes for table `user_deposits`
+--
+ALTER TABLE `user_deposits`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_subscriptions`
+--
+ALTER TABLE `user_subscriptions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `withdraws`
+--
+ALTER TABLE `withdraws`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `withdraws_creator_type_creator_id_index` (`creator_type`,`creator_id`),
+  ADD KEY `withdraws_editor_type_editor_id_index` (`editor_type`,`editor_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `addons`
+--
+ALTER TABLE `addons`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `backend_menus`
+--
+ALTER TABLE `backend_menus`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+--
+-- AUTO_INCREMENT for table `balances`
+--
+ALTER TABLE `balances`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+--
+-- AUTO_INCREMENT for table `banks`
+--
+ALTER TABLE `banks`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `banners`
+--
+ALTER TABLE `banners`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `best_selling_category`
+--
+ALTER TABLE `best_selling_category`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `collection`
+--
+ALTER TABLE `collection`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `cuisines`
+--
+ALTER TABLE `cuisines`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `delivery_boy_accounts`
+--
+ALTER TABLE `delivery_boy_accounts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `delivery_status_histories`
+--
+ALTER TABLE `delivery_status_histories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `discounts`
+--
+ALTER TABLE `discounts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `footer_menu_sections`
+--
+ALTER TABLE `footer_menu_sections`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `gateways`
+--
+ALTER TABLE `gateways`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `languages`
+--
+ALTER TABLE `languages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `ledgers`
+--
+ALTER TABLE `ledgers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `ltm_translations`
+--
+ALTER TABLE `ltm_translations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `media`
+--
+ALTER TABLE `media`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `menu_items`
+--
+ALTER TABLE `menu_items`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `menu_item_options`
+--
+ALTER TABLE `menu_item_options`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `menu_item_variations`
+--
+ALTER TABLE `menu_item_variations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `order_histories`
+--
+ALTER TABLE `order_histories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `order_line_items`
+--
+ALTER TABLE `order_line_items`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `otp`
+--
+ALTER TABLE `otp`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `pages`
+--
+ALTER TABLE `pages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+--
+-- AUTO_INCREMENT for table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `push_notifications`
+--
+ALTER TABLE `push_notifications`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `qr_codes`
+--
+ALTER TABLE `qr_codes`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `request_withdraw`
+--
+ALTER TABLE `request_withdraw`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `reservations`
+--
+ALTER TABLE `reservations`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `restaurants`
+--
+ALTER TABLE `restaurants`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+--
+-- AUTO_INCREMENT for table `restaurant_category`
+--
+ALTER TABLE `restaurant_category`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `restaurant_dishes`
+--
+ALTER TABLE `restaurant_dishes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `restaurant_events`
+--
+ALTER TABLE `restaurant_events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `restaurant_gallery`
+--
+ALTER TABLE `restaurant_gallery`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `restaurant_menu_items`
+--
+ALTER TABLE `restaurant_menu_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `restaurant_ratings`
+--
+ALTER TABLE `restaurant_ratings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `restaurant_seating_category`
+--
+ALTER TABLE `restaurant_seating_category`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+--
+-- AUTO_INCREMENT for table `sliders`
+--
+ALTER TABLE `sliders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `subscription_plans`
+--
+ALTER TABLE `subscription_plans`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `tables`
+--
+ALTER TABLE `tables`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `templates`
+--
+ALTER TABLE `templates`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `time_slots`
+--
+ALTER TABLE `time_slots`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+--
+-- AUTO_INCREMENT for table `user_deposits`
+--
+ALTER TABLE `user_deposits`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+--
+-- AUTO_INCREMENT for table `user_subscriptions`
+--
+ALTER TABLE `user_subscriptions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `withdraws`
+--
+ALTER TABLE `withdraws`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `model_has_permissions`
+--
+ALTER TABLE `model_has_permissions`
+  ADD CONSTRAINT `model_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `model_has_roles`
+--
+ALTER TABLE `model_has_roles`
+  ADD CONSTRAINT `model_has_roles_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `role_has_permissions`
+--
+ALTER TABLE `role_has_permissions`
+  ADD CONSTRAINT `role_has_permissions_permission_id_foreign` FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `role_has_permissions_role_id_foreign` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

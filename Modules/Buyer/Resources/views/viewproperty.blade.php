@@ -7,7 +7,7 @@
    object-position: center;
    }
 </style>
-<div class="col-lg-9">
+<div class="col-md-8 col-lg-9 pb-4">
 <div class="profile-box">
 <div class="profile-box-form">
 <h1 class="mb-3"> Properties</h1>

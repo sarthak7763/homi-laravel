@@ -5,7 +5,14 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<div class="col-lg-9">
+<style>
+
+[aria-label="Pagination Navigation"] .flex {
+    display: flex;
+    justify-content: end;
+}
+</style>
+<div class="col-md-8 col-lg-9">
     <div class="profile-box">
         <div class="profile-box-form">
             <div>
@@ -15,7 +22,7 @@
                     </div>
                     @endif
                 </div>
-            <div class="row align-items-center mb-3 group-property-row">
+            <div class="row align-items-center mb-3 group-property-row proep_page">
                 
                 <div class="col-md">
                     <h1 class="mb-3">Property</h1>
@@ -76,7 +83,7 @@
                                     {{'Active'}}
                                     @else
                                     {{'Suspend'}}
-                                    @endif |    Listed on:  {{$property['created_at']}}
+                                    @endif |    Listed on:  {{date('M d, Y',strtotime($property['created_at']))}}
                                 </p>
                                 <p>
                                 @if($property['property_type'] == 1)
@@ -131,6 +138,11 @@
             </div>
         </form>
     </div>
+    <div>
+{{$propertyData->links()}};
+
+</div>
+
 </div>
 </div>
 </div>

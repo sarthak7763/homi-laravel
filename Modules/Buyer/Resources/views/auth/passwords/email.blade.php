@@ -3,7 +3,7 @@
 
 @section('content')
 
-<div class="row">
+<div class="">
 
         <section class="signup-section pt-4 pb-4">
         <div class="container h-100">
@@ -35,6 +35,9 @@
             </div>
         @endif
     </div>
+     <div class="forgot-password">
+                            <p><a href="{{route('buyer-login')}}">Back to login</a></p>
+                        </div>
 
                         </div>
                         <button type="submit" class="btn btn-primary">Send Link</button>
