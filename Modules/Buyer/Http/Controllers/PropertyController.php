@@ -41,7 +41,7 @@ class PropertyController extends Controller
         }
        
         //DB::enableQueryLog();
-        $propertyDetail = Property::where('add_by',$user_id); 
+        $propertyDetail = Property::where('add_by',$user_id)->latest(); 
 
 
         if($search_title!="" || $search_status!="" || $segmentvalue!="") {
@@ -70,8 +70,14 @@ class PropertyController extends Controller
                
               });
             }
+        
+        
+            $propertyData = $propertyDetail->Paginate(6);
 
-        $propertyData = $propertyDetail->paginate(6);
+
+
+
+     
         //dd(DB::getQueryLog());
         foreach($propertyData as $key=>$list)
         {
@@ -179,10 +185,11 @@ class PropertyController extends Controller
         {
           return redirect()->route('buyer.property','all')->with('error',"Property cant be add more.");;
         }
-      $data=$request->all();
 
-      $request->validate([
-			    'title'=>'required',
+
+
+        $validator = Validator::make($request->all(), [
+          'title'=>'required|regex:/^[\pL\s]+$/u',
 			     'property_type'=>[
                    'required',
                    Rule::in('1','2'),
@@ -198,54 +205,55 @@ class PropertyController extends Controller
                 'property_condition'=>'required',
                 'property_features'=>'required',
                 'property_area'=>'required|numeric',
-                'property_address'=>'required',
+                'property_address'=>'required||regex:/^[\pL\s]+$/u',
+               
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
-                
                 'property_image' => 'required|mimes:jpeg,png,jpg',
-                
-                'property_gallery_image' => 'array|max:8'
+                'property_gallery_image' => 'array|max:7'
+],
+[
+  'title.required'=>'Title field can’t be left blank',
+  'title.regex'=>'  Title field only alphabetic characters.',
+  'property_type.required' => 'Property type is required.',
+  'property_type.in'=>'Invalid property type Value',
+  'property_category.required'=>'Property category is required.',
+  'guest_count.required'=>'Guest count field can’t be left blank',
+  'guest_count.numeric'=>'Guest count field allows only numbers.',
+  'no_of_bedroom.required'=>'No.of bedroom field can’t be left blank',
+  'no_of_bedroom.numeric'=>'No.of bedroom field allows only numbers.',
+  'built_in_year.required'=>'Built in year field can’t be left blank',
+  'built_in_year.numeric'=>'Built in year field allows only numbers.',
+  'no_of_kitchen.required'=>'No.of kitchen field can’t be left blank',
+  'no_of_kitchen.numeric'=>'No.of kitchen field allows only numbers.',
+  'no_of_bathroom.required'=>'No.of bathroom field can’t be left blank',
+  'no_of_bathroom.numeric'=>'No.of bathroom field allows only numbers.',
+  'no_of_balcony.required'=>'No.of balcony field can’t be left blank',
+  'no_of_balcony.numeric'=>'No.of balcony field allows only numbers.',
+  'no_of_floors.required'=>'Floor no. field can’t be left blank',
+  'no_of_floors.numeric'=>'Floor no. field allows only numbers.',
+  'property_condition.required'=>'Property condition is required.',
+  'property_features.required' => 'Property features is required.',
+  'property_area.required'=>'Property area field can’t be left blank',
+  'property_area.numeric'=>'Property area field allows only numbers.',
+  'property_address.required'=>'Property address field can’t be left blank',
+  'property_address.regex'=>'Property address field only alphabetic characters.',
+  
+  'property_price.required'=>'Property price field can’t be left blank',
+  'property_price.numeric'=>'Property price field only allows number',
+  'property_price_type.required'=>'Property price type is required.',
+  'property_image.required'=>'Image field can not be empty',
+  'property_image.mimes'=>'Image extension should be jpg,jpeg,png',
 
-                
+  'property_gallery_image.max'=>'Image should not be greater than 7.',
+]);
+if($validator->fails()){
 
+return Redirect::back()->withErrors($validator)->withInput();
+}
+      $data=$request->all();
 
-			      ],
-		       [
-		                  'title.required'=>'Title field can’t be left blank',
-                      'property_type.required' => 'Property type is required.',
-                      'property_type.in'=>'Invalid property type Value',
-                      'property_category.required'=>'Property category is required.',
-                      'guest_count.required'=>'Guest count field can’t be left blank',
-                      'guest_count.numeric'=>'Guest count field allows only numbers.',
-                      'no_of_bedroom.required'=>'No.of bedroom field can’t be left blank',
-                      'no_of_bedroom.numeric'=>'No.of bedroom field allows only numbers.',
-                      'built_in_year.required'=>'Built in year field can’t be left blank',
-                      'built_in_year.numeric'=>'Built in year field allows only numbers.',
-                      'no_of_kitchen.required'=>'No.of kitchen field can’t be left blank',
-                      'no_of_kitchen.numeric'=>'No.of kitchen field allows only numbers.',
-                      'no_of_bathroom.required'=>'No.of bathroom field can’t be left blank',
-                      'no_of_bathroom.numeric'=>'No.of bathroom field allows only numbers.',
-                      'no_of_balcony.required'=>'No.of balcony field can’t be left blank',
-                      'no_of_balcony.numeric'=>'No.of balcony field allows only numbers.',
-                      'no_of_floors.required'=>'Floor no. field can’t be left blank',
-                      'no_of_floors.numeric'=>'Floor no. field allows only numbers.',
-                      'property_condition.required'=>'Property condition is required.',
-                      'property_features.required' => 'Property features is required.',
-                      'property_area.required'=>'Property area field can’t be left blank',
-                      'property_area.numeric'=>'Property area field allows only numbers.',
-                      'property_address.required'=>'Property address field can’t be left blank',
-                      'property_price.required'=>'Property price field can’t be left blank',
-                      'property_price.numeric'=>'Property price field only allows number',
-                      'property_price_type.required'=>'Property price type is required.',
-                      'property_image.required'=>'Image field can not be empty',
-                      'property_image.mimes'=>'Image extension should be jpg,jpeg,png',
-                    
-                      'property_gallery_image.max'=>'Image should not be greater than 8.',
-                      //  'property_gallery_image.mimes'=>'Image extension should be jpg,jpeg,png',
-
-
-
-            ]);
+      
                   
             $checkpropertycategory=Category::where('id',$data['property_category'])->where('category_type',$data['property_type'])->where('status',1)->get()->first();
             if(!$checkpropertycategory)
@@ -328,9 +336,10 @@ class PropertyController extends Controller
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
-                          $property->property_status=1;
+                          $property->property_status=0;
+                          // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
-                          print_r($property);
+                      
                           $property->save();
                           $property_id = $property->id;
 
@@ -345,21 +354,19 @@ class PropertyController extends Controller
 
 
                               
-                                  // $property_gallery_image = time().'.'.$value->extension();
-                                  // $property_gallery_image= uniqid().$value->extension();
-                                  $property_gallery_image = time() . rand(1, 100) . '.' .$value->extension();
-                                  
+                              $image_extension = $value->getClientOriginalExtension();
+                              $property_gallery_image= uniqid().$value->extension();
 
+                              
 
-                                  $image_extension= $value->getClientOriginalExtension();
-
-                                  
-
-                                  $check = in_array($image_extension, $allowedfileExtension);
-                                  // Checking the image extension
-                                  if (!$check) {
-                                      return redirect()->back();
-                                  }
+                              $check = in_array($image_extension, $allowedfileExtension);
+                              // Checking the image extension
+                              if (!$check) {
+                                  return redirect()->back()->with('error', 'Images must be png, jpeg or jpg!');
+                              }
+                              
+                              
+                               $image = $value->move(public_path('images/property/gallery/'), $property_gallery_image);
                                   
                                     $gallery = new PropertyGallery;
                                         $gallery->property_id = $property_id;
@@ -413,9 +420,14 @@ class PropertyController extends Controller
         }
 
         $data=$request->all();
-       
-        $request->validate([
-			    'title'=>'required',
+
+        $uploaded_images = PropertyGallery::where('property_id',$id)->count();
+
+        $remaining_images = 7-$uploaded_images;
+
+
+        $validator = Validator::make($request->all(), [
+          'title'=>'required|regex:/^[\pL\s]+$/u',
 			     'property_type'=>[
                     'required',
                     Rule::in('1','2'),
@@ -431,39 +443,54 @@ class PropertyController extends Controller
                 'property_condition'=>'required',
                 'property_features'=>'required',
                 'property_area'=>'required|numeric',
-                'property_address'=>'required',
+                'property_address'=>'required|regex:/^[\pL\s]+$/u',
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
-              ],
-		          [
-		                  'title.required'=>'Title field can’t be left blank',
-                      'property_type.required' => 'Property type is required.',
-                      'property_type.in'=>'Invalid property type Value',
-                      'property_category.required'=>'Property category is required.',
-                      'guest_count.required'=>'Guest count field can’t be left blank',
-                      'guest_count.numeric'=>'Guest count field allows only numbers.',
-                      'no_of_bedroom.required'=>'No.of bedroom field can’t be left blank',
-                      'no_of_bedroom.numeric'=>'No.of bedroom field allows only numbers.',
-                      'built_in_year.required'=>'Built in year field can’t be left blank',
-                      'built_in_year.numeric'=>'Built in year field allows only numbers.',
-                      'no_of_kitchen.required'=>'No.of kitchen field can’t be left blank',
-                      'no_of_kitchen.numeric'=>'No.of kitchen field allows only numbers.',
-                      'no_of_bathroom.required'=>'No.of bathroom field can’t be left blank',
-                      'no_of_bathroom.numeric'=>'No.of bathroom field allows only numbers.',
-                      'no_of_balcony.required'=>'No.of balcony field can’t be left blank',
-                      'no_of_balcony.numeric'=>'No.of balcony field allows only numbers.',
-                      'no_of_floors.required'=>'Floor no. field can’t be left blank',
-                      'no_of_floors.numeric'=>'Floor no. field allows only numbers.',
-                      'property_condition.required'=>'Property condition is required.',
-                      'property_features.required' => 'Property features is required.',
-                      'property_area.required'=>'Property area field can’t be left blank',
-                      'property_area.numeric'=>'Property area field allows only numbers.',
-                      'property_address.required'=>'Property address field can’t be left blank',
-                      'property_price.required'=>'Property price field can’t be left blank',
-                      'property_price.numeric'=>'Property price field only allows number',
-                      'property_price_type.required'=>'Property price type is required.',
-        
-              ]);
+                'property_gallery_image' => 'array|max:'.$remaining_images,
+                
+],
+[
+
+  'title.required'=>'Title field can’t be left blank',
+  'title.regex'=>'  Title field only alphabetic characters.',
+  'property_type.required' => 'Property type is required.',
+  'property_type.in'=>'Invalid property type Value',
+  'property_category.required'=>'Property category is required.',
+  'guest_count.required'=>'Guest count field can’t be left blank',
+  'guest_count.numeric'=>'Guest count field allows only numbers.',
+  'no_of_bedroom.required'=>'No.of bedroom field can’t be left blank',
+  'no_of_bedroom.numeric'=>'No.of bedroom field allows only numbers.',
+  'built_in_year.required'=>'Built in year field can’t be left blank',
+  'built_in_year.numeric'=>'Built in year field allows only numbers.',
+  'no_of_kitchen.required'=>'No.of kitchen field can’t be left blank',
+  'no_of_kitchen.numeric'=>'No.of kitchen field allows only numbers.',
+  'no_of_bathroom.required'=>'No.of bathroom field can’t be left blank',
+  'no_of_bathroom.numeric'=>'No.of bathroom field allows only numbers.',
+  'no_of_balcony.required'=>'No.of balcony field can’t be left blank',
+  'no_of_balcony.numeric'=>'No.of balcony field allows only numbers.',
+  'no_of_floors.required'=>'Floor no. field can’t be left blank',
+  'no_of_floors.numeric'=>'Floor no. field allows only numbers.',
+  'property_condition.required'=>'Property condition is required.',
+  'property_features.required' => 'Property features is required.',
+  'property_area.required'=>'Property area field can’t be left blank',
+  'property_area.numeric'=>'Property area field allows only numbers.',
+  'property_address.required'=>'Property address field can’t be left blank',
+  'property_address.regex'=>'  property address field only alphabetic characters.',
+  'property_price.required'=>'Property price field can’t be left blank',
+  'property_price.numeric'=>'Property price field only allows number',
+  'property_price_type.required'=>'Property price type is required.',
+ 
+  'property_gallery_image.max'=>' please upload only'.' '.$remaining_images.' gallery images' 
+
+  ]);
+if($validator->fails()){
+
+return Redirect::back()->withErrors($validator)->withInput();
+}
+
+       
+
+       
               $property=Property::find($id);
               if(!empty($property))
               {
@@ -549,7 +576,8 @@ class PropertyController extends Controller
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
-                          $property->property_status=1;
+                          $property->property_status=0;
+                          // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
               }
               else{
@@ -585,7 +613,8 @@ class PropertyController extends Controller
                   $property->property_description=$data['property_description'];
                   $property->property_description_pt=$property_description_pt;
                   $property->built_in_year=$data['built_in_year'];
-                  $property->property_status=1;
+                   $property->property_status=0;
+                  // $property->property_status=1;
                   $property->publish_date=date('Y-m-d');
               }
             }
@@ -634,7 +663,8 @@ class PropertyController extends Controller
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
-                          $property->property_status=1;
+                          $property->property_status=0;
+                          // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
                       }
                   else{
@@ -672,31 +702,40 @@ class PropertyController extends Controller
                     $property->property_description=$data['property_description'];
                     $property->property_description_pt=$property_description_pt;
                     $property->built_in_year=$data['built_in_year'];
-                    $property->property_status=1;
+                    $property->property_status=0;
+
+                    // $property->property_status=1;
                     $property->publish_date=date('Y-m-d');
                   }
               }
           } 
                         $property->save();
+
+
+
+                       
                         $property_id = $property->id;
+
+                        if($remaining_images==0)
+                        {
+                            return redirect()->back()->with('error', 'you cant upload  new gallery image.');
+                        }
+                       
                           if($request->hasFile('property_gallery_image')){
+
                             $allowedfileExtension = ['jpeg','jpg','png'];
-                            foreach ($data['property_gallery_image'] as $key => $value ){
-                                  // $property_gallery_image = time().'.'.$value->extension();
-                                  $image_extension= $value->getClientOriginalExtension();
-                                  // $property_gallery_image= uniqid().$value->extension();
+                            
+                        foreach ($data['property_gallery_image'] as $key => $value ){
 
-                                  $property_gallery_image = time() . rand(1, 100) . '.' .$value->extension();
-
-                                  
-
-                                  $check = in_array($image_extension, $allowedfileExtension);
-                                  // Checking the image extension
-                                  if (!$check) {
-                                      return redirect()->back()->with('error', 'Images must be png, jpeg or jpg!');
-                                  }
-                                  
-                                   $image = $value->move(public_path('images/property/gallery/'), $property_gallery_image);
+                              $image_extension = $value->getClientOriginalExtension();
+                              $property_gallery_image= uniqid().$value->extension();
+                              $check = in_array($image_extension, $allowedfileExtension);
+                              // Checking the image extension
+                              if (!$check) {
+                                  return redirect()->back()->with('error', 'Images must be png, jpeg or jpg!');
+                              }
+                              
+                              $image = $value->move(public_path('images/property/gallery/'), $property_gallery_image);
                                         $gallery = new PropertyGallery;
                                         $gallery->property_id = $property_id;
                                         $gallery->type = 1;

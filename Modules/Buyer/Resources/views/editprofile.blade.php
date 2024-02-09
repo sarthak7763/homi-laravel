@@ -17,16 +17,16 @@
             <div class="user-box-img">
                <div class="row">
                   <div class="col-12 text-center">
-                     <div class="user-box overflow-visible position-relative">    
+                     <div class="user-box overflow-visible position-relative mb-1">    
                         <div class="useravtaricon">
-                           <div class="user-box2-img">
+                           <div class=" user-box2-img">
                            @if($userInfo->profile_pic)
-                           <img class="rounded-pill-box" src="{{url('/')}}/images/{{$userInfo->profile_pic}}">
+                           <img id="profile_pic_preview" class="rounded-pill-box" src="{{url('/')}}/images/user/{{$userInfo->profile_pic}}">
                            @else
-                           <img class="rounded-pill-box" src="{{url('/')}}/images/1699333958.jpg">
+                           <img id="profile_pic_preview" class="rounded-pill-box" src="assets_front/images/user/1707281764.png">
                            @endif    
                             </div>
-                           <input type="file" id="my-profile_pic" class="opacity-0 position-absolute bottom-0" name="profile_pic">
+                           <input type="file"  class="opacity-0 position-absolute bottom-0" name="profile_pic" id="profile_pic">
                            <label for="my-profile_pic" class="avtar_user d-inline-block rounded-pill position-absolute bottom-0 bg-white">                            
                               <svg width="18" height="16" viewBox="0 0 18 16" fill="none" class="mt-1">
                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M0.75 5.25002C0.75 4.2375 1.57081 3.41669 2.58333 3.41669H3.43549C4.04848 3.41669 4.6209 3.11034 4.96092 2.6003L5.70575 1.48307C6.04577 0.973037 6.61819 0.666687 7.2312 0.666687H10.7688C11.3818 0.666687 11.9542 0.973037 12.2942 1.48307L13.0391 2.6003C13.3791 3.11034 13.9516 3.41669 14.5645 3.41669H15.4167C16.4292 3.41669 17.25 4.2375 17.25 5.25002V13.5C17.25 14.5126 16.4292 15.3334 15.4167 15.3334H2.58333C1.57081 15.3334 0.75 14.5126 0.75 13.5V5.25002Z" stroke="#4A5568" stroke-linecap="round" stroke-linejoin="round"/>
@@ -39,7 +39,7 @@
                </div>
                <div class="row">
                   <div class="col-12">
-                     <strong>Owner Type</strong>
+                     <strong class="mb-2">Owner Type</strong>
                   </div>
                   <div class="col-12 col-sm-6">
                      <div class="mb-4">
@@ -61,8 +61,7 @@
                      </div>
                      @endif
                   </div>
-               </div>
-               <div class="row" >
+             
                   <div class="col-12" >
                      <input type="text"   class="form-control @error('mobile') is-invalid @enderror"  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}" placeholder="Please Enter Mobile No">   
                   </div>
@@ -71,10 +70,9 @@
                     {{$message}}
                   </div>
                   @enderror
-               </div>
-               
-               <div class="row mt-3">
-                  <label class="font-weight-bold mb-2">Owner Type</label>
+                  <div class="col-sm-12">
+                     <label class="mt-3 font-weight-bold mb-2">Owner Type</label>
+                  </div>
                   <div class="col-sm-6">
                      <div class="form-group mb-4">                        
                         <select name="owner_type" id="owner_type"  class="form-control-select owner_type">
@@ -97,7 +95,10 @@
                   </div>
                   @endif
                </div>
-               <button type="submit"  class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">Update</button>
+               <div class="d-flex align-items-center gap-3 justify-content-center pb-4">
+               <button type="submit"  class="mt-3 btn btn-primary mx-0" data-toggle="modal" data-target="#exampleModal">Update</button>
+               
+            </div>
          </form>
          </div>
       </div>
@@ -107,3 +108,7 @@
 </div>
 </main> 
 @endsection
+
+
+
+

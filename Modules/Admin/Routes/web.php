@@ -84,6 +84,9 @@ Route::group(['middleware' => 'Isadmin'], function () {
           //-------------------------ADMIN Property owners ROUTE--------------------------//
         
           Route::get('/propertyOwner-list', 'PropertyOwnerController@index')->name('admin-propertyOwner-list');
+          
+          Route::post('/propertyowner-pending-status-change', 'PropertyOwnerController@pendingStatusChange')->name('admin-propertyowner-pending-status-change');
+
           Route::any('/propertyOwner-add', 'PropertyOwnerController@add')->name('admin-propertyOwner-add');
   
           Route::post('/propertyOwner-save', 'PropertyOwnerController@save')->name('admin-propertyOwner-save');
@@ -184,6 +187,11 @@ Route::group(['middleware' => 'Isadmin'], function () {
         
         //Pending Property where timer expire sale status 0 in offfer table
         Route::get('/pending-property-list', 'PropertyController@pendingProperty')->name('admin-pending-property-list');
+
+
+        Route::post('/pending-property-status-change', 'PropertyController@statusupdate')->name('admin-seller-pending-property-status-change');
+
+        
 
         Route::get('/property-add', 'PropertyController@add')->name('admin-property-add');
 

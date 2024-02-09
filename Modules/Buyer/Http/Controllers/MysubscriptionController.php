@@ -81,8 +81,9 @@ class MySubscriptionController extends Controller
 
     }
 
-    public function sellerSubscriptionstore (Request $request,$id)
+    public function sellerSubscriptionstore (Request $request)
     {
+       
         $validator = Validator::make($request->all(), [
             'fund_amount' => 'required',
             'fund_image' => 'required|mimes:jpeg,png,jpg'
@@ -97,28 +98,40 @@ class MySubscriptionController extends Controller
             return Redirect::back()->withErrors($validator)->withInput();
             }
 
+                $id = $request->hidden_id;
+               
+               
+
                 $user_id = Auth::User()->id;
+                
                 $check_status = SellerSubscription::where('user_id',$user_id)->first();
                 if(!empty($check_status))
                 {
                     $update_status = SellerSubscription::where('user_id',$user_id)->update(['status' =>  0,]);
                 }
+                      if(!empty($id))
+                      {
+                        if ($request->hasFile('fund_image')) {
+                            $imageName = time().'.'.$request->fund_image->extension();
+                            $fund_image = $request->fund_image->move(public_path('images/'), $imageName);
+                        
+                        }
+                        $user_id = Auth::User()->id;
+                        $seller = new SellerSubscription;
+                        $seller->user_id = $user_id;
+                        $seller->subscription_id = $id;
+                        $seller->status = 2;
+                        $seller->fund_amount = $request->fund_amount;
+                        $seller->fund_screenshot = $imageName;
+                        $seller->save();
+                        return redirect()->route('buyer.subscription-plans')->with('success','please wait .All details has been sent to admin for activation subcription plan');
+                        }
+                      else
+                      {
 
-
-                    if ($request->hasFile('fund_image')) {
-                        $imageName = time().'.'.$request->fund_image->extension();
-                        $fund_image = $request->fund_image->move(public_path('images/'), $imageName);
+                        return Redirect()->back();
+                      }
                     
-                    }
-                    $user_id = Auth::User()->id;
-                    $seller = new SellerSubscription;
-                    $seller->user_id = $user_id;
-                    $seller->subscription_id = $id;
-                    $seller->status = 2;
-                    $seller->fund_amount = $request->fund_amount;
-                    $seller->fund_screenshot = $imageName;
-                    $seller->save();
-                    return redirect()->route('seller.subscription-details')->with('success','please wait .All details has been sent to admin for activation subcription plan');
         }
 
 

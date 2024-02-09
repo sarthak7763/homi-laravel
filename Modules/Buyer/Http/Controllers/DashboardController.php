@@ -43,6 +43,13 @@ class DashboardController extends Controller
     }
 
 
+    public function sendotpemail()
+    {
+        $email="sarthak.agarwal@emails.emizentech.com";
+        getemailtemplate($template_id='1',$email,$username="sarthak user",$otp="1235");
+    }
+
+
 
 
     

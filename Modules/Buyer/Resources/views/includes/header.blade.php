@@ -37,7 +37,7 @@
               <div class="header-profile">
 
               @if($sellerinfo->profile_pic)
-                <img class="rounded-pill-box" src="{{url('/')}}/images/{{$sellerinfo->profile_pic}}">
+                <img class="rounded-pill-box" src="{{url('/')}}/images/user/{{$sellerinfo->profile_pic}}">
                            
                            @else
                            <img class="rounded-pill-box" src="{{url('/')}}/images/1699333958.jpg">
@@ -53,8 +53,8 @@
           <ul class="dropdown-menu text-small ssss" id="seller_dropdown">
             
             <li class = "dropdown-item {{ (request()->is('dealer/my-profile*')) ? 'active' : '' }}"><a href="{{route('buyer.my-profile')}}"><i class="fa-regular fa-user"></i> My Profile</a></li>
-            <li class="dropdown-item" ><a href="{{route('buyer.change-password')}}"> <i class="fa-solid fa-unlock"></i> Change Password</a></li>
-            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a href="{{route('buyer.logout')}}"><i class="fa-solid fa-arrow-right-from-bracket"></i>  Sign out</a></li>
+            <li class="dropdown-item" ><a href="{{route('buyer.change-password')}}" > <i class="fa-solid fa-unlock"></i> Change Password</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a data-toggle="modal" data-target="#exampleModalCenter" href="{{route('buyer.logout')}}"><i class="fa-solid fa-arrow-right-from-bracket"></i>  Sign out</a></li>
           </ul>
         </div>
       </div>

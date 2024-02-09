@@ -101,6 +101,24 @@ $(".js-edit-example-tokenizer").select2({
 
 </script>
 
+<script type="text/javascript">
+
+$(document).ready(function (e) {
+   
+$('#profile_pic').change(function(){
+let reader = new FileReader();
+reader.onload = (e) => {
+
+$('#profile_pic_preview').attr('src', e.target.result);
+
+    }
+reader.readAsDataURL(this.files[0]);
+});
+
+   });
+
+</script>
+
 
 <script>
 
@@ -203,9 +221,6 @@ $(document).on('change','#owner_type',function(){
     }
 </script>
 
-
-
-
 <script>
 $('#property_type').on('change',function(){
     var property_type=$(this).val();
@@ -243,6 +258,11 @@ $('#property_type').on('change',function(){
 
   });
 </script>
+
+
+
+
+
 
 
 

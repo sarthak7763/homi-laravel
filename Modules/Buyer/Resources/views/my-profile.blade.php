@@ -1,7 +1,39 @@
 @extends('buyer::layouts.master')
 @section('content')
-<div class="col-md-8 col-lg-9">  
-<div class="profile-box">
+<style>
+    .mt-40 {
+    margin-top: -40px;
+}
+
+.user-box.profilepics-icon img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+}
+.user-box {
+    border: 1px solid #7591a3;
+    padding: 5px;
+}
+</style>
+<div class="col-md-8 col-lg-9 mt-4">  
+<div class="profile-box border px-4 mt-3">
+     <div class="row">
+               <div class="col-12 text-center">
+                  <div class="user-box overflow-visible position-relative profilepics-icon mb-0 mt-40">
+                    @if($userInfo->profile_pic)
+                           <img class="rounded-pill profilepics" src="{{url('/')}}/images/user/{{$userInfo->profile_pic}}">
+                           @else
+                           
+                           <img class="rounded-pill profilepics" src="{{url('/')}}/images/1699333958.jpg"> 
+                           @endif   
+                     
+                    <div class="useravtarIcon">
+                        <input type="file" id="myFile" class="opacity-0 position-absolute bottom-0" name="filename">
+                        
+                     </div>
+                  </div>
+               </div>
+            </div>
     <div class="profile-box-form">
         <h1 class="mb-3">My Profile</h1>
         <div>
@@ -12,8 +44,9 @@
             @endif
         </div>
        
-    </div>
+  
     <div class="ox-auto uinfo-table">
+       
 <table class="table-responsive table-striped table w-100 table-bordered">
 <thead>
     <tr>
@@ -82,6 +115,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 </div>
     </div>
 </div>

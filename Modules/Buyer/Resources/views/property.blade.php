@@ -27,16 +27,17 @@
                 <div class="col-md">
                     <h1 class="mb-3">Property</h1>
                 </div>
-                <div class="col-md-auto">
+                <div class="col-md-auto manage-Property_container">
                     <form action = "{{route('buyer.property-search')}}" method="post" id="searchform" autocomplete="off">
                         @csrf
                         <div class="search-input-group input-group-property">
+                            
                             <div class="form-outline">
                                 <input type="text" id="title_search" class="form-control" name = "title_search" placeholder="Search data" value ="{{$search_title}}" />
                                 <select name="status_search">
                                   <option value ="" >select status</option> 
                                   <option value ="1" {{ $search_status == 1 ? 'selected' : '' }}>Active</option>
-                                  <option value ="2" {{ $search_status ==                                                                                                                                                                            2 ? 'selected' : '' }}>Suspend</option>
+                                  <option value ="2" {{ $search_status == 2 ? 'selected' : '' }}>Suspend</option>                                                                                                                                                                           2 ? 'selected' : '' }}>Suspend</option>
                                   <option value ="0">Pending</option>
                                  </select>                                
                                 </div>
@@ -51,7 +52,7 @@
         <div>
             <a href="{{route('buyer.add-property')}}" class="btn btn-info" button type="submit">Add Property</a>
         </div>
-        @if(!empty($propertyData))
+        @if($propertyData->total()>0)
         <div class="manage-total-bookings">
             <ul class="manage-list">
                 @foreach($propertyData as $property)
@@ -79,12 +80,23 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 7.1665C10.5 8.54725 9.38075 9.6665 8 9.6665C6.61925 9.6665 5.5 8.54725 5.5 7.1665C5.5 5.7858 6.61925 4.6665 8 4.6665C9.38075 4.6665 10.5 5.7858 10.5 7.1665Z" stroke="#828282" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                     {{$property['property_address']}}    | 
-                                    @if($property['property_status'] == 1)
-                                    {{'Active'}}
-                                    @else
-                                    {{'Suspend'}}
-                                    @endif |    Listed on:  {{date('M d, Y',strtotime($property['created_at']))}}
+                                       Listed on:  {{date('M d, Y',strtotime($property['created_at']))}}
                                 </p>
+                                <p>
+                                    @if($property['property_status'] == 1)
+                                 <div class="prop_active">
+                                 {{ $property['property_status'] == 1 ? 'active' : '' }}
+                                    </div>
+                                    @elseif($property['property_status'] == 2)
+                                    <div class="prop_suspend">
+                                 {{ $property['property_status'] == 2 ? 'Suspend' : '' }}
+                                    </div>
+                                    @elseif($property['property_status'] == 0)
+                                    <div class="prop_pending">
+                                 {{ $property['property_status'] == 0 ? 'Pending' : '' }}
+                                    </div>
+                               @endif
+                                </P>
                                 <p>
                                 @if($property['property_type'] == 1)
                                     {{'Renting'}}
@@ -95,7 +107,12 @@
                                 <div class="manage-btn-group">
                                     <a href="{{route('buyer.view-property',($property['id']))}}" class="btn btn-view">View</a>
                                     <a href="{{route('buyer.edit-property',($property['id']))}}" class="btn btn-edit">Edit</a>
-                                    <button type="button" class="btn btn-primary status_change" data-toggle="modal" data-target="#myModal" data-id="{{$property['id']}}" data-status="{{$property['property_status']}}">Change Status</button>
+                                    @if($property['property_status'] == 1 ||  $property['property_status'] == 2 )
+                                    <button type="button" class="btn btn-primary status_change" data-toggle="modal" data-target="#myModal" style="display: block;" data-id="{{$property['id']}}" data-status="{{$property['property_status']}}">Change Status</button>
+                                    @elseif($property['property_type'] == 0)
+                                    <button type="button" class="btn btn-primary status_change" data-toggle="modal" style="display:;" data-target="#myModal" data-id="{{$property['id']}}" data-status="{{$property['property_status']}}">Change Status</button>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
@@ -125,7 +142,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- Your form or content for status change goes here -->
-                            <p>Are you sure you want to change the status?</p>
+                            <p>Are you sure you want to change the property status?</p>
                             <input type= "hidden" name = "property_id" id="property_hidden_id">
                             <input type= "hidden" name = "property_status" id="property_hidden_status"> 
                         </div>
@@ -139,10 +156,9 @@
         </form>
     </div>
     <div>
-{{$propertyData->links()}};
+   {{$propertyData->links()}}
 
 </div>
-
 </div>
 </div>
 </div>

@@ -18,7 +18,7 @@
               <div class="text-center">
             <div class="form-group clrFix mt-1">
                     
-                    <input type="password" name="current_password"  class="form-control @error('old_password') is-invalid @enderror" placeholder="Enter Old Password">
+                    <input type="password" name="current_password" value="{{old('current_password')}}"  class="form-control @error('old_password') is-invalid @enderror" placeholder="Enter Old Password">
                     @error('current_password')
                   <div class="invalid-feedback" style="display:block;">
                     {{$message}}
@@ -27,7 +27,7 @@
                   </div>
                     <div class="form-group clrFix mt-4">
                     
-                    <input type="password" name="new_password"  class="form-control @error('new_password') is-invalid @enderror" placeholder="Enter New Password">
+                    <input type="password" name="new_password" value="{{old('new_password')}}" class="form-control @error('new_password') is-invalid @enderror" placeholder="Enter New Password">
                     @error('new_password')
                   <div class="invalid-feedback" style="display:block;">
                     {{$message}}
@@ -36,7 +36,7 @@
                   </div>
                     <div class="form-group clrFix mt-4">
                   
-                    <input type="password" name="confirm_password"  class="form-control @error('confirm_password') is-invalid @enderror" placeholder="Re-enter New Password">
+                    <input type="password" name="confirm_password" value="{{old('confirm_password')}}"  class="form-control @error('confirm_password') is-invalid @enderror" placeholder="Re-enter New Password">
                     @error('confirm_password')
                   <div class="invalid-feedback" style="display:block;">
                     {{$message}}

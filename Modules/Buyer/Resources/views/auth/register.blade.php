@@ -4,38 +4,7 @@
 <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/6.4.1/css/intlTelInput.css">
 <style type="text/css">
-.phone_number_sec .intl-tel-input {
-    width: 100%;
-}
 
-.phone_number_sec .form-group .form-control {
-    padding-left: 80px;
-}
-
-.phone_number_sec .flag-box {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.phone_number_sec .country .country-name,
-.phone_number_sec .country .country-dial-code {
-    overflow: hidden;
-    padding-left: 15px;
-}
-
-label#password-error {
-    position: absolute;
-    bottom: -25px;
-}
-
-label#confirm_password-error {
-    position: absolute;
-    bottom: -25px;
-}
-
-span.messages strong{
-    color: red;
-}
 </style>
 @endsection
 @section('content')
@@ -121,26 +90,25 @@ span.messages strong{
                         <h1>Welcome!</h1>
                         <strong>Signup your account</strong>
                         <div class="mb-3">
-                            <input type="text" name="name" class="form-control"  id="name" aria-describedby="emailHelp" placeholder="Enter your name here">
-                            @if($name_error!="")
-                              <span class="messages">
-                                  <strong>{{ $name_error }}</strong>
-                              </span>
-                          @endif
+                            <input type="text" name="name" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror"  id="name" aria-describedby="emailHelp" placeholder="Enter your name here">
+                            @error('name')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror
                                
                         </div>
                         <div class="mb-3">
-                            <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                            <input type="email" name="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID">
-                        @if($email_error!="")
-                          <span class="messages">
-                              <strong>{{ $email_error }}</strong>
-                          </span>
-                        @endif
+                                @error('email')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror
                         </div>
-
                         <div class="mb-3 input-group">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                            <input type="password" name="password" value="{{old('password')}}" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password">
                             <span toggle="#password" class="input-group-text togglePassword" id="">
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -161,18 +129,18 @@ span.messages strong{
                                 </svg>
                             </span>
 
-                        @if($password_error!="")
-                          <span class="messages">
-                              <strong>{{ $password_error }}</strong>
-                          </span>
-                        @endif
+                            @error('password')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror
 
                         </div>
 
 
                         <div class="mb-3 input-group">
-                            <input type="password" name="confirm_password" class="form-control" name="confirm_password"  placeholder="Password">
-                            <span toggle="#confirm_password" class="input-group-text togglePassword2" id="">
+                            <input type="password" name="confirm_password" value="{{old('confirm_password')}}" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password"  placeholder="Password" id="confirm_password">
+                            <span toggle="#confirm_password" class="input-group-text togglePassword2" >
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -193,22 +161,29 @@ span.messages strong{
 
                             </span>
 
-                            @if($confirm_password_error!="")
-                          <span class="messages">
-                              <strong>{{ $confirm_password_error }}</strong>
-                          </span>
-                        @endif
+                            @error('confirm_password')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror
                         </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="mycheckbox">
+                        <div class="mb-3 form-check reg_check">
                             <label class="form-check-label" for="exampleCheck1">I Accept <a href="#">Terms and
                                     Conditions</a></label>
-                                    @if($mycheckbox_error!="")
-                          <span class="messages">
-                              <strong>{{ $mycheckbox_error }}</strong>
-                          </span>
-                        @endif
+                                   
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1" name="mycheckbox">
+                            
+                                 @error('mycheckbox')
+                  <div class="invalid-feedback" style="display:block;">
+                    {{$message}}
+                  </div>
+                  @enderror   
+                            
                         </div>
+                        
+                       
+                       
+                    
                         <button type="submit"  id="btnSignup" class="btn btn-primary">Signup</button>
                         <div class="signup-footer mt-4 text-center">
                             <p>Already have an account? <a href="{{url('/')}}/dealer/login">Sign in</a></p>
@@ -252,11 +227,17 @@ $.ajaxSetup({
                 required: true,
                 minlength: 8
             },
+
+            
             confirm_password: {
                 required: true,
                 minlength: 8,
                 equalTo: "#password"
             },
+
+            mycheckbox: {
+                required: true,
+                },
            
 
         },
@@ -280,6 +261,12 @@ $.ajaxSetup({
             confirm_password: {
                 required: "Confirm password field is required",
                 equalTo: "Confirm password must be same as password",
+
+            },
+
+            mycheckbox : {
+                required: "please accept terms and condition",
+               
 
             },
             

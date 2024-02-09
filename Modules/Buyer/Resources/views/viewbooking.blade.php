@@ -1,5 +1,13 @@
 @extends('buyer::layouts.master')
 @section('content')
+<style type="text/css">
+   .carousel-item img {
+   height: 300px;
+   object-fit: cover;
+   object-position: center;
+   }
+   
+</style>
 <div class="col-md-8 col-lg-9">
   <div class="profile-box">          
     <div class="profile-box-form">
@@ -11,14 +19,14 @@
 
       </div>
           
-      <div class="properties-detail mb-5">
+      <div class="properties-detail mb-2">
       <div class="properties-top">
       <div class="row align-items-center">
-      <div class="col-sm-4">
-            <div class="properties-top-img">
-              <img src="{{url('/')}}//images/property/thumbnail/1683619110-a66063ec4bdc74958acedff692e2f099.jpg">
-            </div>
+        <div class="col-sm-4">
+          <div class="properties-top-img">
+            <img src="{{url('/')}}//images/property/thumbnail/1683619110-a66063ec4bdc74958acedff692e2f099.jpg">
           </div>
+        </div>
     
           <div class="col-sm-8">
                <div class="properties-rent">
@@ -62,7 +70,7 @@
                   </span></p>
                </div>
           </div>
-        </div>
+      </div>
       </div>
         <div class="listing-content">                  
           <ul class="row listing-details">
@@ -287,10 +295,15 @@
         </div>
           
       </div>
-    </div>     
+
+    </div>  
+     <div class="d-block text-center py-4 gap-2 profile-box justify-content-center fsdf">
+   <a href ="{{route('buyer.bookings','ongoing')}}" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
+   </div>   
   </div>
 </div>
 </div>
 </div>
+
 </div>
 @endsection

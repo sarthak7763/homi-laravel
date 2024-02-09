@@ -20,35 +20,35 @@
     <form action = "{{route('buyer.bookings-search')}}" method="Post" autocomplete="off">
                         @csrf
                         <div class="search-input-group">
-                            <div class="row form-outline ">
+                            <div class="row form-outline p-2">
 
-                            <div class="col name-box">
+                            <div class="col px-2 name-box">
                                     <label>Property Name</label>
                                     <input type="text" id="form1" class="form-control" name = "title_search" placeholder="Search Property Name" value="{{$search_title}}" >
                                 </div>
-                                <div class="col booking-box">
+                                <div class="col px-2 booking-box">
                                      <label>BookingID</label>
                                      <input type="text" id="form1" class="form-control" name = "booking_id_search" placeholder="Search Booking ID" value="{{$search_booking_id}}">
                                 </div>
-                                <div class="col status-box">
+                                <div class="col px-2 status-box">
                                     <label>Booking Status</label>
                                     <select name="booking_status_search">
                                   <option value ="" >select status</option> 
                                   <option value ="0" {{ $search_booking_status == 0 ? 'selected' : '' }}>Ongoing</option>
                                   <option value ="1" {{ $search_booking_status == 1 ? 'selected' : '' }}>Completed</option>
-                                  <option value ="2" {{ $search_booking_status == 2 ? 'selected' : '' }} >Cancel</option>
+                                  <option value ="2" {{ $search_booking_status == 2 ? 'selected' : '' }} >Cancelled</option>
                                  </select> 
                                 </div>
 
-                                <div class="col date-box">
+                                <div class="col px-2 date-box">
                                     <label>Checkin Date</label>
                                     <input type="text" id="datepicker1" name = "check_in_search" value="{{$search_checkin}}" >
                                 </div>                         
-                                    <div class="col date-box">
+                                    <div class="col px-2 date-box">
                                      <label>Checkout Date</label>
                                      <input type="text" id="datepicker2" name = "check_out_search" value="{{$search_checkout}}">
                                 </div>
-                                <div class="col-auto date-box-submit">
+                                <div class="col-auto date-box-submit px-2">
                                      <button type="submit" class="btn-search">
                             Search
                             </button>
@@ -61,8 +61,8 @@
                     
 
           @if(!empty($bookingData))
-            <div class="total-bookings">
-                <table class="table mb-0">
+            <div class="total-bookings px-3">
+                <table class="table mb-0 border">
                     <thead>
                         <tr>
                             <th scope="col">Sr.no</th>
@@ -94,7 +94,7 @@
                                 @elseif($booking->booking_status==1) 
                                 {{'completed'}}
                                 @elseif($booking->booking_status==2) 
-                                {{'cancel'}}
+                                {{'cancelled'}}
                                 @endif
                             </td>
                             <td>
@@ -128,7 +128,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <!-- Your form or content for status change goes here -->
-                                    <p>Are you sure you want to change the status?</p>
+                                    <p>Are you want to mark your booking completed ?</p>
                                     <input type= "hidden" name = "booking_id" id="booking_hidden_id">
                                     <input type= "hidden" name = "booking_status" id="booking_hidden_status"> 
                                 </div>

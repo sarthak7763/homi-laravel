@@ -171,49 +171,55 @@ class BuyerController extends Controller {
 
 
       }//BUYER SIGN UP REGISTER POST 
-  public function sellerSignupPost(Request $request){
-    try{
+        public function sellerSignupPost(Request $request){
+                try{
+
+                  $validator = Validator::make($request->all(), [
+                    'email'=>'required|email:rfc,dns',
+                        'name'=>[
+                              'required',
+                              'regex:/^[\pL\s]+$/u',
+                          ],
+                        'password' => [
+                                'required',
+                                'min:8',
+                                'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+                                'max:25'
+                          ],
+                        'confirm_password' => 'required|same:password', 
+                        'mycheckbox' =>'required'    
+            ],
+            [
+                        'name.required' => 'Name field can’t be left blank.',
+                        'name.regex' => 'Please enter only alphabetic characters.',
+                        'email.required'=>'Email field can not be empty',
+                        'email.email'=>'Please enter a valid email address',
+                        'password.required'=>'Password field can’t be left blank',
+                        'password.min'=>'Password can not be less than 8 character.',
+                        'password.max'=>'Password can not be more than 25 character',
+                        'password.regex'=>'Password should contain a Capital Letter, small letter, number and special characters',
+                        'confirm_password.required'=>'Confirm Password field can’t be left blank',
+                        'confirm_password.same'=>'Password and confirm password doesn’t match',
+                        'mycheckbox.required'=>'please accept terms and condition',
+
+            ]);
+                if($validator->fails()){
+
+                return Redirect::back()->withErrors($validator)->withInput();
+                }
       
           $data=$request->all();
-          $request->validate([
-            'email'=>'required|email:rfc,dns',
-            'name'=>[
-                  'required',
-                  'regex:/^[\pL\s]+$/u',
-              ],
-            'password' => [
-                    'required',
-                    'min:8',
-                    'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
-                    'max:25'
-              ],
-            'confirm_password' => 'required|same:password', 
-            'mycheckbox' =>'required'    
-          ],
-          [
-            'name.required' => 'Name field can’t be left blank.',
-            'name.regex' => 'Please enter only alphabetic characters.',
-            'email.required'=>'Email field can not be empty',
-            'email.email'=>'Please enter a valid email address',
-            'password.required'=>'Password field can’t be left blank',
-            'password.min'=>'Password can not be less than 8 character.',
-            'password.max'=>'Password can not be more than 25 character',
-            'password.regex'=>'Password should contain a Capital Letter, small letter, number and special characters',
-            'confirm_password.required'=>'Confirm Password field can’t be left blank',
-            'confirm_password.same'=>'Password and confirm password doesn’t match',
-            'mycheckbox.required'=>'please accept terms and condition',
-
-          ]);
-
+          
           $checkuseremail=User::where('email',$data['email'])->where('user_type','3')->get()->first();
           if($checkuseremail)
           {
               return back()->with('error','Email already exists. Please try with another one.');
+
           }
 
           try{
                 $data['password']= Hash::make($data['password']);
-                $email_token="1234";
+                $email_token= rand(1111,9999);
                 $user = new Tempuser;
                 $user->name=$data['name'];
                 $user->email=$data['email'];
@@ -229,6 +235,11 @@ class BuyerController extends Controller {
                       'email'=>$data['email'],
                       'otp' =>$email_token
                     ];
+
+
+
+                    getemailtemplate($template_id='1',$data['email'],$data['name'],$email_token);
+
    
                     // \Mail::to($data['email'])->send(new \App\Mail\EmailVerification($details));
 
@@ -271,6 +282,8 @@ class BuyerController extends Controller {
   {
    try
     {
+
+      
           $validator = Validator::make($request->all(), [
               'email' => 'required|email',
               'password' => [
@@ -325,7 +338,7 @@ class BuyerController extends Controller {
             
             }
             else{
-              return redirect("dealer/login")->withSuccess('Oppes! You have entered invalid credentials');
+              return redirect("dealer/login")->with('error','Oppes! You have entered invalid credentials');
             }
      }
     catch(\Exception $e)
@@ -370,6 +383,8 @@ class BuyerController extends Controller {
                     return back()->with('error','Email already verified.');
                 }
 
+
+
                 $email_verification_token=$checktempuseremail->email_verification_token;
 
                 if($email_verification_token==$data['otp'])
@@ -390,8 +405,12 @@ class BuyerController extends Controller {
                     });
 
                     $checkuser=User::where('email',$seller_email)->where('user_type','3')->get()->first();
+                   
                     if($checkuser)
                     {
+
+                    getemailtemplate($template_id='4',$checkuser->email,$checkuser->name); 
+                       
                       $user_id=$checkuser->id;
                       Session::forget('email');
                       Session::forget('type');
@@ -436,8 +455,13 @@ class BuyerController extends Controller {
 
   public function sellerresendemailotp(Request $request)
   {
+    
     $data=$request->all();
-    $resend_otp = 5678;
+
+    $resend_otp = rand(1111,9999);
+
+
+
     if(session()->has('email') && session()->has('type'))
           {
             $seller_email=Session::get('email');
@@ -450,14 +474,18 @@ class BuyerController extends Controller {
 
          $checkuseremail=Tempuser::where('email',$seller_email)->where('user_type','3')->orderBy('id', 'DESC')->get()->first();
         
+         
           if($checkuseremail)
+
           {
-                  if($checkuseremail->email_verified==0)
+              if($checkuseremail->email_verified==0)
                     {
+                  getemailtemplate($template_id='3',$seller_email,$checkuseremail->name,$resend_otp);
+
                     $otp_update = Tempuser::where('email',$seller_email)->where('user_type','3')->orderBy('id', 'DESC')->update(
                                                                                                         ['email_verification_token'=>$resend_otp],
                                                                                                             );
-                    return response()->json(['status'=>'success','message'=>'you are successfully updated rsend otp']);
+                    return response()->json(['status'=>'success','message'=>'OTP resend successfully on your registered email.']);
                     }
                   else
                   {
@@ -500,15 +528,20 @@ class BuyerController extends Controller {
                     return back()->with('error','Email already verified.');
                 }
 
+                 
+
                 $email_verification_token=$checkuseremail->email_verification_token;
 
                 if($email_verification_token==$data['otp'])
                 {
                   $userid=$checkuseremail->id;
                   $userdet=User::find($userid);
+
                   $userdet->email_verification_token="";
                   $userdet->email_verified=1;
                   $userdet->save();
+
+                  
 
                   Session::forget('email');
                   Session::forget('type');
@@ -565,16 +598,20 @@ class BuyerController extends Controller {
     {
 
           $validator = Validator::make($request->all(), [
-                        'current_password' => 'required',
+                        'current_password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
                         'new_password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
                         'confirm_password' => 'required|same:password'
           ],
             [
-            'current_password.required' => 'current passsword is required.',
-            'new_password.required' => 'new password is required.',
-            'new_password.min' => ' new password should be minimum 6 characters.',
-            'new_password.max' => 'The new password must not be greater than 12 characters.',
-            'new_password.regex' => 'password should be capital letter, small letter,special charcters and number .',
+            'current_password.required' => 'Old passsword is required.',
+            
+            'current_password.min' => ' Old passsword should be minimum 6 characters.',
+            'current_password.max' => 'Old passsword must not be greater than 10 characters.',
+            'current_password.regex' => 'Old passsword should be capital letter, small letter,special charcters and number .',
+            'new_password.required' => 'New password is required.',
+            'new_password.min' => ' New password should be minimum 6 characters.',
+            'new_password.max' => ' New password must not be greater than 10 characters.',
+            'new_password.regex' => 'Password should be capital letter, small letter,special charcters and number .',
             'confirm_password.required'=>'Confirm Password field can’t be left blank',
             'confirm_password.same'=>'Password and confirm password doesn’t match',
             

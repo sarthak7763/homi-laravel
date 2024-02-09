@@ -1,13 +1,7 @@
 @extends('buyer::layouts.master')
 @section('content')
 <div class="col-md-8 col-lg-9">
-    <div>
-        @if (session()->has('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-        @endif
-    </div>
+    
     <div class="profile-box">
         <div class="profile-box-form">
             <h1 class="mb-3">Edit Properties</h1>
@@ -54,7 +48,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-4">
-                                <input type="text" class="form-control @error('guest_count') is-invalid @enderror" value = "{{$propertyDetail->guest_count}}" name = "guest_count" aria-describedby="" placeholder="Maximum guest allowed">
+                                <input type="number"  class="form-control @error('guest_count') is-invalid @enderror" value = "{{$propertyDetail->guest_count}}" name = "guest_count" aria-describedby="" placeholder="Maximum guest allowed">
                                 @if($errors->has('guest_count'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('guest_count')}}
@@ -64,7 +58,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-4">
-                                <input type="text" class="form-control @error('no_of_bedroom') is-invalid @enderror" value = "{{$propertyDetail->no_of_bedroom}}"  name = "no_of_bedroom" aria-describedby="" placeholder="No of Bedrooms">            
+                                <input type="number"   class="form-control @error('no_of_bedroom') is-invalid @enderror" value = "{{$propertyDetail->no_of_bedroom}}"  name = "no_of_bedroom" aria-describedby="" placeholder="No of Bedrooms">            
                                 @if($errors->has('no_of_bedroom'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('no_of_bedroom')}}
@@ -86,7 +80,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-4 pt-4">
-                                <input type="text" class="form-control @error('no_of_kitchen') is-invalid @enderror" name = "no_of_kitchen" value = "{{$propertyDetail->no_of_kitchen}}"  aria-describedby="" placeholder="Enter No of Kitchen">            
+                                <input type="number"  class="form-control @error('no_of_kitchen') is-invalid @enderror" name = "no_of_kitchen" value = "{{$propertyDetail->no_of_kitchen}}"  aria-describedby="" placeholder="Enter No of Kitchen">            
                                 @if($errors->has('no_of_kitchen'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('no_of_kitchen')}}
@@ -96,7 +90,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-4">
-                                <input type="text" class="form-control @error('no_of_bathroom') is-invalid @enderror" name = "no_of_bathroom" value = "{{$propertyDetail->no_of_bathroom}}"  aria-describedby="" placeholder="Enter No of Bathrooms">            
+                                <input type="number"  class="form-control @error('no_of_bathroom') is-invalid @enderror" name = "no_of_bathroom" value = "{{$propertyDetail->no_of_bathroom}}"  aria-describedby="" placeholder="Enter No of Bathrooms">            
                                 @if($errors->has('no_of_bathroom'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('no_of_bathroom')}}
@@ -107,7 +101,7 @@
                        
                         <div class="col-sm-6">
                             <div class="mb-4">
-                                <input type="text" class="form-control @error('no_of_balcony') is-invalid @enderror" value = "{{$propertyDetail->no_of_balcony}}"  name = "no_of_balcony"  aria-describedby="" placeholder="Enter No of Balcony">            
+                                <input type="number"  class="form-control @error('no_of_balcony') is-invalid @enderror" value = "{{$propertyDetail->no_of_balcony}}"  name = "no_of_balcony"  aria-describedby="" placeholder="Enter No of Balcony">            
                                 @if($errors->has('no_of_balcony'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('no_of_balcony')}}
@@ -117,7 +111,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-4">
-                                <input type="text" class="form-control @error('property_area') is-invalid @enderror" value = "{{$propertyDetail->property_area}}" name ="property_area" aria-describedby="" placeholder=" Enter Property Area">            
+                                <input type="number"  class="form-control @error('property_area') is-invalid @enderror" value = "{{$propertyDetail->property_area}}" name ="property_area" aria-describedby="" placeholder=" Enter Property Area">            
                                 @if($errors->has('property_area'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('property_area')}}
@@ -127,7 +121,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-4">
-                                <input type="text" class="form-control @error('no_of_floors') is-invalid @enderror" value = "{{$propertyDetail->no_of_floors}}" name = "no_of_floors"  aria-describedby="" placeholder="Enter Floor No">            
+                                <input type="number"   class="form-control @error('no_of_floors') is-invalid @enderror" value = "{{$propertyDetail->no_of_floors}}" name = "no_of_floors"  aria-describedby="" placeholder="Enter Floor No">            
                                 @if($errors->has('no_of_floors'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('no_of_floors')}}
@@ -159,13 +153,13 @@
                                        ({{$list['phonecode']}})</option>
                                   @endforeach
                                 </select>   
-                        <input type="text" class="form-control" value="{{$propertyDetail->property_number}}" name="property_number" id="property_number" placeholder="Enter Contact Number" >  
+                        <input type="text" class="form-control"  value="{{$propertyDetail->property_number}}" name="property_number" id="property_number" placeholder="Enter Contact Number" >  
                         </div>         
                      </div>
                   </div>
                         <div class="col-sm-6">
                             <div class="mb-4">            
-                                <input type="text" class="form-control" readonly value="{{$propertyDetail->property_email}}" name = "property_email" readonly  aria-describedby="" placeholder="Enter Contact Email">            
+                                <input type="email" class="form-control"  value="{{$propertyDetail->property_email}}" name = "property_email" readonly  aria-describedby="" placeholder="Enter Contact Email">            
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -193,7 +187,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-4">
-                                <input type="text" class="form-control @error('property_price') is-invalid @enderror" name = "property_price" value = "{{$propertyDetail->property_price}}" aria-describedby="" placeholder="Enter Property Price">            
+                                <input type="number" class="form-control @error('property_price') is-invalid @enderror" name = "property_price" value = "{{$propertyDetail->property_price}}" aria-describedby="" placeholder="Enter Property Price">            
                                 @if($errors->has('property_price'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('property_price')}}
@@ -235,23 +229,46 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="mb-4">            
-                                <textarea class="form-control" name = "meta_title"   rows="3" placeholder="Meta Title">{{$propertyDetail->meta_title}}</textarea>         
+                                <textarea class="form-control @error('meta_title') is-invalid @enderror" name = "meta_title"   rows="3" placeholder="Meta Title">{{$propertyDetail->meta_title}}</textarea>         
+                                @if($errors->has('meta_title'))
+                                <div class="invalid-feedback">
+                                    {{$errors->first('meta_title')}}
+                                </div>
+                                @endif
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="mb-4">            
-                                <textarea class="form-control" name = "meta_keywords"  rows="3" placeholder="Meta keywords">{{$propertyDetail->meta_keywords}}</textarea>         
+                                <textarea class="form-control @error('meta_keywords') is-invalid @enderror" name = "meta_keywords"  rows="3" placeholder="Meta keywords">{{$propertyDetail->meta_keywords}}</textarea>         
+                                @if($errors->has('meta_keywords'))
+                                <div class="invalid-feedback">
+                                    {{$errors->first('meta_keywords')}}
+                                </div>
+                                @endif
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="mb-4">            
-                                <textarea class="form-control" name = "meta_description"   rows="3" placeholder="Meta Description">{{$propertyDetail->meta_description}}</textarea>         
+                                <textarea class="form-control @error('meta_description') is-invalid @enderror" name = "meta_description"   rows="3" placeholder="Meta Description">{{$propertyDetail->meta_description}}</textarea>         
+                                @if($errors->has('meta_description'))
+                                <div class="invalid-feedback">
+                                    {{$errors->first('meta_description')}}
+                                </div>
+                                @endif
                             </div>
+
+
+
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="mb-4">            
-                            <textarea class="form-control" name = "property_description"   rows="3" placeholder="Property Description">{{$propertyDetail->property_description}}</textarea>
+                            <textarea class="form-control @error('property_description') is-invalid @enderror" name = "property_description"   rows="3" placeholder="Property Description">{{$propertyDetail->property_description}}</textarea>
+                            @if($errors->has('property_description'))
+                                <div class="invalid-feedback">
+                                    {{$errors->first('property_description')}}
+                                </div>
+                                @endif
                         </div>
                     </div>
                 </div>
@@ -297,25 +314,37 @@
                         @endif           
                     </div>
                 </div>
+                <div>
+        @if (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+        @endif
+    </div>
                 <div class="col-md-12">
                     <div class="mt-1 text-center row">
                           @foreach($propertyGallery as $gallery) 
                         <div class = "removeimage-box removeimage_{{$gallery['id']}}" >
                             <img class="rounded-pill-box" src="{{url('/')}}/images/property/gallery/{{$gallery['image']}}">
-                            <button type="button" class="deleteProduct delete_property_gallery" id="delete_property_gallery"  data-id= "{{$gallery['id']}}" data-property= "{{$gallery['property_id']}}" class ="btn-btn-delete delete_image" ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12.0005" cy="11.999" r="8.5" fill="white" stroke="#8DC83E"/>
-<path d="M8.1378 16.5742L7.42529 15.8617L15.9003 7.38672L16.6128 8.09922L8.1378 16.5742Z" fill="#8DC83E"/>
-<path d="M15.9003 16.5742L7.42529 8.09922L8.1378 7.38672L16.6128 15.8617L15.9003 16.5742Z" fill="#8DC83E"/>
-</svg>
-</button>
+                            <button type="button" class="deleteProduct delete_property_gallery" id="delete_property_gallery"  data-id= "{{$gallery['id']}}" data-property= "{{$gallery['property_id']}}" class ="btn-btn-delete delete_image" >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12.0005" cy="11.999" r="8.5" fill="white" stroke="#8DC83E"/>
+                                    <path d="M8.1378 16.5742L7.42529 15.8617L15.9003 7.38672L16.6128 8.09922L8.1378 16.5742Z" fill="#8DC83E"/>
+                                    <path d="M15.9003 16.5742L7.42529 8.09922L8.1378 7.38672L16.6128 15.8617L15.9003 16.5742Z" fill="#8DC83E"/>
+                                </svg>
+                            </button>
                         </div>
                         @endforeach
                         <div class="images-preview-div"> </div>
                     </div>
                 </div>
-               
-                <button type="submit" class="btn btn-primary w-auto">Update</button>
-            </form>
+                <div class="d-flex align-items-center gap-3 justify-content-center pb-4">
+                    <button type="submit" class="btn btn-primary w-auto mt-0 mx-0">Update</button>
+                    <a href ="{{route('buyer.property','all')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
+                    
+                </div>
+                </form>
+
         </div>
     </div>
 </div>

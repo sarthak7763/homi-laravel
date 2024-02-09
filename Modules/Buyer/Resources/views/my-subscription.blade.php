@@ -46,13 +46,14 @@
             </div>
             @else
             <div class ="no-data-box">
-            <center>
-    <h2>{{'No Data Found '}}</h2>
-</center>
-</div>
- @endif
-</div>
-</div>
+                <center>
+                    <h2>{{'No Data Found '}}</h2>
+                </center>
+            </div>
+            @endif
+        </div>
+      
+    </div>
 </div>
 </div>
 </main>

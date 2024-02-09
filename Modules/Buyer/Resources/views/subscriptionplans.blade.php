@@ -4,6 +4,14 @@
     <div class="profile-box">          
       <div class="profile-box-form">
         <h1 class="mb-3"> All Subscription Plans</h1>
+
+        <div>
+                    @if (session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+                </div>
         <section class="section-subscription">
           <div class="row ">
           @foreach($subscription_plan as $subscription)
@@ -44,11 +52,14 @@
                    
                    {!! $subscription->image !!}             
                </div>
+               
                </form>
+
             </div>
           
             @endforeach
     `       </div>
+   
         </section>
        
       </div>

@@ -36,7 +36,11 @@
     .cd-horizontal-timeline {
         margin: 0 auto;
     }
-
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    font-size: 12px;
+    padding: 5px;
+    vertical-align: middle;
+}
     #chartdiv {
         height: 440px;
     }

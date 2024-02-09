@@ -77,7 +77,7 @@
                                                 <th>S.No</th>
                                                 <th>Name</th>
                                                 <th>Subject</th>
-                                                <th>Message</th>
+                                                <!-- <th>Message</th> -->
                                                 <th>Email Type</th>
                                                <th>Action</th>
                                             </tr>
@@ -116,7 +116,7 @@
            
             {data: 'name', name: 'name'},
             {data: 'subject', name: 'subject'},
-            {data: 'message', name: 'message'},
+            // {data: 'message', name: 'message'},
             {data: 'email type', name: 'email type'},
             {data: 'action', name: 'action' , orderable: false, searchable: false},
         ]

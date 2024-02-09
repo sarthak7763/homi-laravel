@@ -66,7 +66,7 @@ class BookingController extends Controller
 
                     if($search_checkout!=""){
                       $newcheckout_Date = date("Y-m-d", strtotime($search_checkout));
-                      $query->where("user_booking.user_checkout_date","<=",$newcheckout_Date);  
+                      $query->where("user_booking.user_checkout_date","=",$newcheckout_Date);  
                     }
 
                    

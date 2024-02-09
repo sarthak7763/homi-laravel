@@ -46,6 +46,8 @@ Route::group(['middleware' => 'Isseller'], function ()
 
     Route::get('/dealer/dashboard', 'DashboardController@index')->name('buyer.dashboard');
 
+    Route::get('/dealer/sendotpemail', 'DashboardController@sendotpemail')->name('buyer.sendotpemail');
+
     // change password
 
     Route::get('/dealer/change-password', 'BuyerController@changePassword')->name('buyer.change-password');
@@ -76,7 +78,7 @@ Route::group(['middleware' => 'Isseller'], function ()
     //-------------------------------------- subscription--------------------------------------------// 
     Route::get('/dealer/subscription-plans', 'MysubscriptionController@allsubscriptions')->name('buyer.subscription-plans');
     Route::get('/dealer/seller-subscription/{id}', 'MysubscriptionController@sellerSubscription')->name('seller.subscription-details');
-    Route::post('/dealer/seller-subscription-save//{id}', 'MysubscriptionController@sellerSubscriptionstore')->name('seller.subscription-details-save');
+    Route::post('/dealer/seller-subscription-save', 'MysubscriptionController@sellerSubscriptionstore')->name('seller.subscription-details-save');
     Route::post('/dealer/user-subscription-confirmation/{id}', 'MysubscriptionController@subscriptionconfirmation')->name('buyer.subscription-confirmation');
     Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
 

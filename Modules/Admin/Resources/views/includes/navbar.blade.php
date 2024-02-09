@@ -77,6 +77,8 @@
                 </a>
             </li>
 
+
+
           <!--  <li class="{{ (\Request::route()->getName() == 'admin-subscription-list') ? 'active' : '' }}">
                 <a href="{{route('admin-subscription-list')}}">
                     <span class="pcoded-micon"><i class="fa fa-pagelines"></i></span>
@@ -90,6 +92,16 @@
                     <span class="pcoded-mtext">Manage Payments</span>
                 </a>
             </li> -->
+
+
+            <li class="{{ (\Request::route()->getName() == 'admin-seller-subscription-list') ? 'active' : '' }}">
+                <a href="{{route('admin-seller-subscription-list')}}">
+                    <span class="pcoded-micon"><i class="fa fa-file"></i></span>
+                    <span class="pcoded-mtext">Manage Seller Subscription</span>
+                </a>
+            </li>
+
+            
 
             <li class="{{ (\Request::route()->getName() == 'admin-reason-list') ? 'active' : '' }}">
                 <a href="{{route('admin-reason-list')}}">

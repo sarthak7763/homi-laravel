@@ -612,5 +612,36 @@ function getconditionnamebylang($lang,$id)
 }
 
 
+
+function getemailtemplate($template_id,$email,$username,$otp="")
+  {
+    $emailcontentdata=DB::table('email_templates')->where('id',$template_id)->get()->first();
+    if($emailcontentdata)
+    {
+        $email_content=$emailcontentdata->message;
+        
+        $email_subject=$emailcontentdata->subject;
+
+      $variablesarray=array('[user]','[otp]','[contactname]','[contactinformation]','[contactinformationlink]','[contactsite]','[contactsitelink]');
+
+      $variablesvaluesarray=array($username,$otp,'Homi Team','info@homi.com','mailto:info@homi.com','www.homi.com','https://www.homi.com');
+
+      $email_content=str_replace($variablesarray,$variablesvaluesarray,$email_content);
+      $email_subject=str_replace($variablesarray,$variablesvaluesarray,$email_subject);
+      $email_subject=str_replace('&nbsp;','',$email_subject);
+      $email_subject=strip_tags($email_subject);
+
+      $details['email_content']=$email_content;
+      $details['email_subject']=$email_subject;
+
+      \Mail::to($email)->send(new \App\Mail\EmailMasterMailTemplate($details));
+
+      return true;
+    }
+
+    return true;
+  }
+
+
    
 ?>

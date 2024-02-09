@@ -20,6 +20,8 @@ use Validator;
 use Hash;
 use DB;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use Carbon\Carbon;
+use App\Models\PropertyCondition;
 
 class DashboardController extends BaseController
 {
@@ -261,28 +263,51 @@ class DashboardController extends BaseController
 	        }
 
 
-	        $categorylist=Category::where('category_type',$property_type)->where('status',1)->get();
-        	if($categorylist)
-        	{
-        		$categorylistarray=$categorylist->toArray();
+        $categorylist=Category::where('category_type',$property_type)->where('status',1)->get();
+    	if($categorylist)
+    	{
+    		$categorylistarray=$categorylist->toArray();
 
-        		if($categorylistarray)
-        		{
-        			foreach($categorylistarray as $list)
-        			{
-        				$category_arr[]=array(
-        					'id'=>$list['id'],
-        					'name'=>getcategorynamebylang($lang_key,$list['id'])
-	        			);
-        			}
-        		}
-        		else{
-        			$category_arr=[];
-        		}
-        	}
-        	else{
-        		$category_arr=[];
-        	}
+    		if($categorylistarray)
+    		{
+    			foreach($categorylistarray as $list)
+    			{
+    				$category_arr[]=array(
+    					'id'=>$list['id'],
+    					'name'=>getcategorynamebylang($lang_key,$list['id'])
+        			);
+    			}
+    		}
+    		else{
+    			$category_arr=[];
+    		}
+    	}
+    	else{
+    		$category_arr=[];
+    	}
+
+        $conditionlist=PropertyCondition::where('status',1)->get();
+    	if($conditionlist)
+    	{
+    		$conditionlistarray=$conditionlist->toArray();
+
+    		if($conditionlistarray)
+    		{
+    			foreach($conditionlistarray as $list)
+    			{
+    				$condition_arr[]=array(
+    					'id'=>$list['id'],
+    					'name'=>getconditionnamebylang($lang_key,$list['id'])
+        			);
+    			}
+    		}
+    		else{
+    			$condition_arr=[];
+    		}
+    	}
+    	else{
+    		$condition_arr=[];
+    	}
 
         	if($lang_key=="en")
 			{
@@ -337,6 +362,7 @@ class DashboardController extends BaseController
 	     //    }
 	        	
         	$success['categorylist']=$final_category_arr;
+        	$success['conditionlist']=$condition_arr;
         	$success['minprice']=$minprice;
         	$success['maxprice']=$maxprice;
         	$success['minarea']=$minarea;
@@ -814,17 +840,12 @@ public function getnearbypropertieslist(Request $request)
 	    	$page=1;
 	    }
 
-	    //Buying:
-		// Lowest price : 1
+	    // Lowest price: 1
 		// Highest Price: 2
 		// Most recent: 3
-
-		// Renting:
-		// Lowest price: 1
-		// Highest Price: 2
-		// Most recent: 3
-		//Lowest Rating: 4
+		// Lowest Rating: 4
 		// Highest rating: 5
+		// Least recent: 6
 
 	    if(isset($request->sort_by) && $request->sort_by!="")
 	    {
@@ -936,7 +957,7 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
     }
     elseif($sort_by==3)
     {
-    	$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.id', 'DESC');
+    	$nearbypropertyquery=$nearbypropertyquery->where('created_at', '>', now()->subDays(30))->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
@@ -945,6 +966,10 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
     elseif($sort_by==5)
     {
     	$nearbypropertyquery=$nearbypropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
+    }
+    elseif($sort_by==6)
+    {
+    	$nearbypropertyquery=$nearbypropertyquery->where('created_at', '>', now()->subDays(60))->orderBy('tbl_pr.id', 'DESC');
     }
     else{
     	if($lat!="" && $lng!="")
@@ -999,6 +1024,7 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
 					'property_date'=>date('d M Y',strtotime($list->publish_date)),
+					'property_created_date'=>date('d M Y',strtotime($list->created_at)),
 					'favourite'=>$favourite,
 					'rating'=>5,
 					'property_bedrooms'=>$list->no_of_bedroom,
@@ -1014,6 +1040,7 @@ public function get_nearby_properties_list($lat,$lng,$property_type,$property_ca
 					'property_image'=>$property_image,
 					'property_price'=>$list->property_price,
 					'property_date'=>date('d M Y',strtotime($list->publish_date)),
+					'property_created_date'=>date('d M Y',strtotime($list->created_at)),
 					'favourite'=>$favourite,
 					'property_bedrooms'=>$list->no_of_bedroom,
 					'property_description'=>$propertylangdata['description'],
@@ -1183,17 +1210,12 @@ public function getrecentlyaddeddpropertylist(Request $request)
 	    	$property_category=0;
 	    }
 
-		    //Buying:
-		// Lowest price : 1
+	    // Lowest price: 1
 		// Highest Price: 2
 		// Most recent: 3
-
-		// Renting:
-		// Lowest price: 1
-		// Highest Price: 2
-		// Most recent: 3
-		//Lowest Rating: 4
+		// Lowest Rating: 4
 		// Highest rating: 5
+		// Least recent: 6
 
 		    if(isset($request->sort_by) && $request->sort_by!="")
 		    {
@@ -1306,7 +1328,7 @@ public function get_recentlyadded_properties_list($lat,$lng,$property_type,$prop
     }
     elseif($sort_by==3)
     {
-    	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.id', 'DESC');
+    	$recentlypropertyquery=$recentlypropertyquery->where('created_at', '>', now()->subDays(30))->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
@@ -1315,6 +1337,10 @@ public function get_recentlyadded_properties_list($lat,$lng,$property_type,$prop
     elseif($sort_by==5)
     {
     	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
+    }
+    elseif($sort_by==6)
+    {
+    	$recentlypropertyquery=$recentlypropertyquery->where('created_at', '>', now()->subDays(60))->orderBy('tbl_pr.id', 'DESC');
     }
     else{
     	$recentlypropertyquery=$recentlypropertyquery->orderBy('tbl_pr.publish_date', 'DESC');
@@ -1536,6 +1562,7 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 				$sellername=$sellerdet->name;
 				$selleremail=$sellerdet->email;
 				$sellernumber=$sellerdet->mobile;
+				$selleragencyname=$sellerdet->agency_name;
 
 				if($sellerdet->profile_pic!="")
 		        {
@@ -1550,6 +1577,7 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 				$selleremail="";
 				$sellernumber="";
 				$sellerimage="";
+				$selleragencyname="";
 			}
 
 			if($userid!="")
@@ -1570,6 +1598,15 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 
 	        $propertylangdata=getpropertydetbylang($lang_key,$checkpropertyarray['id']);
 
+	        if($checkpropertyarray['property_features']!="")
+	        {
+	        	$property_features=json_decode($checkpropertyarray['property_features']);
+	        }
+	        else{
+	        	$property_features=[];
+	        }
+	        
+
 			$propertyarray=array(
 				'property_id'=>$checkpropertyarray['id'],
 				'property_gallery'=>$property_gallery,
@@ -1588,21 +1625,23 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 				'no_of_bathroom'=>$checkpropertyarray['no_of_bathroom'],
 				'no_of_pool'=>$checkpropertyarray['no_of_pool'],
 				'no_of_garden'=>$checkpropertyarray['no_of_garden'],
+				'no_of_lift'=>$checkpropertyarray['no_of_lift'],
+				'no_of_parking'=>$checkpropertyarray['no_of_parking'],
 				'no_of_balcony'=>$checkpropertyarray['no_of_balcony'],
 				'property_area'=>$checkpropertyarray['property_area'],
 				'built_in_year'=>$built_in_year,
 				'property_description'=>$propertylangdata['description'],
-				'favourite'=>$favourite
+				'favourite'=>$favourite,
+				'sellernumber'=>$checkpropertyarray['property_number'],
+				'sellerimage'=>$sellerimage,
+				'sellername'=>$sellername,
+				'selleragencyname'=>$selleragencyname,
+				'property_features'=>$property_features
 			);
 
 			if($checkpropertyarray['property_type']==1)
 			{
 				$propertyarray['property_rating'] = 5;
-			}
-			else{
-				$propertyarray['sellernumber'] = $checkpropertyarray['property_number'];
-				$propertyarray['sellerimage']=$sellerimage;
-				$propertyarray['sellername']=$sellername;
 			}
 
 			$data=array('code'=>200,'message'=>'success','propertyarray'=>$propertyarray);
@@ -1755,17 +1794,12 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
         	$lang_key="en";
         }
 
-	 	//Buying:
-		// Lowest price : 1
+	 	// Lowest price: 1
 		// Highest Price: 2
 		// Most recent: 3
-
-		// Renting:
-		// Lowest price: 1
-		// Highest Price: 2
-		// Most recent: 3
-		//Lowest Rating: 4
+		// Lowest Rating: 4
 		// Highest rating: 5
+		// Least recent: 6
 
 	    if(isset($request->sort_by) && $request->sort_by!="")
 	    {
@@ -1843,6 +1877,14 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    	$bed_count=0;
 	    }
 
+	    if(isset($request->bath_count) && $request->bath_count!="")
+	    {
+	    	$bath_count=$request->bath_count;
+	    }
+	    else{
+	    	$bath_count=0;
+	    }
+
 	    if(isset($request->built_year) && $request->built_year!="")
 	    {
 	    	$built_year=$request->built_year;
@@ -1851,19 +1893,12 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    	$built_year="";
 	    }
 
-	    //floor count
-	    //1 : 1
-	    //2:  2
-	    //3:  3
-	    //4:  4
-	    //5+: 5
-
 	    if(isset($request->floor_count) && $request->floor_count!="")
 	    {
 	    	$floor_count=$request->floor_count;
 	    }
 	    else{
-	    	$floor_count="";
+	    	$floor_count=0;
 	    }
 
 	    if(isset($request->condition) && $request->condition!="")
@@ -1874,6 +1909,40 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    	$condition="";
 	    }
 
+	    if(isset($request->garden_checkbox) && $request->garden_checkbox!="")
+	    {
+	    	$garden_checkbox=$request->garden_checkbox;
+	    }
+	    else{
+	    	$garden_checkbox=0;
+	    }
+
+	    if(isset($request->lift_checkbox) && $request->lift_checkbox!="")
+	    {
+	    	$lift_checkbox=$request->lift_checkbox;
+	    }
+	    else{
+	    	$lift_checkbox=0;
+	    }
+
+	    if(isset($request->parking_checkbox) && $request->parking_checkbox!="")
+	    {
+	    	$parking_checkbox=$request->parking_checkbox;
+	    }
+	    else{
+	    	$parking_checkbox=0;
+	    }
+
+	    if(isset($request->pool_checkbox) && $request->pool_checkbox!="")
+	    {
+	    	$pool_checkbox=$request->pool_checkbox;
+	    }
+	    else{
+	    	$pool_checkbox=0;
+	    }
+
+
+
 	    $user = auth()->guard("api")->user();
         if($user)
         {
@@ -1882,20 +1951,20 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
         	{
         		if($lat!="" && $lng!="")
         		{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat,$lng,$lang_key);
         		}
         		else{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat="",$lng="",$lang_key);
         		}
         		
         	}
         	else{
         		if($lat!="" && $lng!="")
         		{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat,$lng,$lang_key);
         		}
         		else{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$user->id,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat="",$lng="",$lang_key);
         		}
         	}   
         }
@@ -1906,20 +1975,20 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
         	{
         		if($lat!="" && $lng!="")
         		{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat,$lng,$lang_key);
         		}
         		else{
-        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
+        			$nearbyfilterpropertydata=$this->get_nearby_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat="",$lng="",$lang_key);
         		}
         		
         	}
         	else{
         		if($lat!="" && $lng!="")
         		{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key);
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat,$lng,$lang_key);
         		}
         		else{
-        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat="",$lng="",$lang_key);
+        			$recentfilterpropertydata=$this->get_recently_filter_properties_list($property_type,$userid="",$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat="",$lng="",$lang_key);
         		}
         	}
         }
@@ -1965,7 +2034,7 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 
     }
 
-    public function get_nearby_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key)
+    public function get_nearby_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat,$lng,$lang_key)
     {
     	$radiusvalue=getdistanceradiusvalue();
     	if($lat!="" && $lng!="")
@@ -2082,7 +2151,7 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    }
 	    elseif($sort_by==3)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.id', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->where('created_at', '>', now()->subDays(30))->orderBy('tbl_pr.id', 'DESC');
 	    }
 	    elseif($sort_by==4)
 	    {
@@ -2091,6 +2160,10 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    elseif($sort_by==5)
 	    {
 	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
+	    }
+	    elseif($sort_by==6)
+	    {
+	    	$filterpropertyquery=$filterpropertyquery->where('created_at', '>', now()->subDays(60))->orderBy('tbl_pr.id', 'DESC');
 	    }
 	    else{
 	    	if($lat!="" && $lng!="")
@@ -2190,7 +2263,7 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 
     }
 
-    public function get_recently_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$lat,$lng,$lang_key)
+    public function get_recently_filter_properties_list($property_type,$userid,$page,$sort_by,$category,$min_price,$max_price,$min_area,$max_area,$publish_date,$bed_count,$built_year,$floor_count,$condition,$bath_count,$garden_checkbox,$lift_checkbox,$parking_checkbox,$pool_checkbox,$lat,$lng,$lang_key)
     {
     	$radiusvalue=getdistanceradiusvalue();
     	if($lat!="" && $lng!="")
@@ -2245,43 +2318,35 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 
     	if(isset($bed_count) && $bed_count!="")
     	{
-    		if($bed_count==1)
+    		if($bed_count >= 1 && $bed_count < 4)
     		{
     			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
     		}
-    		elseif($bed_count==2)
-    		{
-    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
-    		}
-    		elseif($bed_count==3)
-    		{
-    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom',$bed_count);
-    		}
-    		elseif($bed_count==4)
+    		else
     		{
     			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bedroom','>=',$bed_count);
     		}
     	}
 
+    	if(isset($bath_count) && $bath_count!="")
+    	{
+    		if($bath_count >= 1 && $bath_count < 4)
+    		{
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bathroom',$bath_count);
+    		}
+    		else
+    		{
+    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_bathroom','>=',$bath_count);
+    		}
+    	}
+
     	if(isset($floor_count) && $floor_count!="")
     	{
-    		if($floor_count==1)
+    		if($floor_count >= 1 && $floor_count < 5)
     		{
     			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
     		}
-    		elseif($floor_count==2)
-    		{
-    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
-    		}
-    		elseif($floor_count==3)
-    		{
-    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
-    		}
-    		elseif($floor_count==4)
-    		{
-    			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors',$floor_count);
-    		}
-    		elseif($floor_count==5)
+    		else
     		{
     			$filterpropertyquery=$filterpropertyquery->where('tbl_pr.no_of_floors','>=',$floor_count);
     		}
@@ -2297,6 +2362,26 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
     		$filterpropertyquery=$filterpropertyquery->where('property_condition',$condition);
     	}
 
+    	if(isset($garden_checkbox) && $garden_checkbox=="1")
+    	{
+    		$filterpropertyquery=$filterpropertyquery->where('no_of_garden',$garden_checkbox);
+    	}
+
+    	if(isset($lift_checkbox) && $lift_checkbox=="1")
+    	{
+    		$filterpropertyquery=$filterpropertyquery->where('no_of_lift',$lift_checkbox);
+    	}
+
+    	if(isset($parking_checkbox) && $parking_checkbox=="1")
+    	{
+    		$filterpropertyquery=$filterpropertyquery->where('no_of_parking',$parking_checkbox);
+    	}
+
+    	if(isset($pool_checkbox) && $pool_checkbox=="1")
+    	{
+    		$filterpropertyquery=$filterpropertyquery->where('no_of_pool',$pool_checkbox);
+    	}
+
 	   	if($sort_by==1)
 	    {
 	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_price', 'ASC');
@@ -2307,7 +2392,7 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    }
 	    elseif($sort_by==3)
 	    {
-	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.id', 'DESC');
+	    	$filterpropertyquery=$filterpropertyquery->where('created_at', '>', now()->subDays(30))->orderBy('tbl_pr.id', 'DESC');
 	    }
 	    elseif($sort_by==4)
 	    {
@@ -2316,6 +2401,10 @@ public function getproperty_details_api($property_id,$userid,$lang_key)
 	    elseif($sort_by==5)
 	    {
 	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
+	    }
+	    elseif($sort_by==6)
+	    {
+	    	$filterpropertyquery=$filterpropertyquery->where('created_at', '>', now()->subDays(60))->orderBy('tbl_pr.id', 'DESC');
 	    }
 	    else{
 	    	$filterpropertyquery=$filterpropertyquery->orderBy('tbl_pr.publish_date', 'DESC');
@@ -2597,7 +2686,7 @@ public function get_search_properties_list($property_type,$property_category,$us
     }
     elseif($sort_by==3)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.id', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->where('created_at', '>', now()->subDays(30))->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
@@ -2606,6 +2695,10 @@ public function get_search_properties_list($property_type,$property_category,$us
     elseif($sort_by==5)
     {
     	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
+    }
+    elseif($sort_by==6)
+    {
+    	$searchpropertyquery=$searchpropertyquery->where('created_at', '>', now()->subDays(60))->orderBy('tbl_pr.id', 'DESC');
     }
     else{
     	if($lat!="" && $lng!="")
@@ -2954,7 +3047,7 @@ public function get_search_property_renting_list($lat,$lng,$property_type,$prope
     }
     elseif($sort_by==3)
     {
-    	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.id', 'DESC');
+    	$searchpropertyquery=$searchpropertyquery->where('created_at', '>', now()->subDays(30))->orderBy('tbl_pr.id', 'DESC');
     }
     elseif($sort_by==4)
     {
@@ -2963,6 +3056,10 @@ public function get_search_property_renting_list($lat,$lng,$property_type,$prope
     elseif($sort_by==5)
     {
     	$searchpropertyquery=$searchpropertyquery->orderBy('tbl_pr.property_rating', 'DESC');
+    }
+    elseif($sort_by==6)
+    {
+    	$searchpropertyquery=$searchpropertyquery->where('created_at', '>', now()->subDays(60))->orderBy('tbl_pr.id', 'DESC');
     }
     else{
     	if($lat!="" && $lng!="")

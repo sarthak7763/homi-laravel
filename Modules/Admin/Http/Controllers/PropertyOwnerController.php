@@ -47,7 +47,7 @@ class PropertyOwnerController extends Controller{
                 }elseif($status==0){
                      $status='<span class="badge badge-danger badge_status_change" style="cursor: pointer;" id="'.$row->id.'">Inactive</span>';
                 }else {
-                   $status='<span class="badge badge-danger" id="'.$row->id.'">Inactive</span>';
+                  $status='<span class="badge badge-warning" id="'.$row->id.'">Pending</span>';
                 }
                 return $status;
             }) 
@@ -55,10 +55,16 @@ class PropertyOwnerController extends Controller{
                 $created_date=date('d M, Y g:i A', strtotime($data->created_at));
                 return $created_date;   
             })
-            ->addColumn('action__', function($row){
+            ->addColumn('action__', function($row){ 
+                               
                 $route=route('admin-propertyOwner-edit',$row->id);
                 $route_view=route('admin-propertyOwner-details',$row->id);
                 $action='<a href="'.$route_view.'" title="Show" class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></a><a href="'.$route.'" title="Edit" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>';
+
+                if($row->status==3)
+                {
+                  $action.='<a href="" title="Activate"><button class="btn btn-info btn-sm status_change" id="'.$row->id.'">Activate</button></a>';
+                }
 
                   // $action='<button class="btn btn-danger btn-sm badge_delete_status_change" title="Delete" id="'.$row->id.'"><i class="fa fa-trash"></i></button>';
                 
@@ -594,4 +600,37 @@ class PropertyOwnerController extends Controller{
     }
   }
 
+
+
+  public function pendingStatusChange(Request $request)
+  {
+   
+          $data=$request->all();
+          $check_id = User::where('id',$data['id'])->first();
+              if(empty($check_id))
+              {
+                  return response()->json(['error'=>'somethuing wrong']);
+              }
+                  $sellerData= User::where('user_type',3)->where('id', $data['id'])->first();
+                  
+                  if($sellerData->status==3){
+                          $status = 1;
+                      }
+                      else{
+                          $status = 1;
+                      }
+                      $sellerData->status = $status;
+                      $sellerData->save();
+
+                      if(!empty($sellerData)){
+                    getemailtemplate($template_id='4',$sellerData->email,$sellerData->name);
+                          }
+                        else
+                        {
+                          return back()->with('error','Something went wrong.');
+                        }
+
+                    return response()->json(['success'=>$status]);
+          
+                  }
 }

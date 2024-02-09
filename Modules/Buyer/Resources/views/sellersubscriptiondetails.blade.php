@@ -10,6 +10,8 @@
     <div class="profile-box">
         <div class="profile-box-form">
             <h1 class="mb-3"> Seller Subscription Details</h1>
+
+            
             <section class="section-subscription">
                 <div class="row">
                     <div class="col-md-6 d-flex">
@@ -40,15 +42,18 @@
                     </div>
                 </div>
                 <div class="card box mb-3">
-                    <form method="post" action="{{route('seller.subscription-details-save',$subscription_plan_details->id)}}" enctype="multipart/form-data">
+                    
+                    <form method="post" action="{{route('seller.subscription-details-save')}}" enctype="multipart/form-data">
                         @csrf
+                        
                         <div class="form-sec">
                             <h6 class="rounded-top border-bottom p-3 mb-0 text-white">If you want to take subscription then please fill below details:- </h6>
                             <div class="p-3">
                                 <div class="row">
                                     <div class="py-2 col-sm-6">
+                                    <input type = "hidden" value="{{$subscription_plan_details->id}}" name="hidden_id">
                                         <strong><label>Fund Amount</label></strong>
-                                        <input type="number" name=f und_amount class="form-control @error('fund_amount') is-invalid @enderror" id="fund_amount" value=""> @error('fund_amount')
+                                        <input type="number" name=fund_amount value="{{$subscription_plan_details->plan_price}}" class="form-control @error('fund_amount') is-invalid @enderror" id="fund_amount" value=""> @error('fund_amount')
                                         <div class="invalid-feedback" style="display:block;">
                                             {{$message}}
                                         </div>
@@ -63,8 +68,10 @@
                                         </div>
                                         @enderror
                                     </div>
-                                    <div class="col-md-12">
-                                        <button button type="submit" class="btn-2 btn-primary mx-auto mt-4 plan-btn text-white">Activate Plan</button>
+                                    <div class="col-md-12 d-flex text-center py-4 gap-2 justify-content-center">
+                                        <button button type="submit" class="btn btn-primary  m-0  plan-btn text-white px-3">Activate Plan</button>
+                                        <a href ="{{route('buyer.subscription-plans')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
+                                        
                                     </div>
                                 </div>
                             </div>

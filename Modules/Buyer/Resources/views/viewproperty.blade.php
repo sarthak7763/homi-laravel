@@ -174,13 +174,13 @@
                 
                 <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
-                  <p class="mb-0">property Condition:</p>
+                  <p class="mb-0">Property Condition:</p>
                      <strong>{{$property_conditionData->name}}</strong> 
                   </div>
                </div>
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
-                  <p class="mb-0">property price type:</p>
+                  <p class="mb-0">Property Price Type:</p>
                      <strong>
                         
                      
@@ -273,6 +273,9 @@
                
                     
       </div>
+   </div>
+   <div class="d-block text-center py-4 gap-2 justify-content-center">
+   <a href ="{{route('buyer.property','all')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
    </div>
 </div>
 @endsection

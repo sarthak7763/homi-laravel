@@ -311,6 +311,7 @@ $('.datepicker').datepicker({
     { 
             var status_class = $(this).attr('class');
             var id = $(this).attr('id');
+            
             var change_btn = $(this);
             var url = "{{ route('admin-propertyOwner-email-status-update') }}";
             
@@ -419,11 +420,71 @@ $('.datepicker').datepicker({
             //     swal("Cancelled", "User not deleted", "error");
             // }
             });         
-    });   
+    });  
+    
+    
 
 
 
 
+
+
+    $(document).on('click','.status_change', function(e)
+    { 
+        var status_class = $(this).attr('class');
+        var id = $(this).attr('id');
+        var change_btn = $(this);
+         var url = "{{ route('admin-propertyowner-pending-status-change')}}";
+            
+            if(status_class == "badge badge-warning")
+            {
+                var newClass = "badge badge-success badge_status_change";
+                var status = 'Active';
+                
+            }else
+            {
+                var newClass = "badge badge-warning";
+                var status = 'Pending';
+            }
+
+
+            var title ='Are you sure to '+status+' this property owner ?';
+            e.preventDefault();      
+            swal({
+              title: title,
+              icon: "warning",
+              buttons: [
+                'No, cancel it!',
+                'Yes, I am sure!'
+              ],
+              dangerMode: true,
+            }).then(function(isConfirm) {
+              if(isConfirm){
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {_token: "{{ csrf_token() }}",id:id},
+                    dataType: "json",
+                    beforeSend: function(){
+                        $("#loading").show();
+                    },
+                    complete: function(){
+                        $("#loading").hide();
+                    },
+                    success: function (data){
+                        if(data.success==1){
+                           toastr.success("Property Owner status active successfully");
+                           window.location.reload();
+                            
+                        }
+
+                    }         
+                })
+            } 
+           
+            }); 
+
+        });     
 
 </script>   
 @endsection
