@@ -387,6 +387,7 @@ $(document).on('click', '.badge_publish_status_change', function(e)
           dangerMode: true,
         }).then(function(isConfirm) {
           if(isConfirm){
+         
             $.ajax({
                 type: "POST",
                 url: url,

@@ -226,6 +226,7 @@ class BuyerController extends Controller {
                 $user->password=$data['password'];
                 $user->user_type=3;
                 $user->email_verified=0;
+                $user->status=3;
                 $user->email_verification_token = $email_token;
                 $user->save();
                 if($user)
@@ -306,9 +307,17 @@ class BuyerController extends Controller {
 
             return Redirect::back()->withErrors($validator)->withInput();
             }
+
+          $credentials = $request->only('email', 'password');
+              
+            $vendor_login_access= User::where('email',$credentials['email'])->where('status',3)->first();
+            if(!empty($vendor_login_access))
+            {
+              return Redirect()->back()->with('error','your request not has been verified by super admin for approval.please wait for approval');
+            }
         
    
-          $credentials = $request->only('email', 'password');
+          
               if (Auth::attempt($credentials)) {
 
               $user=auth()->user();
@@ -408,14 +417,15 @@ class BuyerController extends Controller {
                    
                     if($checkuser)
                     {
-
-                    getemailtemplate($template_id='4',$checkuser->email,$checkuser->name); 
+                         $admin = User::where('user_type','1')->get()->first();
+                    getemailtemplate($template_id='5',$admin->email,$admin->name,$email_token="",$checkuser->name,$checkuser->email); 
+                    
                        
                       $user_id=$checkuser->id;
                       Session::forget('email');
                       Session::forget('type');
                       Session::put('user_id', $user_id);
-                      return redirect('dealer/my-profile/')->with('success', 'Seller Account verified successfully.');  
+                      return redirect('dealer/my-profile/')->with('success', 'your request has been sent to super admin for approval');  
                     }
                     else{
                       return back()->with('error','Something went wrong2.');
@@ -480,7 +490,8 @@ class BuyerController extends Controller {
           {
               if($checkuseremail->email_verified==0)
                     {
-                  getemailtemplate($template_id='3',$seller_email,$checkuseremail->name,$resend_otp);
+                      
+                  getemailtemplate($template_id='3',$seller_email,$checkuseremail->name,$resend_otp,$checkuseremail->mobile="");
 
                     $otp_update = Tempuser::where('email',$seller_email)->where('user_type','3')->orderBy('id', 'DESC')->update(
                                                                                                         ['email_verification_token'=>$resend_otp],

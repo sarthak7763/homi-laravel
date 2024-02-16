@@ -205,7 +205,7 @@ class PropertyController extends Controller
                 'property_condition'=>'required',
                 'property_features'=>'required',
                 'property_area'=>'required|numeric',
-                'property_address'=>'required||regex:/^[\pL\s]+$/u',
+                'property_address'=>'required',
                
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
@@ -237,7 +237,7 @@ class PropertyController extends Controller
   'property_area.required'=>'Property area field can’t be left blank',
   'property_area.numeric'=>'Property area field allows only numbers.',
   'property_address.required'=>'Property address field can’t be left blank',
-  'property_address.regex'=>'Property address field only alphabetic characters.',
+  
   
   'property_price.required'=>'Property price field can’t be left blank',
   'property_price.numeric'=>'Property price field only allows number',
@@ -297,8 +297,9 @@ return Redirect::back()->withErrors($validator)->withInput();
             }
             if($request->hasFile('property_image')){      
                           $imageName = time().'.'.$request->property_image->extension();
-                        $image = $request->property_image->move(public_path('images/property/thumbnail/'), $imageName);
-                         $user_id = Auth::User()->id;
+                          $image = $request->property_image->move(public_path('images/property/thumbnail/'), $imageName);
+                          
+                          $user_id = Auth::User()->id;
                           $property = new Property;
                           $property->title=$data['title'];
                           $property->add_by=$user_id;
@@ -341,12 +342,9 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->publish_date=date('Y-m-d');
                       
                           $property->save();
-                          $property_id = $property->id;
-
-
-    
-                          
-                          if($request->hasFile('property_gallery_image')){
+                         $property_id = $property->id;
+                      
+                         if($request->hasFile('property_gallery_image')){
                           $allowedfileExtension = ['jpeg','jpg','png'];
 
 
@@ -378,8 +376,29 @@ return Redirect::back()->withErrors($validator)->withInput();
                                         $gallery->save();
                                   }
                           }
+
+                            $admin  = User::where('user_type','1')->get()->first();
+                            $seller = User::where('id',$user_id)->get()->first();
+
+                            // $image_path = 
+                            
+                            if($data['property_type']==1)
+                            {
+                              $property_typevalue='Renting';
+                            }
+                            else{
+                              $property_typevalue='Buying';
+                            }
                           
-                      return redirect()->route('buyer.property','all')->with('success', 'Property has been added !');      
+                            //  $property_image_link = "<img src='https://homi.ezxdemo.com/storage/uploads/sitelogo/Logo.png'>";
+
+                              $property_image_link = $image;
+
+                      getemailtemplate($template_id='6',$admin->email,$admin->name,$otp="",$seller->name,$seller->email="",$data['title'],$property_typevalue,$data['property_price'],$data['property_address'],$property_image_link); 
+                            
+                          
+                          
+                      return redirect()->route('buyer.property','all')->with('success', 'Property has been added and property email has been sent to admin verify and publish to homi panel !');      
                       }
                      else{
                           return back()->with('error','Please choose property thumbnail image.');

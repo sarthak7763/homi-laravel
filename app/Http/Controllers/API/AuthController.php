@@ -82,8 +82,9 @@ class AuthController extends BaseController
                       'email'=>$data['email'],
                       'otp' =>$email_token
                     ];
-   
-                    // \Mail::to($data['email'])->send(new \App\Mail\EmailVerification($details));
+                    
+                    getemailtemplate($template_id='10',$data['email'],$data['name'],$email_token);
+
                     $success['email'] =  $data['email'];
                     $success['otp']=$email_token;
                     return $this::sendResponse($success, 'Account created successfully. OTP has been send to your registered email.');

@@ -72,6 +72,7 @@ class MySubscriptionController extends Controller
         
        
         $subscription_plan_details= Subscription::where('id',$id)->first();
+    
        
         $homi_account_number = SystemSetting::where('option_slug','personal-accountno')->select('option_value')->first();
         $homi_whatsapp_number = SystemSetting::where('option_slug','personal-whatsappno')->select('option_value')->first();
@@ -99,6 +100,7 @@ class MySubscriptionController extends Controller
             }
 
                 $id = $request->hidden_id;
+
                
                
 
@@ -124,6 +126,21 @@ class MySubscriptionController extends Controller
                         $seller->fund_amount = $request->fund_amount;
                         $seller->fund_screenshot = $imageName;
                         $seller->save();
+
+                        $admin  = User::where('user_type','1')->get()->first();
+                        $seller_details = User::where('id',$user_id)->get()->first();
+
+                        $subscription_plan_details= Subscription::where('id',$id)->first();
+                        
+                       
+
+
+                        getemailtemplate($template_id='8',$admin->email,$admin->name,$otp="",$seller_details->name,$seller_details->email="",$data['title']="",$property_typevalue="",$data['property_price']="",$data['property_address']="",
+                        $property_image_link="",$subscription_plan_details->name,$subscription_plan_details->plan_price,
+                        $subscription_plan_details->plan_duration,$subscription_plan_details->product_listing,$seller->fund_amount,$seller->fund_screenshot);
+
+                      
+
                         return redirect()->route('buyer.subscription-plans')->with('success','please wait .All details has been sent to admin for activation subcription plan');
                         }
                       else

@@ -157,7 +157,18 @@ footer {width: 100%;position: absolute;}
 
 .user-box2-img img {height: 100%;width: 100%;object-fit: cover;} 
 .profile-form .form-control{border-radius: 6px;height: 48px;color: var(--dark-gray2);background: #fff;}
-.profile-form select {border-radius: 6px;height: 48px;color: var(--dark-gray2);background: #fff;border: var(--bs-border-width) solid var(--bs-border-color) !important;width: 100%;padding: .375rem .75rem;outline: none;} 
+.profile-form select {
+    border-radius: 6px;
+    height: 48px;
+    color: var(--dark-gray2);
+    background: #fff;
+    border: var(--bs-border-width) solid var(--bs-border-color) !important;
+    width: 100%;
+    padding: .375rem .75rem;
+    outline: none;
+    font-size: 16px;
+    font-weight: 400;
+}
 .profile-form .form-control::placeholder { color: var(--dark-gray2);opacity: 1;}
 .profile-form .form-control:-ms-input-placeholder {color: var(--dark-gray2);}
 .profile-form .form-control::-ms-input-placeholder {color: var(--dark-gray2);}
@@ -270,14 +281,14 @@ span.for-rent {background: #124868;border-radius: 100px;color: #fff;display: inl
 .sub-total-box .table>tbody>tr>th, .sub-total-box .table>tbody>tr td {border-bottom: 1px dashed #BECFA6;padding:13px 15px !important;font-weight: 500;font-size: 16px;line-height: 24px;color: #0D181F;}
 .sub-total-box tr:last-child th, .sub-total-box tr:last-child td {border-bottom: none;}
 .manage-total-bookings{padding: 10px;border: 1px solid #E2E7EB;border-radius: 10px;margin-bottom: 20px;}
-.manage-list-img {border: 1px solid #E2E7EB;border-radius: 10px;overflow: hidden;}
+.manage-list-img {border: 1px solid #E2E7EB;border-radius: 10px;overflow: hidden; height: 100%}
 .manage-list-text h2{  font-size: 18px;line-height: 27px;margin-top: 0;}
 .manage-list-text h2 a {font-family: Poppins;font-size: 18px;font-weight: 500;line-height: 27px;letter-spacing: 0em;text-align: left;color: #0D181F;} 
 .profile-box .manage-btn-group .btn{margin:0;padding:6px 20px;min-width:unset;background:transparent;border:1px solid #E2E7EB;border-radius:10px;font-weight:500;font-size:16px;line-height:24px;text-align:center;min-width:120px;margin-right:5px;}
 .manage-btn-group{display:flex;gap:5px;}
 .profile-box .manage-btn-group .btn.btn-view {color: #124868;border-color: #124868;margin-bottom: 10px;}  
 .profile-box .manage-btn-group .btn.btn-edit {color: #8DC83E;border-color: #8DC83E;margin-bottom: 10px;}
-.profile-box .manage-btn-group a.btn {line-height: 35px;}
+.profile-box .manage-btn-group a.btn {line-height: 32px;}
 .profile-box .manage-btn-group .btn.btn-delete {color: #626262;border-color: #626262;}   
 .profile-box .manage-btn-group .btn.status_change {color: #626262;border-color: #626262;margin-bottom: 10px;margin-right: 0}  
 button.active-button {background: #8DC83E;border-radius: 2px;padding: 3px 12px;font-family: 'Poppins';font-style: normal;font-weight: 500;font-size: 14px;line-height: 18px;color: #FFFFFF;border: 1px solid #8DC83E;} 
@@ -295,8 +306,12 @@ button.active-button {background: #8DC83E;border-radius: 2px;padding: 3px 12px;f
 .modal-backdrop {position: fixed;top: 0;right: 0;bottom: 0;left: 0;z-index: 1040;background-color: #000000;}
 .modal-backdrop.fade {opacity: 0;}
 .modal-backdrop, .modal-backdrop.fade.in {opacity: 0.8;filter: alpha(opacity=80);}
-.modal.fade {-webkit-transition: opacity .3s linear, top .3s ease-out;-moz-transition: opacity .3s linear, top .3s ease-out;-o-transition: opacity .3s linear, top .3s ease-out;transition: opacity .3s linear, top .3s ease-out;top: -25%;}
-.modal.fade.in {top: 10%;}
+.modal.fade {
+/*    -webkit-transition: opacity .3s linear, top .3s ease-out;-moz-transition: opacity .3s linear, top .3s ease-out;-o-transition: opacity .3s linear, top .3s ease-out;transition: opacity .3s linear, top .3s ease-out;top: -25%;*/
+}
+.modal.fade.in {
+/*    top: 10%;*/
+}
 .modal-header {padding: 27px 25px 25px;border-bottom: 1px solid #E2E7EB;background: var(--bs-white);}
 .modal-header .close {margin-left: auto;border: none;background: no-repeat;height: unset;line-height: 0;padding: 0;}
 .modal-header .close span {color: #4A5568;font-size: 18px;margin-left: auto;border: 1px solid #C2C2C2;background: var(--bs-white);height: 24px;width: 24px;line-height: 24px;display: inline-block;border-radius: 50%;text-align: center;}
@@ -365,7 +380,7 @@ section.section-dashboard{min-height:770px;}
 .user-box [type="file"]{left:0;width:auto;max-width:100%;height:100%;z-index:3}
 .manage-list-img:hover img{transform:scale(1.2);}
 .manage-list-img{position:relative;overflow:hidden;transition:all .3s;}
-.manage-list-img img{transition:all .3s;}
+.manage-list-img img{display: block; margin: auto; transition:all .3s;}
 header .dropdown ul.dropdown-menu li{padding: 0;line-height: normal;display: inline-block;}
 header .dropdown ul.dropdown-menu a{padding:8px 10px;color:#174c6c;font-size: 14px;line-height: 22px;display: block;font-family: 'Poppins', sans-serif;}
 header .dropdown ul.dropdown-menu a:hover{color:#fff;background-color:#174c6c;}
@@ -408,11 +423,22 @@ span.messages strong{color:red;}
     
     padding-left: 10px;
 }
+main {
+    padding-bottom: 30px;
+}
+.profile-box-form  form.profile-form button {
+    background: #174c6c;
+    line-height: 35px;
+    font-weight: 500;
+    font-size: 16px;
+}
 @media (min-width: 576px) {
     .modal-dialog {max-width: 450px;}
 }
 @media (max-width: 1366px) { 
-    .profile-box .manage-btn-group .btn{font-size:16px;width:auto;line-height:normal;height:auto;padding:7px 14px;min-width:0;}
+    .profile-box .manage-btn-group a.btn {
+    line-height: 29px;
+	}
 }
 @media (max-width: 1199px) { 
     .search-input-group .form-outline{flex-wrap:wrap;}
@@ -465,6 +491,22 @@ span.messages strong{color:red;}
     .modal{max-width:calc(100% - 30px);margin:auto;}
     .profile-box.booking_page .button-like{display:block;margin:5px 0;}
     .profile-box .manage-btn-group a.btn{line-height:25px;}
+    .manage-list-img {
+    width: auto;
+    display: block;
+    padding: 10px;
+    max-width: 250px;
+    margin: 10px auto 0;
+    text-align: center;
+}
+
+.manage-list-text {
+    text-align: center;
+}
+
+.manage-btn-group {
+    justify-content: center;
+}
 }
  @media (max-width: 640px){
     .profile-box-form .search-input-group .col.date-box,
@@ -480,6 +522,7 @@ span.messages strong{color:red;}
     border: 1px solid#ddd;
     padding: 10px 10px;
 }
+
     .group-property-row.proep_page .search-input-group select{border:1px solid #C2C2C2;margin-top:5px;}
  }
 @media (max-width: 575px) {

@@ -85,15 +85,15 @@
                                 <p>
                                     @if($property['property_status'] == 1)
                                  <div class="prop_active">
-                                 {{ $property['property_status'] == 1 ? 'active' : '' }}
+                                 Active
                                     </div>
                                     @elseif($property['property_status'] == 2)
                                     <div class="prop_suspend">
-                                 {{ $property['property_status'] == 2 ? 'Suspend' : '' }}
+                                    Suspend
                                     </div>
                                     @elseif($property['property_status'] == 0)
                                     <div class="prop_pending">
-                                 {{ $property['property_status'] == 0 ? 'Pending' : '' }}
+                                     Pending
                                     </div>
                                @endif
                                 </P>
@@ -107,12 +107,9 @@
                                 <div class="manage-btn-group">
                                     <a href="{{route('buyer.view-property',($property['id']))}}" class="btn btn-view">View</a>
                                     <a href="{{route('buyer.edit-property',($property['id']))}}" class="btn btn-edit">Edit</a>
-                                    @if($property['property_status'] == 1 ||  $property['property_status'] == 2 )
-                                    <button type="button" class="btn btn-primary status_change" data-toggle="modal" data-target="#myModal" style="display: block;" data-id="{{$property['id']}}" data-status="{{$property['property_status']}}">Change Status</button>
-                                    @elseif($property['property_type'] == 0)
-                                    <button type="button" class="btn btn-primary status_change" data-toggle="modal" style="display:;" data-target="#myModal" data-id="{{$property['id']}}" data-status="{{$property['property_status']}}">Change Status</button>
-                                    @endif
-
+                                    @if($property['property_status'] != 0 )
+                                    <button type="button" class="btn btn-primary status_change" data-toggle="modal" data-target="#myModal" data-id="{{$property['id']}}" data-status="{{$property['property_status']}}">Change Status</button>
+                                   @endif
                                 </div>
                             </div>
                         </div>

@@ -164,7 +164,9 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="mb-4 position-relative address-group">
-                                <input type="text" class="form-control pe-5 @error('property_address') is-invalid @enderror" name = "property_address" value = "{{$propertyDetail->property_address}}" aria-describedby="" placeholder="Address">   
+                                <input type="text" id="property_address" class="form-control pe-5 @error('property_address') is-invalid @enderror" name = "property_address" value = "{{$propertyDetail->property_address}}" aria-describedby="" placeholder="Address">   
+                                <input type="hidden" name="property_latitude" id="property_latitude" value="" />
+                                <input type="hidden" name="property_longitude" id="property_longitude" value="" />
                                 @if($errors->has('property_address'))
                                 <div class="invalid-feedback">
                                     {{$errors->first('property_address')}}

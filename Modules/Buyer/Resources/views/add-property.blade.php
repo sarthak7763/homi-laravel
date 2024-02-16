@@ -138,9 +138,9 @@
                   <div class="col-sm-6">
                      <div class="mb-4">
                         <select class="form-select form-control @error('property_condition') is-invalid @enderror"   name = "property_condition" aria-label="Default select example">
-                           <option value = ""> Select Property Condition </option>
+                           <option value = "" > Select Property Condition </option>
                            @foreach($property_condition as $property) 
-                           <option value="{{$property->id}}">{{$property->name}}</option>
+                           <option value="{{$property->id}}" @if (old('property_condition') == $property->id) {{ 'selected' }} @endif>{{$property->name}}</option>
                            @endforeach
                         </select>
                         @if($errors->has('property_condition'))
@@ -183,9 +183,9 @@
                   </div>
                   <div class="col-sm-12">
                      <div class="mb-4 position-relative address-group">
-                        <input type="text" id="property_address"   class="form-control pe-5 @error('property_address') is-invalid @enderror" name = "property_address" placeholder="Address">   
+                        <input type="text" id="property_address"   class="form-control pe-5 @error('property_address') is-invalid @enderror" name="property_address" placeholder="Address">   
                         <input type="hidden" name="property_latitude" id="property_latitude" value="" />
-                                <input type="hidden" name="property_longitude" id="property_longitude" value="" />
+                        <input type="hidden" name="property_longitude" id="property_longitude" value="" />
                      </div>
                   </div>
                   <div class="col-sm-6">
@@ -351,9 +351,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZWubYF4RSrhWvk_cDI17x4oeUaZm7lf8&libraries=places&callback=initMap"></script>
-
 <script type="text/javascript" src="{{ asset('assets_front/js/bootstrap.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('assets_front/js/script.js')}}"></script>
 
@@ -469,47 +466,6 @@ reader.readAsDataURL(this.files[0]);
    });
 
 </script>
-
-
-<script>
-var input = document.getElementById('property_address');
-var originLatitude = document.getElementById('property_latitude');
-var originLongitude = document.getElementById('property_longitude');
-
-var originAutocomplete = new google.maps.places.Autocomplete(input);
-
-    
-originAutocomplete.addListener('place_changed', function(event) {
-    var place = originAutocomplete.getPlace();
-
-    if (place.hasOwnProperty('place_id')) {
-        if (!place.geometry) {
-                // window.alert("Autocomplete's returned place contains no geometry");
-                return;
-        }
-        originLatitude.value = place.geometry.location.lat();
-        originLongitude.value = place.geometry.location.lng();
-    } else {
-        service.textSearch({
-                query: place.name
-        }, function(results, status) {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                originLatitude.value = results[0].geometry.location.lat();
-                originLongitude.value = results[0].geometry.location.lng();
-            }
-        });
-    }
-});
-</script>
-
-
-
-
-
-
- 
-
-
 
 <script>
     $(function() {

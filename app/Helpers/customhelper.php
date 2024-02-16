@@ -613,18 +613,17 @@ function getconditionnamebylang($lang,$id)
 
 
 
-function getemailtemplate($template_id,$email,$username,$otp="")
+function getemailtemplate($template_id,$email,$username,$otp="",$sellername="",$selleremail="",$property_title="",$property_type="",$property_price="",$property_address="",$property_image_link="",$subscription_plan_name="",$subscription_plan_price="",$subscription_plan_duration="",$subscription_product_listing="",$fund_amount="",$fund_screenshot="")
   {
     $emailcontentdata=DB::table('email_templates')->where('id',$template_id)->get()->first();
     if($emailcontentdata)
     {
         $email_content=$emailcontentdata->message;
-        
         $email_subject=$emailcontentdata->subject;
 
-      $variablesarray=array('[user]','[otp]','[contactname]','[contactinformation]','[contactinformationlink]','[contactsite]','[contactsitelink]');
+      $variablesarray=array('[user]','[otp]','[contactname]','[contactinformation]','[contactinformationlink]','[contactsite]','[contactsitelink]','[sellername]','[selleremail]','[property_title]','[property_type]','[property_price]','[property_address]','[property_image_link]','[subscription_plan_name]','[subscription_plan_price]','[subscription_plan_duration]','[subscription_product_listing]','[fund_amount]','[fund_screenshot]');
 
-      $variablesvaluesarray=array($username,$otp,'Homi Team','info@homi.com','mailto:info@homi.com','www.homi.com','https://www.homi.com');
+      $variablesvaluesarray=array($username,$otp,'Homi Team','info@homi.com','mailto:info@homi.com','www.homi.com','https://www.homi.com',$sellername,$selleremail,$property_title,$property_type,$property_price,$property_address,$property_image_link,$subscription_plan_name,$subscription_plan_price,$subscription_plan_duration,$subscription_product_listing,$fund_amount,$fund_screenshot);
 
       $email_content=str_replace($variablesarray,$variablesvaluesarray,$email_content);
       $email_subject=str_replace($variablesarray,$variablesvaluesarray,$email_subject);

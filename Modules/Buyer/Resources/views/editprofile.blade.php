@@ -1,5 +1,10 @@
 @extends('buyer::layouts.master')
 @section('content')
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <div class="col-md-8 col-lg-9">
    <div class="profile-box">
       <div class="profile-box-form">
@@ -23,7 +28,7 @@
                            @if($userInfo->profile_pic)
                            <img id="profile_pic_preview" class="rounded-pill-box" src="{{url('/')}}/images/user/{{$userInfo->profile_pic}}">
                            @else
-                           <img id="profile_pic_preview" class="rounded-pill-box" src="assets_front/images/user/1707281764.png">
+                           <img id="profile_pic_preview" class="rounded-pill-box" src="{{url('/')}}/images/1699333958.jpg">
                            @endif    
                             </div>
                            <input type="file"  class="opacity-0 position-absolute bottom-0" name="profile_pic" id="profile_pic">

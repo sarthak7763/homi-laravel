@@ -1,12 +1,27 @@
 <footer>
+
   <div class="copyright-section text-center">
     <div class="container">
       <p>© 2023 - Homi. All rights reserved</p>          
     </div>
   </div>
 </footer>
+<div class="modal fade logout_modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body p-0 text-center">
+        <p class="mb-0 p-3">Are you sure you want to logout?</p>
+        <div class="d-flex p-3 gap-3 border-top justify-content-center ">
+          <button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 m-0 px-4" data-dismiss="modal">Cancel</button>
+          <a href="{{route('buyer.logout')}}" class="btn btn-primary px-4" button type="button">ok</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!--Jquery -->
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -38,6 +53,8 @@
 <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBZWubYF4RSrhWvk_cDI17x4oeUaZm7lf8&libraries=places&callback=initMap"></script>
 
  <!-- custom JS code after importing jquery and owl -->
 
@@ -257,6 +274,38 @@ $('#property_type').on('change',function(){
     });
 
   });
+</script>
+
+
+<script>
+ var input = document.getElementById('property_address');
+var originLatitude = document.getElementById('property_latitude');
+var originLongitude = document.getElementById('property_longitude');
+
+var originAutocomplete = new google.maps.places.Autocomplete(input);
+
+    
+originAutocomplete.addListener('place_changed', function(event) {
+    var place = originAutocomplete.getPlace();
+
+    if (place.hasOwnProperty('place_id')) {
+        if (!place.geometry) {
+                // window.alert("Autocomplete's returned place contains no geometry");
+                return;
+        }
+        originLatitude.value = place.geometry.location.lat();
+        originLongitude.value = place.geometry.location.lng();
+    } else {
+        service.textSearch({
+                query: place.name
+        }, function(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                originLatitude.value = results[0].geometry.location.lat();
+                originLongitude.value = results[0].geometry.location.lng();
+            }
+        });
+    }
+});
 </script>
 
 

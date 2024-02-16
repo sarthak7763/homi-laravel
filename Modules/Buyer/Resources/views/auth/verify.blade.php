@@ -62,6 +62,32 @@ form#signupBuyerForm button {
 @endif
 
 <div class="row">
+@if($message = Session::get('success'))
+                    <div class="row">
+                        <div class="col-md-12">
+                          <div class="alert alert-success alert-dismissible fade show" role="alert">
+                             <label  class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"  style="font-size: 19px;margin-top: -1px;">&times;</span>
+                              </label>
+                                {{ $message }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                @if($message = Session::get('error'))
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                             <label type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true" style="font-size: 19px;margin-top: -1px;">&times;</span>
+                              </label>
+                                
+                                {{ $message }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
 
     
 

@@ -54,7 +54,7 @@
             
             <li class = "dropdown-item {{ (request()->is('dealer/my-profile*')) ? 'active' : '' }}"><a href="{{route('buyer.my-profile')}}"><i class="fa-regular fa-user"></i> My Profile</a></li>
             <li class="dropdown-item" ><a href="{{route('buyer.change-password')}}" > <i class="fa-solid fa-unlock"></i> Change Password</a></li>
-            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a data-toggle="modal" data-target="#exampleModalCenter" href="{{route('buyer.logout')}}"><i class="fa-solid fa-arrow-right-from-bracket"></i>  Sign out</a></li>
+            <li class = "dropdown-item {{ (request()->is('dealer-logout*')) ? 'active' : '' }}"><a data-toggle="modal" data-target="#exampleModalCenter"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
           </ul>
         </div>
       </div>

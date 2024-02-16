@@ -21,6 +21,7 @@ class SellerSubscriptionController extends Controller{
             if($request->ajax()) { 
                
             $data = SellerSubscription::where('status',2)->get();
+        
             
            return Datatables::of( $data)
                   ->addIndexColumn()
@@ -74,15 +75,13 @@ class SellerSubscriptionController extends Controller{
     {
         
             $data=$request->all();
-            
             $check_id = SellerSubscription::where('id',$data['id'])->first();
                 if(empty($check_id))
                 {
                     return response()->json(['error'=>'somethuing wrong']);
                 }
                     $sellerData = SellerSubscription::where('id', $data['id'])->first();
-                    
-                        if($sellerData->status==2){
+                    if($sellerData->status==2){
                             $status = 1;
                         }
                         else{
@@ -91,7 +90,6 @@ class SellerSubscriptionController extends Controller{
                         $sellerData->status = $status;   
                         $sellerData->save();
 
-                        
                         $start_date = date('Y-m-d');
                         $end_date    = date('Y-m-d', strtotime("+1 month", strtotime($start_date)));
 
@@ -100,7 +98,6 @@ class SellerSubscriptionController extends Controller{
                            $update_status =  UserSubscription::where('user_id',$sellerData->user_id)->update(['subscription_status'=>0]); 
                         
                         }
-
                                 $user_subscription = new UserSubscription;
                                 $user_subscription->user_id = $sellerData->user_id;
                                 $user_subscription->subscription_id = 0;
@@ -108,10 +105,19 @@ class SellerSubscriptionController extends Controller{
                                 $user_subscription->starting_date = $start_date;
                                 $user_subscription->ending_date = $end_date;
                                 $user_subscription->subscription_status = 1;
-                            
                                 $user_subscription->save();
 
-                            return response()->json(['success'=>$status]);
+                                //  $admin  = User::where('user_type','1')->get()->first();
+                                
+                                //  $seller_details = User::where('id',$sellerData->user_id)->get()->first();
+                                 
+                                //  $subscription_plan_details= Subscription::where('id',$user_subscription->plan_id)->first();    
+                                
+                                //  getemailtemplate($template_id='9',$admin->email="",$admin->name,$otp="",$seller_details->name,$seller_details->email="",$data['title']="",$property_typevalue="",$data['property_price']="",$data['property_address']="",
+                                //  $property_image_link="",$subscription_plan_details->name="",$subscription_plan_details->plan_price="",
+                                //  $subscription_plan_details->plan_duration="",$subscription_plan_details->product_listing="",$sellerData->fund_amount="",$sellerData->fund_screenshot="");
+
+                               return response()->json(['success'=>$status]);
             
        
     }

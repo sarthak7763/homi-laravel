@@ -1116,9 +1116,11 @@ class PropertyController extends Controller {
 
     public function updatePropertyPublishStatus(Request $request)
     {
+        
         try {
             $data=$request->all();
-
+            dd($data);
+          
             $request->validate([
                 'property_id'=>'required',
                 ],
@@ -1127,10 +1129,12 @@ class PropertyController extends Controller {
               ]);
 
             $propertyupdate=Property::find($data['property_id']);
+            
 
             if(is_null($propertyupdate)){
                return redirect()->route('admin-property-list')->with('error',"Something went wrong.");
             }
+
 
             if($propertyupdate->property_status==0)
             {
@@ -1139,6 +1143,14 @@ class PropertyController extends Controller {
                 $propertyupdate->property_status=$status;
                 $propertyupdate->publish_date=date('Y-m-d');
                 $propertyupdate->save();
+                
+
+                $seller = User::where('id',$propertyupdate->add_by)->first();
+                $admin = User::where('user_type','1')->get()->first();
+
+                getemailtemplate($template_id='7',$admin->email,$admin->name,$otp="",$seller->name,$seller->email="",$data['title']="",$property_typevalue="",$data['property_price']="",$data['property_address']="",$property_image_link="");
+
+                
 
                 return response()->json(["status" => 'success','message'=>$status]);
             }

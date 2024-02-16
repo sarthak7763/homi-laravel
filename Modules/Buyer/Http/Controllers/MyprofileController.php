@@ -65,6 +65,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 								$imageName = time().'.'.$request->profile_pic->extension(); 
 								
 								$image = $request->profile_pic->move(public_path('images/user/'), $imageName);
+								dd($image);
 								$user->name = $data['name'];
 								$user->mobile = $data['mobile'];
 								$user->profile_pic = $imageName;
