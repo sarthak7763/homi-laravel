@@ -290,7 +290,7 @@ label.error{
                                       <select class="form-control livesearch" id="add_by" name="add_by">
                                       <option value="">Select Owner</option>
                                       @foreach($PropOwnerList as $k=>$property)
-                                          <option value="{{$property->id}}">{{$property->name}}</option>
+                                          <option value="{{$property->id}}  @if (old('add_by') == $property->id) {{ 'selected' }} @endif">{{$property->name}}</option>
                                       @endforeach
                                       </select>
                                        @if($property_owner_error!="")
@@ -303,7 +303,7 @@ label.error{
                               <div class="col-md-6">
                                   <div class="form-group">
                                       <label class="font-weight-bold">Property Title<span style="color:red;">*</span></label>
-                                      <input type="text" class="form-control" value="" name="title" id="title"  placeholder="Property Title">
+                                      <input type="text" class="form-control" value="{{old('title')}}"  name="title" id="title"  placeholder="Property Title">
                                      @if($property_title_error!="")
                                           <span class="messages">
                                               <strong>{{ $property_title_error }}</strong>
@@ -318,8 +318,8 @@ label.error{
                                     <select class="form-control" name="property_type" id="property_type">
                                    <option value="">Select Project Type</option>
                                   
-                                   <option value="1">Renting</option>
-                                   <option value="2">Buying</option>
+                                   <option value="1" @if (old('property_type') == "1") {{ 'selected' }} @endif  >Renting</option>
+                                   <option value="2" @if (old('property_type') == "2") {{ 'selected' }} @endif>Buying</option>
                                    
                                     </select>
                                      @if($property_type_error!="")
@@ -348,7 +348,7 @@ label.error{
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="font-weight-bold">Maximum Guests Allowed</label>
-                                    <input type="text" class="form-control" name="guest_count" id="guest_count" value="" placeholder="Enter No. of guests allowed ">
+                                    <input type="text" class="form-control" name="guest_count" id="guest_count" value="{{old('guest_count')}}" placeholder="Enter No. of guests allowed ">
                                     @if($guest_count_error!="")
                                         <span class="messages">
                                             <strong>{{ $guest_count_error }}</strong>
@@ -359,7 +359,7 @@ label.error{
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="font-weight-bold">No. of Bedroom<span style="color:red;">*</span></label>
-                                    <input type="text" name="no_of_bedroom" class="form-control" value="" placeholder="Enter no. of bedroom"  id="no_of_bedroom" >
+                                    <input type="text" name="no_of_bedroom" class="form-control" value="{{old('no_of_bedroom')}}" placeholder="Enter no. of bedroom"  id="no_of_bedroom" >
                                     @if($bedroom_count_error!="")
                                         <span class="messages">
                                             <strong>{{ $bedroom_count_error }}</strong>
@@ -383,7 +383,7 @@ label.error{
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">No. of Kitchen</label>
-                                  <input type="text" class="form-control" name="no_of_kitchen" id="no_of_kitchen" value="" placeholder="Enter no. of kitchen">
+                                  <input type="text" class="form-control" name="no_of_kitchen" id="no_of_kitchen" value="{{old('no_of_kitchen')}}" placeholder="Enter no. of kitchen">
                                   @if($kitchen_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $kitchen_count_error }}</strong>
@@ -395,7 +395,7 @@ label.error{
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">No. of Bathrooms<span style="color:red;">*</span></label>
-                                  <input type="text" class="form-control" value="" name="no_of_bathroom" id="no_of_bathroom" placeholder="Enter No. of bathrooms">
+                                  <input type="text" class="form-control" value="{{old('no_of_bathroom')}}" name="no_of_bathroom" id="no_of_bathroom" placeholder="Enter No. of bathrooms">
                                   @if($bathroom_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $bathroom_count_error }}</strong>
@@ -408,7 +408,7 @@ label.error{
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">Pool</label>
-                                  <input type="checkbox" name="no_of_pool" class="form-control"   value="1" id="no_of_pool">
+                                  <input type="checkbox" @if (old('no_of_pool') == "1") {{ 'checked' }} @endif  name="no_of_pool" class="form-control"   value="1" id="no_of_pool">
                                   @if($pool_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $pool_count_error }}</strong>
@@ -420,7 +420,7 @@ label.error{
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">Garden</label>
-                                  <input type="checkbox" name="no_of_garden" class="form-control" value="1" id="no_of_garden">
+                                  <input type="checkbox" @if (old('no_of_garden') == "1") {{ 'checked' }} @endif name="no_of_garden" class="form-control" value="1" id="no_of_garden">
                                   @if($garden_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $garden_count_error }}</strong>
@@ -432,7 +432,7 @@ label.error{
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">Parking</label>
-                                  <input type="checkbox" name="no_of_parking" class="form-control" value="1" id="no_of_parking">
+                                  <input type="checkbox" @if (old('no_of_parking') == "1") {{ 'checked' }} @endif name="no_of_parking" class="form-control" value="1" id="no_of_parking">
                                   @if($parking_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $parking_count_error }}</strong>
@@ -444,7 +444,7 @@ label.error{
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">Lift</label>
-                                  <input type="checkbox" name="no_of_lift" class="form-control" value="1" id="no_of_lift">
+                                  <input type="checkbox" @if (old('no_of_lift') == "1") {{ 'checked' }} @endif name="no_of_lift" class="form-control" value="1" id="no_of_lift">
                                   @if($lift_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $lift_count_error }}</strong>
@@ -465,7 +465,7 @@ label.error{
                           <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">No. of Balcony</label>
-                                  <input type="text" class="form-control" value="" name="no_of_balcony" id="no_of_balcony" placeholder="Enter No. of balcony">
+                                  <input type="text" class="form-control" value="{{old('no_of_balcony')}}" name="no_of_balcony" id="no_of_balcony" placeholder="Enter No. of balcony">
                                   @if($balcony_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $balcony_count_error }}</strong>
@@ -477,7 +477,7 @@ label.error{
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Property Area <span>(Sq. Ft.)</span></label>
-                                    <input type="text" class="form-control"  value="" name="property_area" id="property_area" placeholder="Enter property area">
+                                    <input type="text" class="form-control"  value="{{old('property_area')}}" name="property_area" id="property_area" placeholder="Enter property area">
                                          
                                
                                 @if($property_area_count_error!="")
@@ -491,7 +491,7 @@ label.error{
                         <div class="col-md-6">
                               <div class="form-group">
                                   <label class="font-weight-bold">Floor No.<span style="color:red;">*</span></label>
-                                  <input type="text" class="form-control" value="" name="no_of_floors" id="no_of_floors" placeholder="Enter Floor No.">
+                                  <input type="text" class="form-control" value="{{old('no_of_floors')}}" name="no_of_floors" id="no_of_floors" placeholder="Enter Floor No.">
                                   @if($floors_count_error!="")
                                       <span class="messages">
                                           <strong>{{ $floors_count_error }}</strong>
@@ -506,7 +506,7 @@ label.error{
                                   <select class="form-control" name="property_condition" id="property_condition">
                                     <option value="">Select Condition</option>
                                     @foreach($condition as $list)
-                                    <option value="{{$list->id}}">{{$list->name}}</option>
+                                    <option value="{{$list->id}}" @if (old('property_condition') == $list->id) {{ 'selected' }} @endif>{{$list->name}}</option>
                                     @endforeach
                                   </select>
                                   @if($property_condition_error!="")
@@ -527,7 +527,7 @@ label.error{
                                       {{$list['name']}} ({{$list['phonecode']}})</option>
                                   @endforeach
                                 </select>
-                                <input type="text" class="form-control" value="" name="property_number" id="property_number" placeholder="Enter Contact Number" >
+                                <input type="text" class="form-control" value="{{old('property_number')}}" name="property_number" id="property_number" placeholder="Enter Contact Number" >
 
                                 @if($phone_number_error!="")
                                     <span class="messages">
@@ -540,7 +540,7 @@ label.error{
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Contact Email<span style="color:red;">*</span></label>
-                                <input type="email" class="form-control"name="property_email" id="property_email" placeholderF="Enter Contact Email">
+                                <input type="email" class="form-control" value="{{old('property_email')}}" name="property_email" id="property_email" placeholderF="Enter Contact Email">
 
                                 @if($email_error!="")
                                     <span class="messages">
@@ -554,7 +554,7 @@ label.error{
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="font-weight-bold">Address<span style="color:red;">*</span></label>
-                                <input type="text" class="form-control" name="property_address" id="property_address" value="">
+                                <input type="text" class="form-control"  name="property_address" id="property_address" value="{{old('property_address')}}">
                                 @if($address_error!="")
                                     <span class="messages" role="alert">
                                         <strong>{{ $address_error }}</strong>
@@ -583,7 +583,7 @@ label.error{
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Price <span style="color:red;">*</span></label>
-                                <input type="text" class="form-control" value="" name="property_price" id="property_price" placeholder="Enter Property Price" >
+                                <input type="text" class="form-control" value="{{old('property_price')}}" name="property_price" id="property_price" placeholder="Enter Property Price" >
                                 
                                 @if($price_error!="")
                                     <span class="messages">
@@ -610,7 +610,7 @@ label.error{
               <div class="col-md-6">
                   <div class="form-group">
                       <label class="font-weight-bold">Meta Title</label>
-                      <input type="text" class="form-control" value="" name="meta_title" id="meta_title" placeholder="Enter Meta title">
+                      <input type="text" class="form-control" value="{{old('meta_title')}}" name="meta_title" id="meta_title" placeholder="Enter Meta title">
                       @if($meta_title_error!="")
                           <span class="messages">
                               <strong>{{ $meta_title_error }}</strong>
@@ -621,7 +621,7 @@ label.error{
                 <div class="col-md-6">
                       <div class="form-group">
                           <label class="font-weight-bold">Meta keywords</label>
-                          <input type="text" class="form-control" value="" name="meta_keywords" id="meta_keywords" placeholder="Enter meta keywords">
+                          <input type="text" class="form-control" value="{{old('meta_keywords')}}" name="meta_keywords" id="meta_keywords" placeholder="Enter meta keywords">
                           @if($meta_keywords_error!="")
                               <span class="messages">
                                   <strong>{{ $meta_keywords_error }}</strong>
@@ -633,7 +633,7 @@ label.error{
               <div class="col-md-12">
                   <div class="form-group">
                       <label class="font-weight-bold">Meta Description<!-- <span style="color:red;">*</span> --></label>
-                      <textarea class="ck-editor" value="" name="meta_description" id="meta_description" rows="5" cols="20"></textarea>
+                      <textarea class="ck-editor" value="{{old('meta_description')}}" name="meta_description" id="meta_description" rows="5" cols="20"></textarea>
                       @if($meta_description_error!="")
                           <span class="messages">
                               <strong>{{ $meta_description_error }}</strong>
@@ -645,7 +645,7 @@ label.error{
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="font-weight-bold">Property Description</label>
-                        <textarea  class="ck-editor" name="property_description" id="property_description" rows="5" cols="20"></textarea>
+                        <textarea  class="ck-editor" value="{{old('property_description')}}" name="property_description" id="property_description" rows="5" cols="20"></textarea>
                         @if($property_description_error!="")
                             <span class="messages">
                                 <strong>{{ $property_description_error }}</strong>

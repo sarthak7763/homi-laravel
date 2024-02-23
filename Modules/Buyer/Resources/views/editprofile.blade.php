@@ -68,7 +68,7 @@
                   </div>
              
                   <div class="col-12" >
-                     <input type="text"   class="form-control @error('mobile') is-invalid @enderror"  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}" placeholder="Please Enter Mobile No">   
+                     <input type="text" class="form-control @error('mobile') is-invalid @enderror"  aria-describedby="" name="mobile"  value="{{$userInfo->mobile}}" placeholder="Please Enter Mobile No">   
                   </div>
                   @error('mobile')
                   <div class="invalid-feedback" style="display:block;">
@@ -89,13 +89,18 @@
                   @if($userInfo->owner_type == 1)
                   <div class="col-sm-6" id="showagencydiv" style="display:block;">
                      <div class="form-group mb-4" >
-                        <input type="text" class="form-control"  name="agency_name" id = "agency_name" value = "{{$userInfo->agency_name}}">
+                     <input type="text" class="form-control @error('agency_name') is-invalid @enderror" placeholder="Agency Name" name="agency_name" id="agency_name" value = "{{$userInfo->agency_name}}">
+                     @if($errors->has('agency_name'))
+                     <div class="invalid-feedback">
+                        {{$errors->first('agency_name')}}
                      </div>
+                     @endif
+                  </div>
                   </div>
                   @else
                   <div class="col-sm-6" id="showagencydiv" style="display:none;">
                      <div class="form-group mb-4">
-                        <input type="text" class="form-control"  name="agency_name" id = "agency_name" value = "{{$userInfo->agency_name}}">
+                        <input type="text" class="form-control"   name="agency_name" id="agency_name" value = "{{$userInfo->agency_name}}">
                      </div>
                   </div>
                   @endif

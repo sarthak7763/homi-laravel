@@ -131,17 +131,16 @@ class MySubscriptionController extends Controller
                         $seller_details = User::where('id',$user_id)->get()->first();
 
                         $subscription_plan_details= Subscription::where('id',$id)->first();
-                        
-                       
 
+                        $fund_screenshot = url('/').'/images/'.$imageName;
 
-                        getemailtemplate($template_id='8',$admin->email,$admin->name,$otp="",$seller_details->name,$seller_details->email="",$data['title']="",$property_typevalue="",$data['property_price']="",$data['property_address']="",
+                        getemailtemplate($template_id='8',$admin->email,$admin->name,$otp="",$seller_details->name,$seller_details->email="",$title="",$property_typevalue="",$property_price="",$property_address="",
                         $property_image_link="",$subscription_plan_details->name,$subscription_plan_details->plan_price,
-                        $subscription_plan_details->plan_duration,$subscription_plan_details->product_listing,$seller->fund_amount,$seller->fund_screenshot);
+                        $seller->fund_amount,$fund_screenshot);
 
                       
 
-                        return redirect()->route('buyer.subscription-plans')->with('success','please wait .All details has been sent to admin for activation subcription plan');
+                        return redirect()->route('buyer.subscription-plans')->with('success','please wait .All details has been sent to admin for activation subcription plan by mail');
                         }
                       else
                       {

@@ -41,4 +41,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
+
+Route::get('cammnd', function () {
+    
+    Artisan::call('optimize:clear');
+
+    
+});
+
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

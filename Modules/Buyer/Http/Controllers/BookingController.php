@@ -19,14 +19,7 @@ class BookingController extends Controller
       return redirect()->route('buyer.subscription-plans');
     }
           try {
-            if($request->segment(3))
-            {
-              $segmentvalue=$request->segment(3);
-              
-            }
-            else{
-              $segmentvalue="";
-            }
+      
             
             $user_id = Auth::User()->id;
             $property_id = Property ::where('add_by',$user_id)->select('id')->get()->toArray();
@@ -45,14 +38,10 @@ class BookingController extends Controller
             $search_checkout = $request->check_out_search;
             $search_booking_status = $request->booking_status_search;
           
-            if($search_title!= "" || $search_booking_id!="" || $search_booking_status!="" || $search_checkin!="" || $search_checkout!="" || $segmentvalue!=""  ) {
-            $bookingDataquery->where(function($query) use ($search_title, $search_booking_id,$search_booking_status,$search_checkin,$search_checkout,$search_status,$segmentvalue)
+           
+            $bookingDataquery->where(function($query) use ($search_title, $search_booking_id,$search_booking_status,$search_checkin,$search_checkout,$request)
               {
-                $access_module= sellermoduleaccess();
-    if($access_module=='false')
-    {
-      return redirect()->route('buyer.subscription-plans');
-    }
+                
                
                 if($search_title!=""){
                       $query->where('tbl_property.title', 'like', '%' . $search_title . '%');
@@ -70,32 +59,32 @@ class BookingController extends Controller
                     }
 
                    
-                  if ($search_booking_status == '0'|| $search_booking_status == '1' || $search_booking_status == '2' ) {
-                    $query->where('user_booking.booking_status',$search_booking_status );
-                }
+                //   if ($search_booking_status == '0'|| $search_booking_status == '1' || $search_booking_status == '2' ) {
+                //     $query->where('user_booking.booking_status',$search_booking_status );
+                // }
                   
                   if($search_booking_id!=""){
                       $query->Where('user_booking.booking_id', 'like', '%' . $search_booking_id . '%');
                     } 
                     
                   
-                    if($segmentvalue!="")
-                    {
+                    // if($segmentvalue!="")
+                    // {
                       
 
-                        if($segmentvalue=='ongoing'){
+                        if($request->booking_status_search=='0'){
                           $query->where('user_booking.booking_status',0 );
                         }
-                        elseif($segmentvalue=='completed'){
+                        elseif($request->booking_status_search=='1'){
                           $query->where('user_booking.booking_status',1 );
                         }
-                        elseif($segmentvalue=='cancel'){
+                        elseif($request->booking_status_search=='2'){
                           $query->where('user_booking.booking_status',2 );
                         }
-              }
+                    // }
               });
 
-            }
+
         $bookingData = $bookingDataquery->get()->toArray();
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
         return view('buyer::my-bookings',compact('bookingData','cancel_reasons','search_title','search_booking_id','search_checkin','search_checkout','search_booking_status'));

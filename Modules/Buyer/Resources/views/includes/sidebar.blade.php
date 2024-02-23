@@ -60,7 +60,7 @@
     </a>
   </li>
   <li class="item {{ (request()->is('dealer/bookings*')) ? 'active' : '' }}">
-    <a href="{{route('buyer.bookings','ongoing')}}">
+    <a href="{{route('buyer.bookings')}}">
       <i class="fa-solid fa-book-open-reader me-3"></i> 
       </span>
       My Bookings
@@ -80,7 +80,7 @@
     </a>
   </li>
   <li class="item {{ (request()->is('dealer/manage-properties*')) ? 'active' : '' }}">
-    <a href="{{route('buyer.property','all')}}">
+    <a href="{{route('buyer.property')}}">
       <i class="fa-solid fa-building-user me-3"></i>
       Manage Properties
     </a> 

@@ -613,32 +613,39 @@ function getconditionnamebylang($lang,$id)
 
 
 
-function getemailtemplate($template_id,$email,$username,$otp="",$sellername="",$selleremail="",$property_title="",$property_type="",$property_price="",$property_address="",$property_image_link="",$subscription_plan_name="",$subscription_plan_price="",$subscription_plan_duration="",$subscription_product_listing="",$fund_amount="",$fund_screenshot="")
+function getemailtemplate($template_id,$email,$username,$otp="",$sellername="",$selleremail="",$property_title="",$property_type="",$property_price="",$property_address="",$property_image_link="",$subscription_plan_name="",$subscription_plan_price="",$fund_amount="",$fund_screenshot="")
   {
-    $emailcontentdata=DB::table('email_templates')->where('id',$template_id)->get()->first();
-    if($emailcontentdata)
-    {
-        $email_content=$emailcontentdata->message;
-        $email_subject=$emailcontentdata->subject;
+    try
+            {
+                $emailcontentdata=DB::table('email_templates')->where('id',$template_id)->get()->first();
+                if($emailcontentdata)
+                {
+                    $email_content=$emailcontentdata->message;
+                    $email_subject=$emailcontentdata->subject;
+            
+                $variablesarray=array('[user]','[otp]','[contactname]','[contactinformation]','[contactinformationlink]','[contactsite]','[contactsitelink]','[sellername]','[selleremail]','[property_title]','[property_type]','[property_price]','[property_address]','[property_image_link]','[subscription_plan_name]','[subscription_plan_price]','[fund_amount]','[fund_screenshot]');
+            
+                $variablesvaluesarray=array($username,$otp,'Homi Team','info@homi.com','mailto:info@homi.com','www.homi.com','https://www.homi.com',$sellername,$selleremail,$property_title,$property_type,$property_price,$property_address,$property_image_link,$subscription_plan_name,$subscription_plan_price,$fund_amount,$fund_screenshot);
+            
+                $email_content=str_replace($variablesarray,$variablesvaluesarray,$email_content);
+                $email_subject=str_replace($variablesarray,$variablesvaluesarray,$email_subject);
+                $email_subject=str_replace('&nbsp;','',$email_subject);
+                $email_subject=strip_tags($email_subject);
+            
+                $details['email_content']=$email_content;
+                $details['email_subject']=$email_subject;
+                // dd($email);
+            
+                \Mail::to($email)->send(new \App\Mail\EmailMasterMailTemplate($details));
+            
+            }
+        }
+        
+        catch (\Exception $e){
+        dd($e);
+        }
 
-      $variablesarray=array('[user]','[otp]','[contactname]','[contactinformation]','[contactinformationlink]','[contactsite]','[contactsitelink]','[sellername]','[selleremail]','[property_title]','[property_type]','[property_price]','[property_address]','[property_image_link]','[subscription_plan_name]','[subscription_plan_price]','[subscription_plan_duration]','[subscription_product_listing]','[fund_amount]','[fund_screenshot]');
-
-      $variablesvaluesarray=array($username,$otp,'Homi Team','info@homi.com','mailto:info@homi.com','www.homi.com','https://www.homi.com',$sellername,$selleremail,$property_title,$property_type,$property_price,$property_address,$property_image_link,$subscription_plan_name,$subscription_plan_price,$subscription_plan_duration,$subscription_product_listing,$fund_amount,$fund_screenshot);
-
-      $email_content=str_replace($variablesarray,$variablesvaluesarray,$email_content);
-      $email_subject=str_replace($variablesarray,$variablesvaluesarray,$email_subject);
-      $email_subject=str_replace('&nbsp;','',$email_subject);
-      $email_subject=strip_tags($email_subject);
-
-      $details['email_content']=$email_content;
-      $details['email_subject']=$email_subject;
-
-      \Mail::to($email)->send(new \App\Mail\EmailMasterMailTemplate($details));
-
-      return true;
-    }
-
-    return true;
+   
   }
 
 

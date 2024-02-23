@@ -36,7 +36,7 @@
             </div>
           </div>
           <div class="col text-end">
-          <a href="{{route('buyer.bookings','all')}}">
+          <a href="{{route('buyer.bookings')}}">
             <h3>{{$total_booking}}</h3>
             <p class="mb-0">Total Bookings</p>
           </div>
@@ -53,7 +53,7 @@
             </div>
           </div>
           <div class="col text-end">
-          <a href="{{route('buyer.bookings','ongoing')}}">
+          <a href="{{route('buyer.bookings',['booking_status_search'=>'0'])}}">
             <h3>{{$ongoing_booking}}</h3>
             <p class="mb-0">ongoing booking</p></a>
           </div>
@@ -69,7 +69,7 @@
             </div>
           </div>
           <div class="col text-end">
-          <a href="{{route('buyer.bookings','completed')}}">
+          <a href="{{route('buyer.bookings',['booking_status_search'=>'1'])}}">
             <h3>{{$completed_booking}}</h3>
             <p class="mb-0">Completed Bookings</p>
 </a>
@@ -86,7 +86,7 @@
             </div>
           </div>
           <div class="col text-end">
-          <a href="{{route('buyer.bookings','cancel')}}">
+          <a href="{{route('buyer.bookings',['booking_status_search'=>'2'])}}">
             <h3>{{$cancel_booking}}</h3>
             <p class="mb-0">Cancelled Bookings</p>
            </a>
@@ -104,7 +104,7 @@
               </div>
             </div>
             <div class="col text-end">
-            <a href="{{route('buyer.property','buying')}}">
+            <a href="{{route('buyer.property',['status_search' => '1','property_type' => '2'])}}">
               <h3>{{$total_buying_property}}</h3>
               <p class="mb-0">Total Property for Active Selling</p>
              </a>
@@ -121,7 +121,7 @@
               </div>
             </div>
             <div class="col text-end">
-            <a href="{{route('buyer.property','renting')}}">
+            <a href="{{route('buyer.property',['status_search' =>'','property_type' => '1'])}}">
               <h3>{{$total_renting_property}}</h3>
               <p class="mb-0">Total Renting Properties</p>
               </a>

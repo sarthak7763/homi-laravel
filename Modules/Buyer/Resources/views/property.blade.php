@@ -28,12 +28,12 @@
                     <h1 class="mb-3">Property</h1>
                 </div>
                 <div class="col-md-auto manage-Property_container">
-                    <form action = "{{route('buyer.property-search')}}" method="post" id="searchform" autocomplete="off">
-                        @csrf
+                    <form action = "{{route('buyer.property')}}" method="get" id="searchform" autocomplete="off">
+                      
                         <div class="search-input-group input-group-property">
                             
                             <div class="form-outline">
-                                <input type="text" id="title_search" class="form-control" name = "title_search" placeholder="Search data" value ="{{$search_title}}" />
+                                <input type="text" id="title_search" class="form-control" name="title_search" placeholder="Search data" value ="{{$search_title}}" />
                                 <select name="status_search">
                                   <option value ="" >select status</option> 
                                   <option value ="1" {{ $search_status == 1 ? 'selected' : '' }}>Active</option>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="modal-body">
                             <!-- Your form or content for status change goes here -->
-                            <p>Are you sure you want to change the property status?</p>
+                            <p class="change-text"></p>
                             <input type= "hidden" name = "property_id" id="property_hidden_id">
                             <input type= "hidden" name = "property_status" id="property_hidden_status"> 
                         </div>

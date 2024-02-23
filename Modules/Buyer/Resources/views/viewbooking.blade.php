@@ -42,7 +42,7 @@
                     </span>
                   </div>
                   <div class="col text-end">
-                    <h3><span class="text-success">{{$view_booking_data->property_price}}</span>/day</h3>
+                    <h3><span class="text-success">{{$view_booking_data->property_price}}</span>/rs day</h3>
                     <p>Payment mode:{{$view_booking_data->payment_mode}}</p>
                   </div>
                 </div>                  

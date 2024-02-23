@@ -67,8 +67,8 @@ Route::group(['middleware' => 'Isseller'], function ()
     
 
     Route::get('/dealer/bookings/', 'BookingController@booking')->name('buyer.bookings');
-    Route::get('/dealer/bookings/{segment}', 'BookingController@booking')->name('buyer.bookings');
-    Route::any('/dealer/bookings-search', 'BookingController@booking')->name('buyer.bookings-search');
+    //  Route::get('/dealer/bookings/{segment}', 'BookingController@booking')->name('buyer.bookings');
+    // Route::any('/dealer/bookings-search', 'BookingController@booking')->name('buyer.bookings-search');
     Route::post('/dealer/bookings-status-change', 'BookingController@bookingstatus')->name('buyer.bookings-update-status');
     Route::post('/dealer/bookings-cancel-booiking', 'BookingController@cancelbooking')->name('buyer.bookings-cancel-booking');
 
@@ -90,8 +90,8 @@ Route::group(['middleware' => 'Isseller'], function ()
 
 // --------------------------------------------------property---------------------------------------------//
     Route::get('/dealer/manage-properties', 'PropertyController@index')->name('buyer.property');
-    Route::get('/dealer/manage-properties/{segment}', 'PropertyController@index')->name('buyer.property');
-    Route::any('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
+    // Route::get('/dealer/manage-properties/{segment}', 'PropertyController@index')->name('buyer.property');
+    // Route::any('/dealer/manage-properties-search', 'PropertyController@index')->name('buyer.property-search');
     Route::get('/dealer/add-properties', 'PropertyController@add')->name('buyer.add-property');
     Route::post('/dealer/get-categorydata-property', 'PropertyController@getcategory')->name('buyer.get-category');
     Route::post('/dealer/save-propertiesData', 'PropertyController@store')->name('buyer.store-property');

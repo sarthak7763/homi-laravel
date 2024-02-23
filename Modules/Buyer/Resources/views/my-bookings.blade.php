@@ -17,8 +17,8 @@
             </div>
         @endif
 
-    <form action = "{{route('buyer.bookings-search')}}" method="Post" autocomplete="off">
-                        @csrf
+    <form action = "{{route('buyer.bookings')}}" method="get" autocomplete="off">
+                   
                         <div class="search-input-group">
                             <div class="row form-outline p-2">
 
@@ -71,8 +71,8 @@
                             <th scope="col">Check in</th>
                             <th scope="col">Check out</th>
                             <th scope="col">Price</th>
-                            <th class="bookings-status" scope="col">Status</th>
-                            <th class="bookings-status" scope="col">Actions</th>
+                            <th class="bookings-status" scope="col">&nbsp;&nbsp; Status</th>
+                            <th class="bookings-status" scope="col">&nbsp;&nbsp;Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,7 +98,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($booking->booking_status==1 || $booking->booking_status==2)
+                            &nbsp;&nbsp; @if($booking->booking_status==1 || $booking->booking_status==2)
                                 <button type="button" class="button-like status_change" data-toggle="modal" data-target="#myModal" data-id="{{$booking->booking_id}}" data-status="{{$booking->booking_status}}" style = "display:none"; >Change Status</button>
                                 @else
                                 <button type="button" class="button-like status_change" data-toggle="modal" data-target="#myModal" data-id="{{$booking->booking_id}}" data-status="{{$booking->booking_status}}">Change Status</button>

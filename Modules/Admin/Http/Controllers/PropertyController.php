@@ -239,10 +239,11 @@ class PropertyController extends Controller {
 
     public function save(Request $request) {
         try {
+
             $data=$request->all();
 
-            $request->validate([
-			    'add_by'=>'required',
+            $validator = Validator::make($request->all(), [
+                'add_by'=>'required',
 			    'title'=>'required',
 			    'property_type'=>[
                   'required',
@@ -262,9 +263,9 @@ class PropertyController extends Controller {
                 'property_email' => 'required|email',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
-			    ],
-		      [
-		        'add_by.required' => 'Owner is required.',
+            ],
+      [
+                'add_by.required' => 'Owner is required.',
 		        'title.required'=>'Title field can’t be left blank',
 		        'property_type.required' => 'Property type is required.',
 		        'property_type.in'=>'Invalid property type Value',
@@ -307,10 +308,15 @@ class PropertyController extends Controller {
                 'property_address.required'=>'Property address field can’t be left blank',
                 'property_price.required'=>'Property address field can’t be left blank',
                 'property_price_type.required'=>'Property price type is required.',
-		      ]);
 
+      ]);
+      if($validator->fails()){
+      
+      return Redirect::back()->withErrors($validator)->withInput();
+      }
            
-    $fileNameToStore="";
+
+            $fileNameToStore="";
             //Upload Image
     if($request->hasFile('property_image')){
             try{
@@ -1119,7 +1125,7 @@ class PropertyController extends Controller {
         
         try {
             $data=$request->all();
-            dd($data);
+            
           
             $request->validate([
                 'property_id'=>'required',
@@ -1138,21 +1144,21 @@ class PropertyController extends Controller {
 
             if($propertyupdate->property_status==0)
             {
-                $status=1;
+                // $status=1;
 
-                $propertyupdate->property_status=$status;
+                $propertyupdate->property_status='1';
                 $propertyupdate->publish_date=date('Y-m-d');
-                $propertyupdate->save();
+                
+                $propertyupdate->update();
                 
 
                 $seller = User::where('id',$propertyupdate->add_by)->first();
-                $admin = User::where('user_type','1')->get()->first();
-
-                getemailtemplate($template_id='7',$admin->email,$admin->name,$otp="",$seller->name,$seller->email="",$data['title']="",$property_typevalue="",$data['property_price']="",$data['property_address']="",$property_image_link="");
-
                 
+                //  dd($seller);
+                $check_email = getemailtemplate($template_id='7',$seller->email,$seller->name);
+             
 
-                return response()->json(["status" => 'success','message'=>$status]);
+                return response()->json(["status" => 'success','message'=>'1']);
             }
             else{
                return response()->json(["status" => 'error','message'=>'Property has already published.']);

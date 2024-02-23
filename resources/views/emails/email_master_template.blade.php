@@ -18,8 +18,8 @@
             <thead style="background: #f4f4fb;">
                 <tr>
                     <th colspan="2" style="text-align: center; padding: 15px 0;">
-                        <img src="https://homi.ezxdemo.com/storage/uploads/sitelogo/Logo.png" style="display:block" width="200px" height="100px" alt="homi" title="homi" />
-                    </th>
+                        <img src="{{url('/')}}/storage/uploads/sitelogo/Logo.png" style="display:block" width="200px" height="100px" alt="homi" title="homi" />
+                        </th>
                 </tr>
             </thead>
             <tbody>

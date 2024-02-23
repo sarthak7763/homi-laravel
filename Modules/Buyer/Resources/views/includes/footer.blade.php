@@ -185,12 +185,23 @@ $(document).on('change','#owner_type',function(){
 <script>
     $(document).ready(function(){
       
-
+     
       $(".status_change").on("click", function() {
         
        var booking_id= $(this).attr('data-id');
        
+       
        var booking_status= $(this).attr('data-status');
+
+       if(booking_status==1)
+       {
+         $('.change-text').html("Are you sure you want to suspend the property status?");
+       }
+       else
+       {
+        $('.change-text').html("Are you sure you want to active the property status?");
+       }
+
        
         $('#booking_hidden_id').val(booking_id);
         $('#booking_hidden_status').val(booking_status);    
@@ -275,6 +286,44 @@ $('#property_type').on('change',function(){
 
   });
 </script>
+
+<script>
+  // Hide image hover alt tag
+  $('#profile_pic').attr('title', '');
+
+</script>
+<script>
+    $(document).ready(function(){
+
+
+      
+
+      $("#country_id").on("click", function() {
+
+        var get_string = $('#country_id option:selected').text().trim();
+        var get_lenght = get_string.length;
+        console.log(get_lenght);
+        if(get_lenght > 5 && get_lenght < 10){
+      
+          // $("#country_id").css("max-width","100px !important");
+          $("#country_id").css({ "max-width": "110px"});
+        }else if(get_lenght > 10){
+          $("#country_id").css({ "max-width": "200px"});
+        }else{
+          $("#country_id").css({ "max-width": "70px"});
+        }
+        
+      //  var booking_id= $(this).attr('data-id');
+       
+      //  var booking_status= $(this).attr('data-status');
+       
+      //   $('#booking_hidden_id').val(booking_id);
+      //   $('#booking_hidden_status').val(booking_status);    
+	}); 
+});
+ 
+</script>
+
 
 
 <script>

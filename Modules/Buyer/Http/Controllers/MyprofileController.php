@@ -42,19 +42,20 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 			$request->validate([
 					
 					'name'=>'required|regex:/^[\pL\s]+$/u',
+				   'mobile' => 'required|min:10|max:12|numeric',
+					'agency_name'=>'required|regex:/^[\pL\s]+$/u',
 					  
-					  'mobile' => 'required|string|between:10,12',
 			],
 			[
 				'name.required' => 'Name field can’t be left blank.',
 				'name.regex' => 'Please enter only alphabetic characters.',
 				'mobile.required' => 'mobile no field can’t be left blank.',
+				'agency_name.required' => 'Agency name  field can’t be left blank.',
+				'agency_name.regex' => 'Please enter only alphabetic characters.',
+				'mobile.min'=>'Mobile number can not be less than 10 character',
+				'mobile.numeric'=>'Please enter only numeric values',
+				'mobile.max' => 'Mobile number can not be max than 12 character',
 				
-				//  'mobile.min'=>'Mobile number can not be less than 10 character',
-				//  'mobile.regex'=>'Please enter only alphabetic characters',
-
-				// 'mobile.max' => 'Mobile number can not be max than 12 character',
-				'mobile.between' => 'Mobile number should be 10 to 12 charcters',
 
 
 			]);
@@ -65,7 +66,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 								$imageName = time().'.'.$request->profile_pic->extension(); 
 								
 								$image = $request->profile_pic->move(public_path('images/user/'), $imageName);
-								dd($image);
+								
 								$user->name = $data['name'];
 								$user->mobile = $data['mobile'];
 								$user->profile_pic = $imageName;

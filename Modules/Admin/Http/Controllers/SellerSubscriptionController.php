@@ -107,15 +107,15 @@ class SellerSubscriptionController extends Controller{
                                 $user_subscription->subscription_status = 1;
                                 $user_subscription->save();
 
-                                //  $admin  = User::where('user_type','1')->get()->first();
                                 
-                                //  $seller_details = User::where('id',$sellerData->user_id)->get()->first();
+                                 $seller_details = User::where('id',$sellerData->user_id)->get()->first();
+
                                  
-                                //  $subscription_plan_details= Subscription::where('id',$user_subscription->plan_id)->first();    
+                                 
+                                   
                                 
-                                //  getemailtemplate($template_id='9',$admin->email="",$admin->name,$otp="",$seller_details->name,$seller_details->email="",$data['title']="",$property_typevalue="",$data['property_price']="",$data['property_address']="",
-                                //  $property_image_link="",$subscription_plan_details->name="",$subscription_plan_details->plan_price="",
-                                //  $subscription_plan_details->plan_duration="",$subscription_plan_details->product_listing="",$sellerData->fund_amount="",$sellerData->fund_screenshot="");
+                                 getemailtemplate($template_id='9',$seller_details->email,$seller_details->name,$otp="",$ame="",$email="",$title="",$property_typevalue="",$property_price="",$property_address="",
+                                 $property_image_link="",$subscription_plan_name="",$subscription_plan_price="",$fund_amount="",$fund_screenshot="");
 
                                return response()->json(['success'=>$status]);
             

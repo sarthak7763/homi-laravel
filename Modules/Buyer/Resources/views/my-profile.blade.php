@@ -13,7 +13,19 @@
 .user-box {
     border: 1px solid #7591a3;
     padding: 5px;
+    
+
+    
 }
+
+.display-block {
+    display: block;
+}
+
+
+.display-none {
+    display: none;
+}  
 </style>
 <div class="col-md-8 col-lg-9 mt-4">  
 <div class="profile-box border px-4 mt-3">
@@ -100,18 +112,17 @@
 <tbody>
 <tr>
 <td><strong>Owner Type : </strong> <span> <?php if ($userInfo->owner_type == 1) echo "Agency"; else echo "Indiviuals" ; ?></span></td>
-<td>
-
-              
-<strong>Agency Name : </strong>
-
 @if($userInfo->owner_type == 1)
-    <span> {{$userInfo->agency_name}}</span>
-    @else
-    <span> 
-    {{'NA'}}</span>
-    @endif
+<td class ="display-block" >
+<strong>Agency Name : </strong>
+<span> {{$userInfo->agency_name}}</span>
 </td>
+ @else
+ <td class ="display-none">
+</td>
+ @endif
+ 
+
 </tr>
 </tbody>
 </table>

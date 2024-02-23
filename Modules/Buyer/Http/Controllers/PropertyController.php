@@ -21,6 +21,7 @@ class PropertyController extends Controller
     //
     public function index(Request $request)
     {
+      // dd($request->all());
       $access_module= sellermoduleaccess();
     if($access_module=='false')
     {
@@ -32,21 +33,21 @@ class PropertyController extends Controller
         $user_id = Auth::User()->id;
         $search_title = $request->title_search;
         $search_status = $request->status_search;
-        if($request->segment(3))
-        {
-        	$segmentvalue=$request->segment(3);
-        }
-        else{
-        	$segmentvalue="";
-        }
+        // if($request->segment(3))
+        // {
+        // 	$segmentvalue=$request->segment(3);
+        // }
+        // else{
+        // 	$segmentvalue="";
+        // }
        
         //DB::enableQueryLog();
         $propertyDetail = Property::where('add_by',$user_id)->latest(); 
 
 
-        if($search_title!="" || $search_status!="" || $segmentvalue!="") {
+        // if($search_title!="" || $search_status!="" || $erwe!="") {
 
-          $propertyDetail->where(function($query) use ($search_title, $search_status,$segmentvalue)
+          $propertyDetail->where(function($query) use ($search_title, $search_status,$request)
               {
                 if($search_title!=""){
                   $query->where('title', 'like', '%' . $search_title . '%');
@@ -57,22 +58,21 @@ class PropertyController extends Controller
                   $query->where('property_status',$search_status );
               	}
 
-              if($segmentvalue!="" && $segmentvalue!="all")
-              {
-              	if($segmentvalue=="buying")
-              	{
-              		$query->where('property_type',2);
+                if($request->property_type=="2"){
+                    $query->where('property_type',$request->property_type);
+                }elseif($request->property_type=="1"){
+              		$query->where('property_type',$request->property_type);
               	}
-              	else{
-              		$query->where('property_type','1');
-              	}
-              }
-               
+
+  
               });
-            }
+            // }
         
         
-            $propertyData = $propertyDetail->Paginate(6);
+            $propertyData = $propertyDetail->Paginate(6)->appends([
+              'status_search' => $search_status,
+          
+          ]);
 
 
 
@@ -340,6 +340,9 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_status=0;
                           // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
+
+
+                             
                       
                           $property->save();
                          $property_id = $property->id;
@@ -380,7 +383,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                             $admin  = User::where('user_type','1')->get()->first();
                             $seller = User::where('id',$user_id)->get()->first();
 
-                            // $image_path = 
+                            
                             
                             if($data['property_type']==1)
                             {
@@ -390,12 +393,10 @@ return Redirect::back()->withErrors($validator)->withInput();
                               $property_typevalue='Buying';
                             }
                           
-                            //  $property_image_link = "<img src='https://homi.ezxdemo.com/storage/uploads/sitelogo/Logo.png'>";
-
-                              $property_image_link = $image;
-
+                                            
+                            $property_image_link=url('/').'/images/property/thumbnail/'.$imageName;
+                        
                       getemailtemplate($template_id='6',$admin->email,$admin->name,$otp="",$seller->name,$seller->email="",$data['title'],$property_typevalue,$data['property_price'],$data['property_address'],$property_image_link); 
-                            
                           
                           
                       return redirect()->route('buyer.property','all')->with('success', 'Property has been added and property email has been sent to admin verify and publish to homi panel !');      
@@ -462,7 +463,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                 'property_condition'=>'required',
                 'property_features'=>'required',
                 'property_area'=>'required|numeric',
-                'property_address'=>'required|regex:/^[\pL\s]+$/u',
+                'property_address'=>'required',
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
                 'property_gallery_image' => 'array|max:'.$remaining_images,
@@ -494,7 +495,6 @@ return Redirect::back()->withErrors($validator)->withInput();
   'property_area.required'=>'Property area field can’t be left blank',
   'property_area.numeric'=>'Property area field allows only numbers.',
   'property_address.required'=>'Property address field can’t be left blank',
-  'property_address.regex'=>'  property address field only alphabetic characters.',
   'property_price.required'=>'Property price field can’t be left blank',
   'property_price.numeric'=>'Property price field only allows number',
   'property_price_type.required'=>'Property price type is required.',

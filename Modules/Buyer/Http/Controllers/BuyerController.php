@@ -101,12 +101,19 @@ class BuyerController extends Controller {
                         'created_at' => Carbon::now()
                       ]);
 
-                  
+                $resend_link =  'https://homi.ezxdemo.com/dealer/reset-password/'.$token;
 
-                    Mail::send('emails.resetpassword', ['token' => $token ], function($message) use($user){
-                        $message->to($user->email);
-                        $message->subject('Reset Password');
-                    });
+                
+
+                
+                getemailtemplate($template_id='11',$user['email'],$user['name'],$resend_link);
+
+                
+
+                  // Mail::send('emails.resetpassword', ['token' => $token ], function($message) use($user){
+                    //     $message->to($user->email);
+                    //     $message->subject('Reset Password');
+                    // });
                     return redirect()->back()->with('success', 'Email has been sent on your email id !');
                 }
                 else{
@@ -136,7 +143,7 @@ class BuyerController extends Controller {
        $request->validate([
               'email' => 'required|email',
               'password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
-              'password_confirmation' => 'required|same:password'
+            'password_confirmation' => 'required|same:password'
           ]);
           
   
@@ -186,7 +193,7 @@ class BuyerController extends Controller {
                                 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
                                 'max:25'
                           ],
-                        'confirm_password' => 'required|same:password', 
+                        // 'confirm_password' => 'required|same:password', 
                         'mycheckbox' =>'required'    
             ],
             [
@@ -196,10 +203,10 @@ class BuyerController extends Controller {
                         'email.email'=>'Please enter a valid email address',
                         'password.required'=>'Password field can’t be left blank',
                         'password.min'=>'Password can not be less than 8 character.',
-                        'password.max'=>'Password can not be more than 25 character',
+                        'password.max'=>'Password can not be more than 12 character',
                         'password.regex'=>'Password should contain a Capital Letter, small letter, number and special characters',
-                        'confirm_password.required'=>'Confirm Password field can’t be left blank',
-                        'confirm_password.same'=>'Password and confirm password doesn’t match',
+                        // 'confirm_password.required'=>'Confirm Password field can’t be left blank',
+                        // 'confirm_password.same'=>'Password and confirm password doesn’t match',
                         'mycheckbox.required'=>'please accept terms and condition',
 
             ]);
@@ -610,19 +617,23 @@ class BuyerController extends Controller {
 
           $validator = Validator::make($request->all(), [
                         'current_password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
-                        'new_password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
-                        'confirm_password' => 'required|same:password'
+                        'new_password' => [
+                          'required',
+                          'min:8',
+                          'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+                          'max:25'
+                    ],
+                  'confirm_password' => 'required|same:new_password', 
           ],
             [
             'current_password.required' => 'Old passsword is required.',
-            
-            'current_password.min' => ' Old passsword should be minimum 6 characters.',
-            'current_password.max' => 'Old passsword must not be greater than 10 characters.',
+            'current_password.min'     => ' Old passsword should be minimum 6 characters.',
+            'current_password.max'    => 'Old passsword must not be greater than 10 characters.',
             'current_password.regex' => 'Old passsword should be capital letter, small letter,special charcters and number .',
             'new_password.required' => 'New password is required.',
-            'new_password.min' => ' New password should be minimum 6 characters.',
-            'new_password.max' => ' New password must not be greater than 10 characters.',
-            'new_password.regex' => 'Password should be capital letter, small letter,special charcters and number .',
+            'new_password.min'      => ' New password should be minimum 6 characters.',
+            'new_password.max'     => ' New password must not be greater than 10 characters.',
+            'new_password.regex'   => 'Password should be capital letter, small letter,special charcters and number .',
             'confirm_password.required'=>'Confirm Password field can’t be left blank',
             'confirm_password.same'=>'Password and confirm password doesn’t match',
             
