@@ -161,7 +161,7 @@
                          
                            </select>          
                         
-                        <input type="number"    class="form-control" name = "property_number" value="{{$userData->mobile}}"  aria-describedby="" placeholder="Enter Contact No" id = "property_number">  
+                        <input type="number" class="form-control @error('property_number') is-invalid @enderror" name="property_number" value="{{$userData->mobile}}"  aria-describedby="" placeholder="Enter Contact No" id = "property_number">  
                         @if($errors->has('property_number'))
                         <div class="invalid-feedback">
                            {{$errors->first('property_number')}}
@@ -173,7 +173,7 @@
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">            
-                        <input type="email"  class="form-control" value="{{$userData->email}}"  name = "property_email"  aria-describedby="" placeholder="Enter Contact Email">
+                        <input type="email"  class="form-control @error('property_email') is-invalid @enderror" value="{{$userData->email}}"  name = "property_email"  aria-describedby="" placeholder="Enter Contact Email">
                         @if($errors->has('property_email'))
                         <div class="invalid-feedback">
                            {{$errors->first('property_email')}}
@@ -284,34 +284,72 @@
             </div>
              <div class="col-sm-12">
                    <div class="row"> 
-                     <div class="col-auto">
-                        <div class="mb-4 checkbox-col">
-                           <label>Pool</label>
-                           <input @if (old('chk_pool') == "1") {{ 'checked' }} @endif type = "checkbox" name = "chk_pool"  value = "1">           
+                   <div class="col-sm-6">
+                     <div class="mb-4">
+                        <select class="form-select form-control @error('no_of_pool') is-invalid @enderror " name="no_of_pool"  aria-label="Default select example" >
+                           <option value="" >Pool</option>
+                           <option value="1" @if (old('no_of_pool') == "1") {{ 'selected' }} @endif >Yes</option>
+                           <option value="0" @if (old('no_of_pool') == "0") {{ 'selected' }} @endif>No</option>
+                           
+                        </select>
+                        @if($errors->has('no_of_pool'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('no_of_pool')}}
                         </div>
-                     </div>
-                     <div class="col-auto">
-                        <div class="mb-4 checkbox-col">
-                           <label>Lift</label>
-                           <input @if (old('chk_lift') == "1") {{ 'checked' }} @endif type = "checkbox" name = "chk_lift"   value = "1"  >           
-                        </div>
-                     </div>
-                 
-                  <div class="col-auto">
-                     <div class="mb-4 checkbox-col">
-                        <label>Garden</label>
-                        <input @if (old('chk_garden') == "1") {{ 'checked' }} @endif type = "checkbox" name = "chk_garden"  value = "1" >           
+                        @endif           
                      </div>
                   </div>
-                  <div class="col-auto">
-                     <div class="mb-4 checkbox-col">
-                        <label>Parking</label>
-                        <input @if (old('chk_parking') == "1") {{ 'checked' }} @endif type = "checkbox" name = "chk_parking"  value = "1"  >           
+
+                  <div class="col-sm-6">
+                     <div class="mb-4">
+                        <select class="form-select form-control @error('no_of_lift') is-invalid @enderror " name="no_of_lift"  aria-label="Default select example" >
+                           <option value="" >Lift</option>
+                           <option value="1" @if (old('no_of_lift') == "1") {{ 'selected' }} @endif >Yes</option>
+                           <option value="0" @if (old('no_of_lift') == "0") {{ 'selected' }} @endif>No</option>
+                           
+                        </select>
+                        @if($errors->has('no_of_lift'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('no_of_lift')}}
+                        </div>
+                        @endif           
                      </div>
                   </div>
-                   </div>
-                   </div>
-            <div class="col-sm-6">
+
+
+                  <div class="col-sm-6">
+                     <div class="mb-4">
+                        <select class="form-select form-control @error('no_of_garden') is-invalid @enderror " name="no_of_garden"  aria-label="Default select example" >
+                           <option value="" >Garden</option>
+                           <option value="1" @if (old('no_of_garden') == "1") {{ 'selected' }} @endif >Yes</option>
+                           <option value="0" @if (old('no_of_garden') == "0") {{ 'selected' }} @endif>No</option>
+                           
+                        </select>
+                        @if($errors->has('no_of_garden'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('no_of_garden')}}
+                        </div>
+                        @endif           
+                     </div>
+                  </div>
+
+
+                  <div class="col-sm-6">
+                     <div class="mb-4">
+                        <select class="form-select form-control @error('no_of_parking') is-invalid @enderror " name="no_of_parking"  aria-label="Default select example" >
+                           <option value="" >Parking</option>
+                           <option value="1" @if (old('no_of_parking') == "1") {{ 'selected' }} @endif >Yes</option>
+                           <option value="0" @if (old('no_of_parking') == "0") {{ 'selected' }} @endif>No</option>
+                           
+                        </select>
+                        @if($errors->has('no_of_parking'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('no_of_parking')}}
+                        </div>
+                        @endif           
+                     </div>
+                  </div>
+                  <div class="col-sm-6">
                      <div class="mb-4">
                         <input type="file"  id="property_gallery_image"  class="form-control @error('property_gallery_image') is-invalid @enderror" name="property_gallery_image[]" multiple="multiple">            
                         @if($errors->has('property_gallery_image'))

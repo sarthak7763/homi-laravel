@@ -140,7 +140,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Description</label>
-                                <textarea rows="5" cols="10" class="form-control" name="description" id="description"></textarea>
+                                <textarea rows="5" cols="10" class="form-control pcoded-inner-content" name="description" id="description"></textarea>
                                 @if($description_error!="")
                                 @php $style="display:block;"; @endphp
                                 @else
@@ -155,7 +155,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Meta Title </label>
-                                <textarea rows="5" cols="10" class="form-control" name="meta_title" id="meta_title"></textarea>
+                                <textarea rows="5" cols="10" class="form-control pcoded-inner-content" name="meta_title" id="meta_title"></textarea>
                                  @if($meta_title_error!="")
                                 @php $style="display:block;"; @endphp
                                 @else
@@ -173,7 +173,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Meta keywords</label>
-                                <textarea rows="5" cols="10" class="form-control" name="meta_keywords" id="meta_keywords"></textarea>
+                                <textarea rows="5" cols="10" class="form-control pcoded-inner-content" name="meta_keywords" id="meta_keywords"></textarea>
                                 @if($meta_keywords_error!="")
                                 @php $style="display:block;"; @endphp
                                 @else
@@ -187,7 +187,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="font-weight-bold">Meta Description</label>
-                                <textarea rows="5" cols="10" class="form-control" name="meta_description" id="meta_description"></textarea>
+                                <textarea rows="5" cols="10" class="form-control pcoded-inner-content" name="meta_description" id="meta_description"></textarea>
                                 @if($meta_description_error!="")
                                 @php $style="display:block;"; @endphp
                                 @else

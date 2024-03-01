@@ -30,18 +30,18 @@
                                 @endif
                             </div>
                             <div class="mb-3">
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
+                            <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID"  style="display:block;"> 
                                 @error('email')
-                  <div class="invalid-feedback" style="display:block;">
+                  <div class="error" style="display:block;">
                     {{$message}}
                   </div>
                   @enderror
                         </div>
                         <div class="mb-3 input-group">
-                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password">
+                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror w-100" id="password" placeholder="Password">
                             @error('password')
-                  <div class="invalid-feedback" style="display:block;">
+                  <div class="error" style="display:block;">
                     {{$message}}
                   </div>
                   @enderror

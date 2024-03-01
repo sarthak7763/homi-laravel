@@ -241,7 +241,7 @@
                                             @elseif($propertyInfo->property_price_type==3)
                                             <span class="badge badge-danger" style="cursor: pointer;">Per Sq. Yd.</span>
                                             @elseif($propertyInfo->property_price_type==4)
-                                            <span class="badge badge-warning" style="cursor: pointer;">Per Night</span>
+                                            <span class="badge badge-warning" style="cursor: pointer;">Per Month</span>
                                             @elseif($propertyInfo->property_price_type==5)
                                             <span class="badge badge-success" style="cursor: pointer;">Per Month</span>
                                             @elseif($propertyInfo->property_price_type==6)

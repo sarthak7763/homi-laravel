@@ -4,7 +4,7 @@ namespace Modules\Buyer\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
+use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,Redirect;
 
 
 	class MyprofileController extends Controller
@@ -23,6 +23,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 			try{
 				$user_id = AUth::User()->id;
 				$userInfo =User::where('id',$user_id)->first();
+				
 				if(!empty($userInfo)){
 				return view('buyer::editprofile',compact('userInfo'));
 				}
@@ -39,27 +40,31 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str;
 	    public function update(Request $request){
 			$data                    =    $request->all();
 			$user_id                 =    Auth::User()->id;
-			$request->validate([
-					
-					'name'=>'required|regex:/^[\pL\s]+$/u',
-				   'mobile' => 'required|min:10|max:12|numeric',
-					'agency_name'=>'required|regex:/^[\pL\s]+$/u',
-					  
-			],
-			[
-				'name.required' => 'Name field can’t be left blank.',
-				'name.regex' => 'Please enter only alphabetic characters.',
-				'mobile.required' => 'mobile no field can’t be left blank.',
-				'agency_name.required' => 'Agency name  field can’t be left blank.',
-				'agency_name.regex' => 'Please enter only alphabetic characters.',
-				'mobile.min'=>'Mobile number can not be less than 10 character',
-				'mobile.numeric'=>'Please enter only numeric values',
-				'mobile.max' => 'Mobile number can not be max than 12 character',
-				
+
+			$validator = Validator::make($request->all(), [
+
+						'name'=>'required|regex:/^[\pL\s]+$/u',
+						'mobile'=>'required|numeric|digits:10',
+						'owner_type'=>'required'
+					],
+					[
+					'name.required' => 'name is required.',
+					'name.regex'=>'  Name field only alphabetic characters.',
+
+					 'agency_name.required' => ' agency  name is required.',
+					 'agency_name.regex'=>'  Agency name field only alphabetic characters.',
+					'mobile.required' => 'mobile no field can’t be left blank.',
+					'mobile.numeric' => 'mobile no should be numeric.',
+					'mobile.digits' => 'mobile no should be only 10 digits',
+					 'owner_type.required' => 'owner type field can’t be left blank.',
+				]);
+						if($validator->fails()){
+
+							return Redirect::back()->withErrors($validator)->withInput();
+						}
 
 
-			]);
-					try{
+						try{
 						$user  = User::find($user_id);
 						if(!empty($user)){
 							if ($request->hasFile('profile_pic')) {

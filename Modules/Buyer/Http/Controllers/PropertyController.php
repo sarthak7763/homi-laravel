@@ -52,32 +52,32 @@ class PropertyController extends Controller
                 if($search_title!=""){
                   $query->where('title', 'like', '%' . $search_title . '%');
                 }
-
-                
-                if ($search_status!="") {
-                  $query->where('property_status',$search_status );
+                if ($search_status=="active") {
+                  $query->where('property_status','1' );
               	}
 
-                if($request->property_type=="2"){
-                    $query->where('property_type',$request->property_type);
-                }elseif($request->property_type=="1"){
-              		$query->where('property_type',$request->property_type);
+                if ($search_status=="pending") {
+                  $query->where('property_status','0' );
+              	}
+
+                if ($search_status=="suspend") {
+                  $query->where('property_status','2' );
+              	}
+
+                if($request->property_type=="buying"){
+                    $query->where('property_type','2');
+                }elseif($request->property_type=="renting"){
+              		$query->where('property_type','1');
               	}
 
   
               });
             // }
-        
-        
-            $propertyData = $propertyDetail->Paginate(6)->appends([
-              'status_search' => $search_status,
-          
-          ]);
 
 
+        $propertyData = $propertyDetail->Paginate(6)->appends([
+            'status_search' =>$search_status ?? '','property_type' => $request->property_type ?? '']);
 
-
-     
         //dd(DB::getQueryLog());
         foreach($propertyData as $key=>$list)
         {
@@ -206,6 +206,13 @@ class PropertyController extends Controller
                 'property_features'=>'required',
                 'property_area'=>'required|numeric',
                 'property_address'=>'required',
+                'property_email'=>'required',
+                'property_number'=>'required',
+                'no_of_pool'=>'required',
+                'no_of_lift'=>'required',
+                'no_of_garden'=>'required',
+                'no_of_parking'=>'required',
+              
                
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
@@ -237,8 +244,12 @@ class PropertyController extends Controller
   'property_area.required'=>'Property area field can’t be left blank',
   'property_area.numeric'=>'Property area field allows only numbers.',
   'property_address.required'=>'Property address field can’t be left blank',
-  
-  
+  'property_email.required'=>'Property email  is required.',
+  'property_number.required'=>'Property number is required.',
+  'no_of_pool.required'=>'Pool field can’t be left blank',
+  'no_of_lift.required'=>'Lift field can’t be left blank',
+  'no_of_garden.required'=>'Garden field can’t be left blank',
+  'no_of_parking.required'=>'Parking field can’t be left blank',
   'property_price.required'=>'Property price field can’t be left blank',
   'property_price.numeric'=>'Property price field only allows number',
   'property_price_type.required'=>'Property price type is required.',
@@ -252,6 +263,16 @@ if($validator->fails()){
 return Redirect::back()->withErrors($validator)->withInput();
 }
       $data=$request->all();
+      
+     
+
+      $country_data = Country ::where('id',$data['country_id'])->select('phonecode')->first();
+     
+      
+
+      
+
+      
 
       
                   
@@ -309,10 +330,10 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->no_of_bedroom=$data['no_of_bedroom'];
                           $property->no_of_kitchen=$data['no_of_kitchen'];
                           $property->no_of_bathroom=$data['no_of_bathroom'];
-                          $property->no_of_pool=$data['chk_pool'] ?? 0;
-                          $property->no_of_garden=$data['chk_garden'] ?? 0;
-                          $property->no_of_lift=$data['chk_lift'] ?? 0;
-                          $property->no_of_parking=$data['chk_parking'] ?? 0;
+                          $property->no_of_pool=$data['no_of_pool'];
+                          $property->no_of_garden=$data['no_of_garden'];
+                          $property->no_of_lift=$data['no_of_lift'];
+                          $property->no_of_parking=$data['no_of_parking'];
                           $property->no_of_balcony=$data['no_of_balcony'];
                           $property->no_of_floors=$data['no_of_floors'];
                           $property->property_area=$data['property_area'];
@@ -322,6 +343,10 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_longitude=$data['property_longitude'] ?? "";
                           $property->property_email=$data['property_email'];
                           $property->property_number=$data['property_number'];
+                          $property->country_code=$country_data->phonecode;
+                          
+
+                        
                           $property->property_price=$data['property_price'];
                           $property->property_price_type=$data['property_price_type'];
                           $property->property_category=$data['property_category'];
@@ -337,14 +362,16 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
+                          $property->country_code=$country_data->phonecode;
                           $property->property_status=0;
                           // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
 
 
                              
-                      
+                    
                           $property->save();
+                          
                          $property_id = $property->id;
                       
                          if($request->hasFile('property_gallery_image')){
@@ -418,6 +445,10 @@ return Redirect::back()->withErrors($validator)->withInput();
       try{
         $country_list=getcountrylist();
         $propertyDetail = Property::where('id',$id)->get()->first();
+
+       
+
+        
         
         $my_property_features = $propertyDetail->property_features;
         $featuresArray = json_decode($my_property_features, true);
@@ -438,9 +469,9 @@ return Redirect::back()->withErrors($validator)->withInput();
         {
           return redirect()->route('buyer.subscription-plans');
         }
-
         $data=$request->all();
-
+        $country_data = Country::where('id',$data['country_id'])->select('phonecode')->first();
+  
         $uploaded_images = PropertyGallery::where('property_id',$id)->count();
 
         $remaining_images = 7-$uploaded_images;
@@ -467,7 +498,12 @@ return Redirect::back()->withErrors($validator)->withInput();
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
                 'property_gallery_image' => 'array|max:'.$remaining_images,
-                
+                'property_email'=>'required',
+                'property_number'=>'required',
+                'no_of_pool'=>'required',
+                'no_of_lift'=>'required',
+                'no_of_garden'=>'required',
+                'no_of_parking'=>'required',
 ],
 [
 
@@ -498,6 +534,15 @@ return Redirect::back()->withErrors($validator)->withInput();
   'property_price.required'=>'Property price field can’t be left blank',
   'property_price.numeric'=>'Property price field only allows number',
   'property_price_type.required'=>'Property price type is required.',
+  'property_email.required'=>'Property email  is required.',
+  'property_number.required'=>'Property number is required.',
+  'no_of_pool.required'=>'Pool field can’t be left blank',
+  'no_of_lift.required'=>'Lift field can’t be left blank',
+  'no_of_garden.required'=>'Garden field can’t be left blank',
+  'no_of_parking.required'=>'Parking field can’t be left blank',
+
+
+
  
   'property_gallery_image.max'=>' please upload only'.' '.$remaining_images.' gallery images' 
 
@@ -511,6 +556,8 @@ return Redirect::back()->withErrors($validator)->withInput();
 
        
               $property=Property::find($id);
+
+              
               if(!empty($property))
               {
               $checkpropertycategory=Category::where('id',$data['property_category'])->where('category_type',$data['property_type'])->where('status',1)->get()->first();
@@ -567,10 +614,10 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->no_of_bedroom=$data['no_of_bedroom'];
                           $property->no_of_kitchen=$data['no_of_kitchen'];
                           $property->no_of_bathroom=$data['no_of_bathroom'];
-                          $property->no_of_pool=$data['chk_pool'] ?? 0;
-                          $property->no_of_garden=$data['chk_garden'] ?? 0;
-                          $property->no_of_lift=$data['chk_lift'] ?? 0;
-                          $property->no_of_parking=$data['chk_parking'] ?? 0;
+                          $property->no_of_pool=$data['no_of_pool'];
+                          $property->no_of_garden=$data['no_of_garden'];
+                          $property->no_of_lift=$data['no_of_lift'];
+                          $property->no_of_parking=$data['no_of_parking'];
                           $property->no_of_balcony=$data['no_of_balcony'];
                           $property->no_of_floors=$data['no_of_floors'];
                           $property->property_area=$data['property_area'];
@@ -595,7 +642,9 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
+                          $property->country_code=$property['country_id'];
                           $property->property_status=0;
+                          $property->country_code=$country_data->phonecode;
                           // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
               }
@@ -605,10 +654,10 @@ return Redirect::back()->withErrors($validator)->withInput();
                   $property->no_of_bedroom=$data['no_of_bedroom'];
                   $property->no_of_kitchen=$data['no_of_kitchen'];
                   $property->no_of_bathroom=$data['no_of_bathroom'];
-                  $property->no_of_pool=$data['chk_pool'] ?? 0;
-                  $property->no_of_garden=$data['chk_garden'] ?? 0;
-                  $property->no_of_lift=$data['chk_lift'] ?? 0;
-                  $property->no_of_parking=$data['chk_parking'] ?? 0;
+                  $property->no_of_pool=$data['no_of_pool'];
+                  $property->no_of_garden=$data['no_of_garden'];
+                  $property->no_of_lift=$data['no_of_lift'] ;
+                  $property->no_of_parking=$data['no_of_parking'];
                   $property->no_of_balcony=$data['no_of_balcony'];
                   $property->no_of_floors=$data['no_of_floors'];
                   $property->property_area=$data['property_area'];
@@ -633,6 +682,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                   $property->property_description_pt=$property_description_pt;
                   $property->built_in_year=$data['built_in_year'];
                    $property->property_status=0;
+                   $property->country_code=$country_data->phonecode;
                   // $property->property_status=1;
                   $property->publish_date=date('Y-m-d');
               }
@@ -653,11 +703,11 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->no_of_bedroom=$data['no_of_bedroom'];
                           $property->no_of_kitchen=$data['no_of_kitchen'];
                           $property->no_of_bathroom=$data['no_of_bathroom'];
-                          $property->no_of_pool=$data['chk_pool'] ?? 0;
+                          $property->no_of_pool=$data['no_of_pool'];
                          
-                          $property->no_of_garden=$data['chk_garden'] ?? 0;
-                          $property->no_of_lift=$data['chk_lift'] ?? 0;
-                          $property->no_of_parking=$data['chk_parking'] ?? 0;
+                          $property->no_of_garden=$data['no_of_garden'];
+                          $property->no_of_lift=$data['no_of_lift'];
+                          $property->no_of_parking=$data['no_of_parking'];
                           $property->no_of_balcony=$data['no_of_balcony'];
                           $property->no_of_floors=$data['no_of_floors'];
                           $property->property_area=$data['property_area'];
@@ -683,6 +733,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
                           $property->property_status=0;
+                          $property->country_code=$country_data->phonecode;
                           // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
                       }
@@ -693,11 +744,11 @@ return Redirect::back()->withErrors($validator)->withInput();
                     $property->no_of_bedroom=$data['no_of_bedroom'];
                     $property->no_of_kitchen=$data['no_of_kitchen'];
                     $property->no_of_bathroom=$data['no_of_bathroom'];
-                    $property->no_of_pool=$data['chk_pool'] ?? 0;
+                    $property->no_of_pool=$data['no_of_pool'];
                   
-                    $property->no_of_garden=$data['chk_garden'] ?? 0;
-                    $property->no_of_lift=$data['chk_lift'] ?? 0;
-                    $property->no_of_parking=$data['chk_parking'] ?? 0;
+                    $property->no_of_garden=$data['no_of_garden'];
+                    $property->no_of_lift=$data['no_of_lift'];
+                    $property->no_of_parking=$data['no_of_parking'];
                     $property->no_of_balcony=$data['no_of_balcony'];
                     $property->no_of_floors=$data['no_of_floors'];
                     $property->property_area=$data['property_area'];
@@ -721,6 +772,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                     $property->property_description=$data['property_description'];
                     $property->property_description_pt=$property_description_pt;
                     $property->built_in_year=$data['built_in_year'];
+                    $property->country_code=$country_data->phonecode;
                     $property->property_status=0;
 
                     // $property->property_status=1;

@@ -21,6 +21,8 @@ Route::get('/dealer-logout', 'BuyerController@buyerlogout')->name('buyer.logout'
 
 /*----------------BUYER REGISTER ROUTES ---------------------*/
 Route::get('/dealer/register', 'BuyerController@buyerRegisterGet')->name('buyer.register');
+Route::post('/dealer/uniqueemail', 'BuyerController@uniqueEmailGet')->name('buyer.email');
+
 
 Route::post('/dealer/registerpost','BuyerController@sellerSignupPost')->name('buyer.post.register');
 

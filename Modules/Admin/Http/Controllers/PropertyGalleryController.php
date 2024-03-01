@@ -38,20 +38,36 @@ class PropertyGalleryController extends Controller{
                 $property_id=$request->property_id;
 
                 $checkproperty=Property::where('id',$property_id)->get()->first();
+                $dbpropertygallery=PropertyGallery::where('property_id',$property_id)->get()->count();
+
                 if($checkproperty)
                 {
+                  $totalgallerycount=8;
+                  $reamingallerycount=$totalgallerycount-$dbpropertygallery;
+
                   $propertyslug=$checkproperty->slug;
 
-                  $property_gallery_files = [];
-                  if($request->hasfile('property_gallery'))
-                   {
-                      foreach($request->file('property_gallery') as $file)
-                      {
-                          $name = time().rand(1,50).'.'.$file->extension();
-                          $file->move(public_path('/images/property/gallery/'), $name);  
-                          $property_gallery_files[] = $name;  
-                      }
-                   }
+                  if($reamingallerycount==0)
+                  {
+                    return back()->with('error','No more property images can be uploaded.');
+                  }
+                  else{
+                    $property_gallery_files = [];
+                    if($request->hasfile('property_gallery'))
+                     {
+                        foreach($request->file('property_gallery') as $file)
+                        {
+                            $name = time().rand(1,50).'.'.$file->extension();
+                            $file->move(public_path('/images/property/gallery/'), $name);  
+                            $property_gallery_files[] = $name;  
+                        }
+                     }
+
+                    if(count($property_gallery_files) > $reamingallerycount)
+                    {
+                        return back()->with('error','Please upload upto '.$reamingallerycount.' property images only');
+                    }
+                  }
 
                   foreach($property_gallery_files as $list)
                   {

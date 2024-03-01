@@ -30,7 +30,7 @@ class DashboardController extends Controller
         $completed_booking = Userbooking::whereIN('property_id',$property_id)->where('booking_status',1)->count();
         $cancel_booking = Userbooking::whereIN('property_id',$property_id)->where('booking_status',2)->count();
         $total_renting_property = Property::where('add_by',$user_id)->where('property_type',1)->count();
-        $total_buying_property = Property::where('add_by',$user_id)->where('property_type',2)->count();
+        $total_buying_property = Property::where('add_by',$user_id)->where('property_type',2)->where('property_status',1)->count();
         
         return view('buyer::dashboard',compact('total_booking','total_property','ongoing_booking',
         'completed_booking','cancel_booking','total_renting_property','total_buying_property'));

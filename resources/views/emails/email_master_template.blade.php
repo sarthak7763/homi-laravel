@@ -18,8 +18,10 @@
             <thead style="background: #f4f4fb;">
                 <tr>
                     <th colspan="2" style="text-align: center; padding: 15px 0;">
-                        <img src="{{url('/')}}/storage/uploads/sitelogo/Logo.png" style="display:block" width="200px" height="100px" alt="homi" title="homi" />
-                        </th>
+                        <p style="padding-left : 15px">
+                            <img src="{{url('/')}}/storage/uploads/sitelogo/Logo.png" style="display:block" width="200px" height="89" alt="homi" title="homi" />
+                        </p>    
+                    </th>
                 </tr>
             </thead>
             <tbody>

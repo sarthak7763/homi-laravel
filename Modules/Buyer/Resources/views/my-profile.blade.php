@@ -36,7 +36,7 @@
                            <img class="rounded-pill profilepics" src="{{url('/')}}/images/user/{{$userInfo->profile_pic}}">
                            @else
                            
-                           <img class="rounded-pill profilepics" src="{{url('/')}}/images/1699333958.jpg"> 
+                           <img class="rounded-pill profilepics" src="{{url('/')}}/images/user-img.png"> 
                            @endif   
                      
                     <div class="useravtarIcon">
@@ -59,7 +59,7 @@
   
     <div class="ox-auto uinfo-table">
        
-<table class="table-responsive table-striped table w-100 table-bordered">
+<table class="table-responsive table-striped table w-100 table-bordered" id="sellerinfo">
 <thead>
     <tr>
         <th colspan="2">Owner Information</th>
@@ -107,23 +107,19 @@
     </td>
 
     </tr>
-</tbody>
 
-<tbody>
-<tr>
-<td><strong>Owner Type : </strong> <span> <?php if ($userInfo->owner_type == 1) echo "Agency"; else echo "Indiviuals" ; ?></span></td>
-@if($userInfo->owner_type == 1)
-<td class ="display-block" >
-<strong>Agency Name : </strong>
-<span> {{$userInfo->agency_name}}</span>
-</td>
- @else
- <td class ="display-none">
-</td>
- @endif
- 
+ <tr>
+    @if($userInfo->owner_type == 1)    
+        <td><strong>Owner Type : </strong> </span>Agency</span> </td> <td><strong>Agency Name : </strong>
+        <span> {{$userInfo->agency_name}}</span></td>
+    @elseif($userInfo->owner_type == 2)
+        <td colspan="2"><strong>Owner Type : </strong>Individual</td>
+        @else
+        <td><strong>Owner Type : </strong></td>
 
-</tr>
+    @endif
+
+    </tr> 
 </tbody>
 </table>
 </div>
@@ -132,3 +128,6 @@
 </div>
 
 @endsection
+
+
+

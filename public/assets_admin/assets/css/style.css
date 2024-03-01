@@ -878,8 +878,8 @@ table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td
     }
 
     .gallery-page .secondDiv .col-lg-6.col-md-6 {
-        padding-left: 0;
-        padding-right: 0;
+     /*   padding-left: 0;
+        padding-right: 0;*/
     }
 
 }
@@ -4114,7 +4114,7 @@ label.txt-ellipsis {
 
 .badge {
     border-radius: 10px;
-    padding: 3px 7px
+    padding: 5px 8px
 }
 
 .badge-top-left {
@@ -26078,13 +26078,16 @@ button.bid_status.btn-rejected {background: #001c4e;border-color: #001c4e;}
 
 .form-group.country-select input {
     float: right;
-    max-width: calc(100% - 50px );    border-left: 0;
+    max-width: calc(100% - 80px );
+    border-left: 0;
 }
 .form-group.country-select select {
-    width: 50px;
+    width: auto;
     height: 35px !important;
     padding: 0;
-    float: left;
+    flex: 0 0 auto;
+    max-width: 64px;
+    min-width: auto;
 }
 .form-group.country-select label {
     display: block;
@@ -26107,13 +26110,22 @@ button.bid_status.btn-rejected {background: #001c4e;border-color: #001c4e;}
     width: 100%;
 }
 
-.pcoded-inner-content textarea {
+.pcoded-inner-content{
+    /*width: calc(50% - 15px);*/
+    display: block;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    resize: none;
+}
+
+.propertydesc {
     width: calc(50% - 15px);
     display: block;
     border: 1px solid #ccc;
     padding: 5px 10px;
     resize: none;
 }
+
 .form-group div#image_preview{
     max-width: 90px;
     border: 1px solid #ccc;
@@ -26171,11 +26183,9 @@ img.remove_image_src {
 }
 .form-group input[type="file"] {
     height: 35px;
-    font-size: 0;
 }
 input[type="file"] {
     height: 35px;
-    font-size: 0;
 }
 
 input#property_gallery_image:after {
@@ -26198,4 +26208,64 @@ input#property_gallery_image:after {
 
 .btn_modify img {
     filter: invert(1);
+}
+form#multi-file-upload-ajax input[type="file"] {
+    font-size: 17px;
+    height: auto;
+}
+div#image_preview .img-fluid {
+    max-width: 120px;
+    min-height: 120px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    max-height: 110px;
+    padding: 0 5px;
+    object-fit: contain;
+}
+.btn_modify  .btn.status_change {
+    width: auto;
+    padding: 2px 9px;
+    height: 20px;
+    line-height: 19px;
+    padding-bottom: 4px;
+    background: #008100;
+    border: #7ba87b 1px solid;
+}
+.btn_modify .btn.status_change:hover {
+    transform: none;
+    background: #57a057;
+}
+
+span.messages strong {
+    color: red;
+    font-size: 13px;
+}
+
+label.error{
+  color: red;
+  font-size: 13px;
+}
+
+
+.card.rounded-card.user-card {
+    margin-top: 20px;
+    padding-bottom: 0px;
+}
+
+.card.rounded-card.user-card .card-block {
+    padding: 10px 10px;
+    max-height: 133px;
+    overflow: hidden;
+    margin: 0;
+}
+
+.card.rounded-card.user-card .card-block img {
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    max-height: 110px;
+}
+
+.img-hover {
+    max-height: 120px;
 }

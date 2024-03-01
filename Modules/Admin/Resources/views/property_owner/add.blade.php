@@ -248,9 +248,11 @@
     var owner_type=$(this).val();
     if(owner_type==1)
     {
+      $('#agency_name').attr('name','agency_name');
       $('#agencynamediv').show();
     }
     else{
+      $('#agency_name').attr('name','');
       $('#agencynamediv').hide();
     }
   });
@@ -279,6 +281,9 @@ $.ajaxSetup({
             owner_type:{
               required: true
             },
+            agency_name:{
+                required:true
+            },
         },
         messages: {
             name: {
@@ -296,6 +301,9 @@ $.ajaxSetup({
             owner_type: {
                 required: "please select owner type",
                 
+            },
+            agency_name: {
+                required: "Please enter agency name",
             },
         },
         submitHandler: function(form) 
@@ -324,7 +332,7 @@ var total_file=document.getElementById("profile_pic").files.length;
 for(var i=0;i<total_file;i++)
 {
 
-  $('#image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid  mr-2'>");
+  $('#image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-radius img-40'>");
  }
 
 }

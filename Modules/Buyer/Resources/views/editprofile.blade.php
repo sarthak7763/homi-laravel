@@ -28,7 +28,7 @@
                            @if($userInfo->profile_pic)
                            <img id="profile_pic_preview" class="rounded-pill-box" src="{{url('/')}}/images/user/{{$userInfo->profile_pic}}">
                            @else
-                           <img id="profile_pic_preview" class="rounded-pill-box" src="{{url('/')}}/images/1699333958.jpg">
+                           <img id="profile_pic_preview" class="rounded-pill-box" src="{{url('/')}}/images/user-img.png">
                            @endif    
                             </div>
                            <input type="file"  class="opacity-0 position-absolute bottom-0" name="profile_pic" id="profile_pic">
@@ -80,16 +80,23 @@
                   </div>
                   <div class="col-sm-6">
                      <div class="form-group mb-4">                        
-                        <select name="owner_type" id="owner_type"  class="form-control-select owner_type">
+                       <select class="form-select form-control @error('owner_type') is-invalid @enderror" name ="owner_type"   aria-label="Default select example" id="owner_type" >
+                           <option value=""> Select owner type</option>
                            <option value="1" {{ $userInfo->owner_type == 1 ? 'selected' : '' }}>Agency</option>
                            <option value="2" {{ $userInfo->owner_type == 2 ? 'selected' : '' }}>Indiviuals</option>
-                        </select>
+                         </select>
+                         <!-- @if (old('owner_type') == "1") {{ 'selected' }} @endif -->
+                        @if($errors->has('owner_type'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('owner_type')}}
+                        </div>
+                        @endif           
                      </div>
                   </div>
                   @if($userInfo->owner_type == 1)
                   <div class="col-sm-6" id="showagencydiv" style="display:block;">
                      <div class="form-group mb-4" >
-                     <input type="text" class="form-control @error('agency_name') is-invalid @enderror" placeholder="Agency Name" name="agency_name" id="agency_name" value = "{{$userInfo->agency_name}}">
+                     <input type="text" class="form-control @error('agency_name') is-invalid @enderror" placeholder="Agency Name" id="agency_name" name="agency_name" id="agency_name" value = "{{$userInfo->agency_name}}">
                      @if($errors->has('agency_name'))
                      <div class="invalid-feedback">
                         {{$errors->first('agency_name')}}
@@ -100,14 +107,18 @@
                   @else
                   <div class="col-sm-6" id="showagencydiv" style="display:none;">
                      <div class="form-group mb-4">
-                        <input type="text" class="form-control"   name="agency_name" id="agency_name" value = "{{$userInfo->agency_name}}">
+                        <input type="text" class="form-control @error('agency_name') is-invalid @enderror" name="agency_name" id="agency_name" value = "{{$userInfo->agency_name}}">
+                        @if($errors->has('agency_name'))
+                     <div class="invalid-feedback">
+                        {{$errors->first('agency_name')}}
                      </div>
-                  </div>
+                     @endif
+                     </div>
+                     </div>
                   @endif
                </div>
                <div class="d-flex align-items-center gap-3 justify-content-center pb-4">
                <button type="submit"  class="mt-3 btn btn-primary mx-0" data-toggle="modal" data-target="#exampleModal">Update</button>
-               
             </div>
          </form>
          </div>

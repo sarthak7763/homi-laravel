@@ -128,7 +128,7 @@ class PropertyController extends Controller {
     public function seller_wise_property(Request $request) {
         try{  
             if($request->ajax()) {   
-                $data = Property::where('add_by',$request->owner_id)->get();
+                $data = Property::where('add_by',$request->owner_id)->orderBy('id','DESC')->get();
 
                 return Datatables::of($data)
                     ->addIndexColumn()
@@ -263,6 +263,10 @@ class PropertyController extends Controller {
                 'property_email' => 'required|email',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
+                'no_of_garden'=>'required',
+                'no_of_pool'=>'required',
+                'no_of_parking'=>'required',
+                'no_of_lift'=>'required'
             ],
       [
                 'add_by.required' => 'Owner is required.',
@@ -285,11 +289,15 @@ class PropertyController extends Controller {
 		        'no_of_bathroom.required'=>'No.of bathroom field can’t be left blank',
 		        'no_of_bathroom.numeric'=>'No.of bathroom field allows only numbers.',
 
-		        'no_of_pool.required'=>'No.of pool field can’t be left blank',
+                'no_of_garden.required'=>'This field is required',
+                'no_of_garden.numeric'=>'No.of garden field allows only numbers.',
+
+		        'no_of_pool.required'=>'This field is required',
 		        'no_of_pool.numeric'=>'No.of pool field allows only numbers.',
 
-		        'no_of_garden.required'=>'No.of garden field can’t be left blank',
-		        'no_of_garden.numeric'=>'No.of garden field allows only numbers.',
+                'no_of_parking.required'=>'This field is required',
+
+                'no_of_lift.required'=>'This field is required',
 
 		        'no_of_balcony.required'=>'No.of balcony field can’t be left blank',
 		        'no_of_balcony.numeric'=>'No.of balcony field allows only numbers.',
@@ -374,38 +382,7 @@ class PropertyController extends Controller {
             if($checkpropertytitle)
             {
             	return redirect()->back()->with('error', 'Property title already exists.');
-            }
-        if(isset($request->no_of_garden))
-        {
-            $no_of_garden=$request->no_of_garden;
-        }
-        else{
-            $no_of_garden=0;
-        }
-
-        if(isset($request->no_of_pool))
-        {
-            $no_of_pool=$request->no_of_pool;
-        }
-        else{
-            $no_of_pool=0;
-        }
-
-        if(isset($request->no_of_parking))
-        {
-            $no_of_parking=$request->no_of_parking;
-        }
-        else{
-            $no_of_parking=0;
-        }
-
-        if(isset($request->no_of_lift))
-        {
-            $no_of_lift=$request->no_of_lift;
-        }
-        else{
-            $no_of_lift=0;
-        }
+            }  
 
         if(isset($request->features))
         {
@@ -466,10 +443,10 @@ class PropertyController extends Controller {
             $property->no_of_bedroom=$data['no_of_bedroom'];
             $property->no_of_kitchen=$data['no_of_kitchen'];
             $property->no_of_bathroom=$data['no_of_bathroom'];
-            $property->no_of_pool=$no_of_pool;
-            $property->no_of_garden=$no_of_garden;
-            $property->no_of_lift=$no_of_lift;
-            $property->no_of_parking=$no_of_parking;
+            $property->no_of_pool=$data['no_of_pool'];
+            $property->no_of_garden=$data['no_of_garden'];
+            $property->no_of_lift=$data['no_of_lift'];
+            $property->no_of_parking=$data['no_of_parking'];
             $property->no_of_balcony=$data['no_of_balcony'];
             $property->no_of_floors=$data['no_of_floors'];
             $property->property_features=$features_list;
@@ -500,9 +477,14 @@ class PropertyController extends Controller {
 
             toastr()->success('Property information saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
 
-            $this->uploadpropertyimages($property->id,$request);
-
-            return redirect()->route('admin-property-list')->with('success',"Property information saved successfully.");
+            $uploadimgdata=$this->uploadpropertyimages($property->id,$request);
+            if($uploadimgdata['code']='200')
+            {
+                return redirect()->route('admin-property-list')->with('success',"Property information saved successfully.");
+            }
+            else{
+                return back()->with('error',$uploadimgdata['message']);
+            }
         }
         catch (\Exception $e){
 	        if($e instanceof ValidationException){
@@ -530,10 +512,21 @@ class PropertyController extends Controller {
     public function uploadpropertyimages($propertyid,$request)
     {
         $checkproperty=Property::where('id',$propertyid)->get()->first();
+        $dbpropertygallery=PropertyGallery::where('property_id',$propertyid)->get()->count();
+
         if($checkproperty)
         {
-            $property_gallery_files = [];
-              if($request->hasfile('property_gallery'))
+            $totalgallerycount=8;
+            $reamingallerycount=$totalgallerycount-$dbpropertygallery;
+
+            if($reamingallerycount==0)
+            {
+                $data=array('code'=>'400','message'=>'No more property images can be uploaded');
+                return $data;
+            }
+            else{
+                $property_gallery_files = [];
+                if($request->hasfile('property_gallery'))
                {
                   foreach($request->file('property_gallery') as $file)
                   {
@@ -542,6 +535,12 @@ class PropertyController extends Controller {
                       $property_gallery_files[] = $name;  
                   }
                }
+
+               if(count($property_gallery_files) > $reamingallerycount)
+                {
+                    $data=array('code'=>'400','message'=>'Please upload upto '.$reamingallerycount.' property images only');
+                    return $data;
+                }
 
             foreach($property_gallery_files as $list)
               {
@@ -554,10 +553,14 @@ class PropertyController extends Controller {
                 $propertygallery->save();
               }
 
-              return true;
+            $data=array('code'=>'200','message'=>'success');
+            return $data;
+
+            }
         }
         else{
-            return true;
+            $data=array('code'=>'400','message'=>'Something went wrong.');
+            return $data;
         }
     }
 
@@ -623,6 +626,10 @@ class PropertyController extends Controller {
                 'property_email' => 'required|email',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
+                'no_of_garden'=>'required',
+                'no_of_pool'=>'required',
+                'no_of_parking'=>'required',
+                'no_of_lift'=>'required'
                 ],
               [
                 'add_by.required' => 'Owner is required.',
@@ -743,38 +750,6 @@ class PropertyController extends Controller {
                 return redirect()->back()->with('error', 'Please select another condition.');
             }
 
-        if(isset($request->no_of_garden))
-        {
-            $no_of_garden=$request->no_of_garden;
-        }
-        else{
-            $no_of_garden=0;
-        }
-
-        if(isset($request->no_of_pool))
-        {
-            $no_of_pool=$request->no_of_pool;
-        }
-        else{
-            $no_of_pool=0;
-        }
-
-        if(isset($request->no_of_parking))
-        {
-            $no_of_parking=$request->no_of_parking;
-        }
-        else{
-            $no_of_parking=0;
-        }
-
-        if(isset($request->no_of_lift))
-        {
-            $no_of_lift=$request->no_of_lift;
-        }
-        else{
-            $no_of_lift=0;
-        }
-
         if(isset($request->features))
         {
 	        if(count($request->features) > 0)
@@ -830,10 +805,10 @@ class PropertyController extends Controller {
                     $propertyupdate->no_of_bedroom=$data['no_of_bedroom'];
                     $propertyupdate->no_of_kitchen=$data['no_of_kitchen'];
                     $propertyupdate->no_of_bathroom=$data['no_of_bathroom'];
-                    $propertyupdate->no_of_pool=$no_of_pool;
-                    $propertyupdate->no_of_garden=$no_of_garden;
-                    $propertyupdate->no_of_lift=$no_of_lift;
-            		$propertyupdate->no_of_parking=$no_of_parking;
+                    $propertyupdate->no_of_pool=$data['no_of_pool'];
+                    $propertyupdate->no_of_garden=$data['no_of_garden'];
+                    $propertyupdate->no_of_lift=$data['no_of_lift'];
+            		$propertyupdate->no_of_parking=$data['no_of_parking'];
             		$propertyupdate->property_features=$features_list;
                     $propertyupdate->no_of_balcony=$data['no_of_balcony'];
                     $propertyupdate->no_of_floors=$data['no_of_floors'];
@@ -870,10 +845,10 @@ class PropertyController extends Controller {
                     $propertyupdate->no_of_bedroom=$data['no_of_bedroom'];
                     $propertyupdate->no_of_kitchen=$data['no_of_kitchen'];
                     $propertyupdate->no_of_bathroom=$data['no_of_bathroom'];
-                    $propertyupdate->no_of_pool=$no_of_pool;
-                    $propertyupdate->no_of_garden=$no_of_garden;
-                    $propertyupdate->no_of_lift=$no_of_lift;
-            		$propertyupdate->no_of_parking=$no_of_parking;
+                    $propertyupdate->no_of_pool=$data['no_of_pool'];
+                    $propertyupdate->no_of_garden=$data['no_of_garden'];
+                    $propertyupdate->no_of_lift=$data['no_of_lift'];
+            		$propertyupdate->no_of_parking=$data['no_of_parking'];
             		$propertyupdate->property_features=$features_list;
                     $propertyupdate->no_of_balcony=$data['no_of_balcony'];
                     $propertyupdate->no_of_floors=$data['no_of_floors'];
@@ -902,10 +877,10 @@ class PropertyController extends Controller {
                     $propertyupdate->no_of_bedroom=$data['no_of_bedroom'];
                     $propertyupdate->no_of_kitchen=$data['no_of_kitchen'];
                     $propertyupdate->no_of_bathroom=$data['no_of_bathroom'];
-                    $propertyupdate->no_of_pool=$no_of_pool;
-                    $propertyupdate->no_of_garden=$no_of_garden;
-                    $propertyupdate->no_of_lift=$no_of_lift;
-            		$propertyupdate->no_of_parking=$no_of_parking;
+                    $propertyupdate->no_of_pool=$data['no_of_pool'];
+                    $propertyupdate->no_of_garden=$data['no_of_garden'];
+                    $propertyupdate->no_of_lift=$data['no_of_lift'];
+            		$propertyupdate->no_of_parking=$data['no_of_parking'];
             		$propertyupdate->property_features=$features_list;
                     $propertyupdate->no_of_balcony=$data['no_of_balcony'];
                     $propertyupdate->no_of_floors=$data['no_of_floors'];
@@ -1122,6 +1097,7 @@ class PropertyController extends Controller {
 
     public function updatePropertyPublishStatus(Request $request)
     {
+        $data = Property::latest();
         
         try {
             $data=$request->all();
@@ -1135,6 +1111,8 @@ class PropertyController extends Controller {
               ]);
 
             $propertyupdate=Property::find($data['property_id']);
+
+            
             
 
             if(is_null($propertyupdate)){
@@ -1150,12 +1128,22 @@ class PropertyController extends Controller {
                 $propertyupdate->publish_date=date('Y-m-d');
                 
                 $propertyupdate->update();
+
+                
                 
 
                 $seller = User::where('id',$propertyupdate->add_by)->first();
+
+                if($propertyupdate['property_type']==1)
+                            {
+                              $property_typevalue='Renting';
+                            }
+                            else{
+                              $property_typevalue='Buying';
+                            }
                 
                 //  dd($seller);
-                $check_email = getemailtemplate($template_id='7',$seller->email,$seller->name);
+                $check_email = getemailtemplate($template_id='7',$seller->email,$seller->name,$otp="",$name="",$email="",$propertyupdate['title'],$property_typevalue,$propertyupdate['property_price'],$propertyupdate['property_address'],$property_image_link="");
              
 
                 return response()->json(["status" => 'success','message'=>'1']);

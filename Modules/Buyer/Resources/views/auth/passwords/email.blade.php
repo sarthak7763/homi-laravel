@@ -14,10 +14,10 @@
                         <h1>Welcome!</h1>
                         <strong>Signin your account</strong>
                         <div class="mb-3">
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
+                            <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" id="exampleInputEmail1"
                                 aria-describedby="emailHelp" placeholder="Email ID"  style="display:block;"> 
                                 @error('email')
-                  <div class="invalid-feedback" style="display:block;">
+                  <div class="error" style="display:block;">
                     {{$message}}
                   </div>
                   @enderror

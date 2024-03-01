@@ -117,7 +117,7 @@ class BuyerController extends Controller {
                     return redirect()->back()->with('success', 'Email has been sent on your email id !');
                 }
                 else{
-                  return redirect()->back()->with('error', 'please enter valid email id !');
+                  return redirect()->back()->with('error', 'Email id does not exist !');
                 }
       }
       catch(Exception $e){ 
@@ -140,6 +140,30 @@ class BuyerController extends Controller {
 
  public function submitResetPasswordForm(Request $request)
       {
+
+        $validator = Validator::make($request->all(), [
+          'email' => 'required|email',
+              'password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
+            'password_confirmation' => 'required|same:password'
+      ],
+  
+
+      [
+      'email.required' => 'Email field can’t be left blank',
+      'email.email' => 'Email should be valid email type',
+      'password.min'     => 'Passsword should be minimum 6 characters.',
+      'password.max'    => 'Passsword must not be greater than 10 characters.',
+      'password.regex' => 'Passsword should be capital letter, small letter,special charcters and number .',
+      'password.required' => 'Password field can’t be left blank',
+      'password_confirmation.required'=>'Confirm Password field can’t be left blank',
+      'password_confirmation.same'=>'Password and confirm password doesn’t match',
+
+      ]);
+if($validator->fails()){
+
+return Redirect::back()->withErrors($validator)->withInput();
+}
+        
        $request->validate([
               'email' => 'required|email',
               'password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
@@ -160,10 +184,20 @@ class BuyerController extends Controller {
   
           $user = User::where('email', $request->email)
                       ->update(['password' => Hash::make($request->password)]);
- 
-          DB::table('password_resets')->where(['email'=> $request->email])->delete();
+
+                 if($user)
+                 {
+                  DB::table('password_resets')->where(['email'=> $request->email])->delete();
         
-          return redirect()->route('buyer-login')->with('success', 'Your password has been changed!');
+          return redirect()->route('buyer-login')->with('success', 'Your password has been reset successfully!');
+              }     
+              else      
+              {
+
+            return redirect()->back()->with('error','please enter valid email id');
+                }
+ 
+          
       }
 
 
@@ -432,7 +466,7 @@ class BuyerController extends Controller {
                       Session::forget('email');
                       Session::forget('type');
                       Session::put('user_id', $user_id);
-                      return redirect('dealer/my-profile/')->with('success', 'your request has been sent to super admin for approval');  
+                      return redirect()->route('buyer-login')->with('success', 'your account verification request has been sent to super admin for approval');  
                     }
                     else{
                       return back()->with('error','Something went wrong2.');
@@ -662,6 +696,19 @@ class BuyerController extends Controller {
             return redirect()->back()->with('error', $e->getmessage());     
      }
   }
+
+
+
+  public function uniqueEmailGet(Request $request)
+  {
+    $email = $request->input('email');
+    $isExists = User::where('email',$email)->first();
+    if($isExists){
+        return response()->json(array("code" => 400,'message'=>'Email already exists.'));
+    }else{
+        return response()->json(array("code" => 200,'message'=>'success'));
+    }
+   }
 }
 
  

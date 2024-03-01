@@ -36,9 +36,9 @@
                                 <input type="text" id="title_search" class="form-control" name="title_search" placeholder="Search data" value ="{{$search_title}}" />
                                 <select name="status_search">
                                   <option value ="" >select status</option> 
-                                  <option value ="1" {{ $search_status == 1 ? 'selected' : '' }}>Active</option>
-                                  <option value ="2" {{ $search_status == 2 ? 'selected' : '' }}>Suspend</option>                                                                                                                                                                           2 ? 'selected' : '' }}>Suspend</option>
-                                  <option value ="0">Pending</option>
+                                  <option value ="active" {{ $search_status =='active'  ? 'selected' : '' }}>Active</option>
+                                  <option value ="suspend" {{ $search_status == 'suspend' ? 'selected' : '' }}>Suspend</option>                                                                                                                                                                           2 ? 'selected' : '' }}>Suspend</option>
+                                  <option value ="pending" {{ $search_status == 'pending' ? 'selected' : '' }}>Pending</option>
                                  </select>                                
                                 </div>
                             <button type="submit" class="btn-search">

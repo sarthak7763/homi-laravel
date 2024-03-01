@@ -2,18 +2,6 @@
 @section('title', 'Edit property')
 @section('content')
 
-<style type="text/css">
-  span.messages strong {
-    color: red;
-    font-size: 13px;
-}
-
-label.error{
-  color: red;
-  font-size: 13px;
-}
-</style>
-
 @php 
   $property_owner_error="";
   $property_title_error="";
@@ -409,74 +397,77 @@ label.error{
                               </div>
                           </div>
 
-
                           <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Pool</label>
-                                  @if($propertyInfo->no_of_pool==1)
-                                    @php $checked="checked"; @endphp
-                                  @else
-                                    @php $checked=""; @endphp
-                                  @endif
-                                  <input {{$checked}} type="checkbox" name="no_of_pool" class="form-control"   value="1" id="no_of_pool">
-                                  @if($pool_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $pool_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Garden<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_garden" id="no_of_garden">
+                                   <option value="">Select Garden</option>
+                                  
+                                   <option value="1" {{ $propertyInfo->no_of_garden ==1 ? "selected" : "" }} >Yes</option>
+                                   <option value="0" {{ $propertyInfo->no_of_garden ==0 ? "selected" : "" }}>No</option>
+                                   
+                                    </select>
+                                     @if($garden_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $garden_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
 
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Garden</label>
-                                  @if($propertyInfo->no_of_garden==1)
-                                    @php $checked="checked"; @endphp
-                                  @else
-                                    @php $checked=""; @endphp
-                                  @endif
-                                  <input {{$checked}} type="checkbox" name="no_of_garden" class="form-control" value="1" id="no_of_garden">
-                                  @if($garden_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $garden_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Pool<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_pool" id="no_of_pool">
+                                   <option value="">Select Pool</option>
+                                  
+                                   <option value="1" {{ $propertyInfo->no_of_pool ==1 ? "selected" : "" }}>Yes</option>
+                                   <option value="0" {{ $propertyInfo->no_of_pool ==0 ? "selected" : "" }}>No</option>
+                                   
+                                    </select>
+                                     @if($pool_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $pool_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
 
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Parking</label>
-                                  @if($propertyInfo->no_of_parking==1)
-                                    @php $checked="checked"; @endphp
-                                  @else
-                                    @php $checked=""; @endphp
-                                  @endif
-                                  <input {{$checked}} type="checkbox" name="no_of_parking" class="form-control" value="1" id="no_of_parking">
-                                  @if($parking_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $parking_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Parking<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_parking" id="no_of_parking">
+                                   <option value="">Select Parking</option>
+                                  
+                                  <option value="1" {{ $propertyInfo->no_of_parking ==1 ? "selected" : "" }}>Yes</option>
+                                  <option value="0" {{ $propertyInfo->no_of_parking ==0 ? "selected" : "" }}>No</option>
+                                   
+                                    </select>
+                                     @if($parking_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $parking_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
 
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Lift</label>
-                                  @if($propertyInfo->no_of_lift==1)
-                                    @php $checked="checked"; @endphp
-                                  @else
-                                    @php $checked=""; @endphp
-                                  @endif
-                                  <input {{$checked}} type="checkbox" name="no_of_lift" class="form-control" value="1" id="no_of_lift">
-                                  @if($lift_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $lift_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Lift<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_lift" id="no_of_lift">
+                                   <option value="">Select Lift</option>
+                                  
+                                   <option value="1" {{ $propertyInfo->no_of_lift ==1 ? "selected" : "" }}>Yes</option>
+                                   <option value="0" {{ $propertyInfo->no_of_lift ==0 ? "selected" : "" }}>No</option>
+                                   
+                                    </select>
+                                     @if($lift_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $lift_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
 
                           <div class="col-md-6">
                               <div class="form-group">
@@ -678,7 +669,7 @@ label.error{
               <div class="col-md-12">
                   <div class="form-group">
                       <label class="font-weight-bold">Meta Description<!-- <span style="color:red;">*</span> --></label>
-                      <textarea class="ck-editor" value="" name="meta_description" id="meta_description" rows="5" cols="20">{{$propertyInfo->meta_description}}</textarea>
+                      <textarea class="ck-editor propertydesc" value="" name="meta_description" id="meta_description" rows="5" cols="20">{{$propertyInfo->meta_description}}</textarea>
                       @if($meta_description_error!="")
                           <span class="messages">
                               <strong>{{ $meta_description_error }}</strong>
@@ -690,7 +681,7 @@ label.error{
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="font-weight-bold">Property Description</label>
-                        <textarea  class="ck-editor" name="property_description" id="property_description" rows="5" cols="20">{{$propertyInfo->property_description}}</textarea>
+                        <textarea  class="ck-editor propertydesc" name="property_description" id="property_description" rows="5" cols="20">{{$propertyInfo->property_description}}</textarea>
                         @if($property_description_error!="")
                             <span class="messages">
                                 <strong>{{ $property_description_error }}</strong>
@@ -703,7 +694,7 @@ label.error{
                     <div class="form-group">
                         <label class="font-weight-bold">Property Gallery Image<span style="color:red;">*</span></label>
                         <small></small>
-                        <input type="file" class="form-control"  name="property_gallery[]" multiple="multiple" id="property_gallery_image"  onchange="preview_multiple_image()">
+                        <input type="file" class="form-control"  name="property_gallery[]" multiple="multiple" id="property_gallery_image" accept="image/*" onchange="preview_multiple_image()">
                         @if($property_image_error!="")
                              <span class="messages">
                                 <strong>{{ $property_image_error }}</strong>
@@ -772,19 +763,19 @@ label.error{
 function preview_multiple_image() 
 {
   $('#property_gallery_image_preview').html("");
-  var gallery_db_count=$('#gallery_db_count').val();
+  var gallery_db_count="{{count($property_gallery)}}";
   var total_file_count=8;
-  var remainfile=total_file_count-gallery_db_count;
+  var remainfile=parseInt(total_file_count)-parseInt(gallery_db_count);
 
   if(remainfile==0)
   {
-    alert('you can only 8 property images');
+    alert('you can upload only '+remainfile+' property images');
   }
   else{
       var total_file=document.getElementById("property_gallery_image").files.length;
       if(total_file > remainfile)
       { 
-        alert('upload only 8 property images');
+        alert('upload only '+remainfile+' property images');
       }
       else{
         for(var i=0;i<remainfile;i++)

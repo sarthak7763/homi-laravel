@@ -211,6 +211,9 @@ $(document).on('change','#owner_type',function(){
 </script>
 
 
+ 
+
+
 <script>
     $(document).ready(function(){
     $(".cancel_booking").on("click", function() {

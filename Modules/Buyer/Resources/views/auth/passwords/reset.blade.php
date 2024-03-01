@@ -1,6 +1,11 @@
 @extends('buyer::auth.auth_layout.authmaster')
 @section('title',"Homi Reset Password")
 @section('content')
+<style>
+    .invalid-feedback:first-letter {
+    text-transform: capitalize;
+}
+</style>
 <div class="">
    <section class="signup-section pt-4 pb-4">
        <div class="container h-100"> 
@@ -12,13 +17,27 @@
                   <input type="hidden" name="token" value="{{ $token }}">
                   
                
-                   <h1>{{ __('Reset Password') }}</h1>            
+                   <h1>{{ __('Reset Password') }}</h1>
+                   <div>
+        @if (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+    </div>
+    <div>
+        @if (session()->has('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+    </div>            
                   <div class="form-group mb-2 position-relative">
                      <label for="email_address" class="col-form-label text-md-right">E-Mail Address</label>                    
                         <input type="text" id="email_address" class="form-control" name="email"  autofocus>
                         @error('email')
                        
-                        <div class="invalid-feedback" style="display:block;">
+                        <div class="error" style="display:block;">
                     {{$message}}
                   </div>
                   @enderror                
@@ -40,7 +59,7 @@
                                 </svg>
                             </span>
                         @error('password')
-                        <div class="invalid-feedback" style="display:block;">
+                        <div class="invalid-feedback " style="display:block;">
                     {{$message}}
                   </div>
                   @enderror                   

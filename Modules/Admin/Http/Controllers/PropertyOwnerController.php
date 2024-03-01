@@ -205,7 +205,7 @@ class PropertyOwnerController extends Controller{
                     }      
                }
 
-        $fileNameToStore=uploadImage($request->file('profile_pic'),"images/owners/",'');
+        $fileNameToStore=uploadImage($request->file('profile_pic'),"images/user/",'');
       }
       else{
       	$fileNameToStore="";
@@ -219,6 +219,14 @@ class PropertyOwnerController extends Controller{
       if($checkemail)
       {
         return redirect()->back()->with('error', 'Email already exists.');
+      }
+
+      if($data['owner_type']==1)
+      {
+        $agency_name=$data['agency_name'];
+      }
+      else{
+        $agency_name="";
       }
       
       $hashedPassword = Hash::make($password);
@@ -235,7 +243,7 @@ class PropertyOwnerController extends Controller{
       $user->profile_pic=$fileNameToStore;
       $user->user_type=3;
       $user->owner_type=$data['owner_type'];
-      $user->agency_name=$data['agency_name'];
+      $user->agency_name=$agency_name;
       $user->save();
 
       if($user){
@@ -360,10 +368,18 @@ class PropertyOwnerController extends Controller{
                     }      
                }
 
-         $fileNameToStore=uploadImage($request->file('profile_pic'),"images/owners/",'');
+         $fileNameToStore=uploadImage($request->file('profile_pic'),"images/user/",'');
       }
       else{
         $fileNameToStore="";
+      }
+
+      if($data['owner_type']==1)
+      {
+        $agency_name=$data['agency_name'];
+      }
+      else{
+        $agency_name="";
       }
 
       if($user->user_type==3)
@@ -375,7 +391,7 @@ class PropertyOwnerController extends Controller{
               $user->name = $data['name'];
               $user->mobile = $data['mobile'];
               $user->owner_type=$data['owner_type'];
-              $user->agency_name=$data['agency_name'];
+              $user->agency_name=$agency_name;
               $user->profile_pic=$fileNameToStore;
 
             }
@@ -383,7 +399,7 @@ class PropertyOwnerController extends Controller{
               $user->name = $data['name'];
               $user->mobile = $data['mobile'];
               $user->owner_type=$data['owner_type'];
-              $user->agency_name=$data['agency_name'];
+              $user->agency_name=$agency_name;
             }
         }
         else{
@@ -399,7 +415,7 @@ class PropertyOwnerController extends Controller{
               $user->email=$data['email'];
               $user->mobile = $data['mobile'];
               $user->owner_type=$data['owner_type'];
-              $user->agency_name=$data['agency_name'];
+              $user->agency_name=$agency_name;
               $user->profile_pic=$fileNameToStore;
 
             }
@@ -408,7 +424,7 @@ class PropertyOwnerController extends Controller{
               $user->email=$data['email'];
               $user->mobile = $data['mobile'];
               $user->owner_type=$data['owner_type'];
-              $user->agency_name=$data['agency_name'];
+              $user->agency_name=$agency_name;
             }
           }
         }

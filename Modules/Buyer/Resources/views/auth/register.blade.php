@@ -55,7 +55,17 @@
 
 <div class="">
 
-    @if($message = Session::get('success'))
+    
+    <section class="signup-section pt-4 pb-4">
+        <div class="container h-100">
+            <div class="row align-items-center justify-content-center h-100">
+                <div class="col-12">
+                    <form name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.register')}}" method="POST" class="signup-form p-5">
+                        @csrf
+                        <h1>Welcome!</h1>
+                        <strong>Signup your account</strong>
+                        
+                        @if($message = Session::get('success'))
                     <div class="row">
                         <div class="col-md-12">
                           <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -81,31 +91,29 @@
                     </div>
                 @endif
 
-    <section class="signup-section pt-4 pb-4">
-        <div class="container h-100">
-            <div class="row align-items-center justify-content-center h-100">
-                <div class="col-12">
-                    <form name="signupBuyerForm" id="signupBuyerForm" action="{{ route('buyer.post.register')}}" method="POST" class="signup-form p-5">
-                        @csrf
-                        <h1>Welcome!</h1>
-                        <strong>Signup your account</strong>
                         <div class="mb-3">
                             <input type="text" name="name" value="{{old('name')}}" class="form-control @error('name') is-invalid @enderror"  id="name" aria-describedby="emailHelp" placeholder="Enter your name here">
                             @error('name')
-                  <div class="invalid-feedback" style="display:block;">
+                  <div class="error" style="display:block;">
                     {{$message}}
                   </div>
                   @enderror
                                
                         </div>
+
+
+                        
                         <div class="mb-3">
                             <input type="email" name="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror" id="email"
                                 aria-describedby="emailHelp" placeholder="Email ID">
                                 @error('email')
-                  <div class="invalid-feedback" style="display:block;">
+                  <div class="error" style="display:block;">
                     {{$message}}
                   </div>
                   @enderror
+
+                  <div class="error" id="email-invalid-feedback" style="display:none;"></div>
+
                         </div>
                         <div class="mb-3 input-group">
                             <input type="password" name="password" value="{{old('password')}}" class="form-control @error('password') is-invalid @enderror" id="password" placeholder="Password">
@@ -130,7 +138,7 @@
                             </span>
 
                             @error('password')
-                  <div class="invalid-feedback" style="display:block;">
+                  <div class="error" style="display:block;">
                     {{$message}}
                   </div>
                   @enderror
@@ -231,7 +239,7 @@ $.ajaxSetup({
             },
            
             mycheckbox : {
-                required: "please accept terms and condition",
+                required: "Please accept terms and condition",
                
 
             },
@@ -257,6 +265,37 @@ $.ajaxSetup({
     });
 
 </script>
+
+
+<script>
+$(document).ready(function(){
+   
+$("#email").on('keyup',function(){
+    var email = $(this).val();
+    
+    $.ajax({
+            type: "POST",
+            url: "{{route('buyer.email')}}",
+            data: 
+               {_token: "{{ csrf_token() }}",email: email},        
+            dataType: "json",
+            success: function(res) {
+                $('#email-invalid-feedback').show();
+                if(res.code==200){
+                    $('#email-invalid-feedback').hide();
+                }else{
+                  $('#email-invalid-feedback').show();
+                  $('#email-invalid-feedback').html(res.message);
+               }
+            },
+    });
+});
+
+});
+
+</script>
+
+
 
 
 @endsection

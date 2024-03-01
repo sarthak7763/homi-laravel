@@ -2,18 +2,6 @@
 @section('title', 'Add property')
 @section('content')
 
-<style type="text/css">
-  span.messages strong {
-    color: red;
-    font-size: 13px;
-}
-
-label.error{
-  color: red;
-  font-size: 13px;
-}
-</style>
-
 @php 
   $property_owner_error="";
   $property_title_error="";
@@ -403,55 +391,78 @@ label.error{
                                   @endif
                               </div>
                           </div>
-                                            
-                                
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Pool</label>
-                                  <input type="checkbox" @if (old('no_of_pool') == "1") {{ 'checked' }} @endif  name="no_of_pool" class="form-control"   value="1" id="no_of_pool">
-                                  @if($pool_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $pool_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
 
                           <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Garden</label>
-                                  <input type="checkbox" @if (old('no_of_garden') == "1") {{ 'checked' }} @endif name="no_of_garden" class="form-control" value="1" id="no_of_garden">
-                                  @if($garden_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $garden_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Garden<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_garden" id="no_of_garden">
+                                   <option value="">Select Garden</option>
+                                  
+                                   <option value="1" @if (old('no_of_garden') == "1") {{ 'selected' }} @endif  >Yes</option>
+                                   <option value="0" @if (old('no_of_garden') == "0") {{ 'selected' }} @endif>No</option>
+                                   
+                                    </select>
+                                     @if($garden_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $garden_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
 
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Parking</label>
-                                  <input type="checkbox" @if (old('no_of_parking') == "1") {{ 'checked' }} @endif name="no_of_parking" class="form-control" value="1" id="no_of_parking">
-                                  @if($parking_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $parking_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Pool<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_pool" id="no_of_pool">
+                                   <option value="">Select Pool</option>
+                                  
+                                   <option value="1" @if (old('no_of_pool') == "1") {{ 'selected' }} @endif  >Yes</option>
+                                   <option value="0" @if (old('no_of_pool') == "0") {{ 'selected' }} @endif>No</option>
+                                   
+                                    </select>
+                                     @if($pool_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $pool_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
 
-                          <div class="col-md-6">
-                              <div class="form-group">
-                                  <label class="font-weight-bold">Lift</label>
-                                  <input type="checkbox" @if (old('no_of_lift') == "1") {{ 'checked' }} @endif name="no_of_lift" class="form-control" value="1" id="no_of_lift">
-                                  @if($lift_count_error!="")
-                                      <span class="messages">
-                                          <strong>{{ $lift_count_error }}</strong>
-                                      </span>
-                                  @endif
-                              </div>
-                          </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Parking<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_parking" id="no_of_parking">
+                                   <option value="">Select Parking</option>
+                                  
+                                  <option value="1" @if (old('no_of_parking') == "1") {{ 'selected' }} @endif  >Yes</option>
+                                  <option value="0" @if (old('no_of_parking') == "0") {{ 'selected' }} @endif>No</option>
+                                   
+                                    </select>
+                                     @if($parking_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $parking_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Lift<span style="color:red;">*</span></label>
+                                    <select class="form-control" name="no_of_lift" id="no_of_lift">
+                                   <option value="">Select Lift</option>
+                                  
+                                   <option value="1" @if (old('no_of_lift') == "1") {{ 'selected' }} @endif  >Yes</option>
+                                   <option value="0" @if (old('no_of_lift') == "0") {{ 'selected' }} @endif>No</option>
+                                   
+                                    </select>
+                                     @if($lift_count_error!="")
+                                    <span class="messages">
+                                        <strong>{{ $lift_count_error }}</strong>
+                                    </span>
+                                @endif  
+                                </div>
+                            </div>
 
                           <div class="col-md-6">
                               <div class="form-group">
@@ -521,14 +532,17 @@ label.error{
                         <div class="col-md-6">
                             <div class="form-group country-select">
                                 <label class="font-weight-bold">Contact Number<span style="color:red;">*</span></label>
+                                <div class="d-flex input-wrap">
                                 <select id="country_id" name="country_id" class=" form-control">
                                   @foreach($country_list as $list)
                                       <option value="{{$list['id']}}">
-                                      {{$list['name']}} ({{$list['phonecode']}})</option>
+                                      {{$list['phonecode']}}</option>
                                   @endforeach
                                 </select>
-                                <input type="text" class="form-control" value="{{old('property_number')}}" name="property_number" id="property_number" placeholder="Enter Contact Number" >
 
+
+                                <input type="text" class="form-control" value="{{old('property_number')}}" name="property_number" id="property_number" placeholder="Enter Contact Number" >
+                              </div>
                                 @if($phone_number_error!="")
                                     <span class="messages">
                                         <strong>{{ $phone_number_error }}</strong>
@@ -633,7 +647,7 @@ label.error{
               <div class="col-md-12">
                   <div class="form-group">
                       <label class="font-weight-bold">Meta Description<!-- <span style="color:red;">*</span> --></label>
-                      <textarea class="ck-editor" value="{{old('meta_description')}}" name="meta_description" id="meta_description" rows="5" cols="20"></textarea>
+                      <textarea class="ck-editor propertydesc" value="{{old('meta_description')}}" name="meta_description" id="meta_description" rows="5" cols="20"></textarea>
                       @if($meta_description_error!="")
                           <span class="messages">
                               <strong>{{ $meta_description_error }}</strong>
@@ -645,7 +659,7 @@ label.error{
                 <div class="col-md-12">
                     <div class="form-group">
                         <label class="font-weight-bold">Property Description</label>
-                        <textarea  class="ck-editor" value="{{old('property_description')}}" name="property_description" id="property_description" rows="5" cols="20"></textarea>
+                        <textarea  class="ck-editor propertydesc" value="{{old('property_description')}}" name="property_description" id="property_description" rows="5" cols="20"></textarea>
                         @if($property_description_error!="")
                             <span class="messages">
                                 <strong>{{ $property_description_error }}</strong>
@@ -658,7 +672,7 @@ label.error{
                     <div class="form-group">
                         <label class="font-weight-bold">Property Gallery Image<span style="color:red;">*</span></label>
                         <small></small>
-                        <input type="file" class="form-control"  name="property_gallery[]" multiple="multiple" id="property_gallery_image"  onchange="preview_multiple_image()">
+                        <input type="file" class="form-control"  name="property_gallery[]" multiple="multiple" id="property_gallery_image" accept="image/*" onchange="preview_multiple_image()">
                         @if($property_image_error!="")
                              <span class="messages">
                                 <strong>{{ $property_image_error }}</strong>
@@ -911,10 +925,16 @@ $.ajaxSetup({
                 digits: true,
             },
             no_of_pool:{
-                digits: true,
+                required: true,
             },
             no_of_garden:{
-                digits: true,
+                required: true,
+            },
+            no_of_parking:{
+                required: true,
+            },
+            no_of_lift:{
+                required: true,
             },
             no_of_balcony:{
                 digits: true,
@@ -977,11 +997,19 @@ $.ajaxSetup({
                 digits: "no. of bathroom value should contains only digits.",
             },
             no_of_pool: {
-                required: "Please enter no. of pool",
+                required: "This field is required",
                 digits: "no. of pool value should contains only digits.",
             },
             no_of_garden: {
-                required: "Please enter no. of garden",
+                required: "This field is required",
+                digits: "no. of garden value should contains only digits.",
+            },
+            no_of_parking: {
+                required: "This field is required",
+                digits: "no. of garden value should contains only digits.",
+            },
+            no_of_lift: {
+                required: "This field is required",
                 digits: "no. of garden value should contains only digits.",
             },
             no_of_balcony: {

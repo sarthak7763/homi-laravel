@@ -32,11 +32,12 @@
                                 </div>
                                 <div class="col px-2 status-box">
                                     <label>Booking Status</label>
-                                    <select name="booking_status_search">
-                                  <option value ="" >select status</option> 
-                                  <option value ="0" {{ $search_booking_status == 0 ? 'selected' : '' }}>Ongoing</option>
-                                  <option value ="1" {{ $search_booking_status == 1 ? 'selected' : '' }}>Completed</option>
-                                  <option value ="2" {{ $search_booking_status == 2 ? 'selected' : '' }} >Cancelled</option>
+                                    <select name="booking_status">
+                                    
+                                  <option value ="" {{empty($booking_status) ? 'selected' : ''  }} >select status</option> 
+                                  <option value ="ongoing" {{ $booking_status == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+                                  <option value ="completed" {{ $booking_status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                  <option value ="cancel" {{ $booking_status == 'cancel' ? 'selected' : '' }} >Cancelled</option>
                                  </select> 
                                 </div>
 

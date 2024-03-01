@@ -137,8 +137,12 @@
                                 <span class="invalid-feedback" style="{{$style}}" role="alert">
                                 <strong>{{ $image_error }}</strong>
                                 </span>
-
+                                @if($userInfo->profile_pic!="")
+                                <div id="image_preview"><img class="img-radius img-40" src="{{url('/')}}/images/user/{{ $userInfo->profile_pic}}" alt="user-pic"></div>
+                                @else
                                 <div id="image_preview"></div>
+                                @endif
+
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -253,9 +257,11 @@
     var owner_type=$(this).val();
     if(owner_type==1)
     {
+      $('#agency_name').attr('name','agency_name');
       $('#agencynamediv').show();
     }
     else{
+      $('#agency_name').attr('name','');
       $('#agencynamediv').hide();
     }
   });
@@ -281,6 +287,12 @@ $.ajaxSetup({
             mobile:{
                 required:true
             },
+            owner_type:{
+                required:true
+            },
+            agency_name:{
+                required:true
+            },
         },
         messages: {
             name: {
@@ -292,9 +304,14 @@ $.ajaxSetup({
                 remote:"Email already exist"
             },
             mobile:{
-                required: "please enter a valid mobile number",
-                
-            }
+                required: "please enter a valid mobile number",  
+            },
+            owner_type: {
+                required: "Please select Owner Type",
+            },
+            agency_name: {
+                required: "Please enter agency name",
+            },
         },
         submitHandler: function(form) 
             {
@@ -322,7 +339,7 @@ var total_file=document.getElementById("profile_pic").files.length;
 for(var i=0;i<total_file;i++)
 {
 
-  $('#image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-fluid  mr-2'>");
+  $('#image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"' height='150px' width='150px' class='img-radius img-40'>");
  }
 
 }

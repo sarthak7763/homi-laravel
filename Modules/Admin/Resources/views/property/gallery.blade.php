@@ -1,4 +1,4 @@
-@extends('admin::layouts.master')
+    @extends('admin::layouts.master')
 @section('title', 'Property Details')
 @section('css')
 <script src="https://code.jquery.com/jquery-latest.js"></script>
@@ -18,7 +18,12 @@
       @php $property_image_error=""; @endphp
       @endif
     @endif
-
+<style>
+    .mw-50 {
+    max-width: 50%;
+    padding: 15px 0;
+}
+</style>
 <div class="pcoded-content">
     <div class="pcoded-inner-content">
         <!-- Main-body start -->
@@ -92,11 +97,11 @@
                     <div class="tab-content">
                         <div class="tab-pane active">
                             @if(count($galleryList) < 8)
-                            <div class="card-block">
+                            <div class="">
                                <form id="multi-file-upload-ajax" method="POST" action="{{ route('admin-upload-gallery-ajax')}}" accept-charset="utf-8" enctype="multipart/form-data">
                                     @csrf
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                    <div class="w-100 mw-50">
+                                        <div class="d-flex w-100">
                                             <input type="file" class="form-control" name="property_gallery[]" id="property_gallery" accept="image/*" multiple onchange="preview_image()"> 
                                             @if($property_image_error!="")
                                             <div id="errorDiv" class="alert alert-danger mt-2" style="max-height: 200px; overflow-y: auto;">
@@ -105,10 +110,9 @@
                                             @endif
                                             <input type="hidden" value="{{$propertyInfo->id}}" name="property_id">
                                             <input type="hidden" value="{{$propertyInfo->slug}}" name="property_slug">
+                                             <button type="submit" class="btn btn-primary" id="submit">Save</button>
                                         </div>
-                                        <div class="col-md-6">
-                                            <button type="submit" class="btn btn-primary" id="submit">Save</button>
-                                        </div>
+
                                     </div>
                                 </form>
                             </div>
@@ -128,10 +132,10 @@
                             <div class="alert alert-warning">You can add Maximum {{$remaingallerycount}} images to the property.</div>
                             @endif
 
-                            <div class="card-block gallery-page">
+                            <div class="px-3 gallery-page">
                             <div class="row users-card secondDiv">
                          @foreach($galleryList as $gli)
-                         <div class="col-lg-6 col-xl-3 col-md-6">
+                         <div class="col-sm-6 col-lg-6 col-xl-3 col-md-6">
                             <div class="card rounded-card user-card">
                                 <div class="card-block">
                                     <div class="img-hover">                  

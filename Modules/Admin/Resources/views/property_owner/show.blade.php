@@ -64,7 +64,7 @@
                             <div class="card">
                                 <div class="card-header contact-user">
                                     @if($userInfo->profile_pic!="")
-                                    <img class="img-radius img-40" src="{{url('/')}}/images/owners/{{ $userInfo->profile_pic}}" alt="user-pic">
+                                    <img class="img-radius img-40" src="{{url('/')}}/images/user/{{ $userInfo->profile_pic}}" alt="user-pic">
                                     @else
                                      <img class="img-radius img-40" src="{{url('/')}}/no_image/user_pic.png" alt="user-pic">
                                     @endif
@@ -335,5 +335,55 @@ function table_property_ajax(){
 $(document).ready(function() {
    table_property_ajax();
 });
+
+
+$(document).on('click', '.badge_publish_status_change', function(e)
+{ 
+        var status_class = $(this).attr('class');
+        var id = $(this).attr('id');
+        var url = "{{ route('admin-property-publish-status-update') }}";
+        
+       var title ='Are you sure to publish this property ?';
+        e.preventDefault();      
+        swal({
+          title: title,
+          icon: "warning",
+          buttons: [
+            'No, cancel it!',
+            'Yes, I am sure!'
+          ],
+          dangerMode: true,
+        }).then(function(isConfirm) {
+          if(isConfirm){
+         
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {_token: "{{ csrf_token() }}",property_id:id},
+                dataType: "json",
+                 beforeSend: function(){
+                    $("#loading").show();
+                },
+                complete: function(){
+                    $("#loading").hide();
+                },
+                success: function (response){
+                    if(response.status=="success"){
+                        toastr.success("Property published successfully");
+                        window.location.reload();
+
+                 }else{
+                        toastr.error("Something went wrong.");
+                    }
+                   
+                }         
+            })
+        } 
+        // else {
+        //     swal("Cancelled", "property is not change", "error");
+        // }
+        });         
+}); 
+
 </script>
 @endsection
