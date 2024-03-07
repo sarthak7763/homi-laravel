@@ -6,7 +6,10 @@
    object-fit: cover;
    object-position: center;
    }
-   
+   .properties-rent span.price {
+    font-size: 18px;
+    padding-left: 3px;
+}
 </style>
 <div class="col-md-8 col-lg-9">
   <div class="profile-box">          
@@ -42,7 +45,7 @@
                     </span>
                   </div>
                   <div class="col text-end">
-                    <h3><span class="text-success">{{$view_booking_data->property_price}}</span> rs/day</h3>
+                    <h3><span class="text-success">{{$view_booking_data->property_price}}</span><span class="price">Rs/day</span></h3>
                     <p>Payment mode:{{$view_booking_data->payment_mode}}</p>
                   </div>
                 </div>                  

@@ -16,7 +16,7 @@
 <div class="tab-pane active" id="AboutTab">
    <div class="card col-md-12 o-auto p-3">
       @if(count($property_gallery) > 0)
-      <div class="row" style="margin-top: 20px;">
+      <div class="row">
          <div class="col-lg-12 col-xl-12">
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                <div class="carousel-inner">

@@ -5,6 +5,11 @@
     }
     input{border: 0;border-bottom: 1px solid #ddd;width: 100%;margin-top: 15px}
     input:focus{outline: none;}
+    .invalid-feedback {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+}
 </style>
 <div class="col-md-12 col-lg-9">
     <div class="profile-box">
@@ -50,24 +55,32 @@
                             <h6 class="rounded-top border-bottom p-3 mb-0 text-white">If you want to take subscription then please fill below details:- </h6>
                             <div class="p-3">
                                 <div class="row">
-                                    <div class="py-2 col-sm-6">
+                                    <div class="pt-2 pb-4 col-sm-6 error-fix">
                                     <input type = "hidden" value="{{$subscription_plan_details->id}}" name="hidden_id">
-                                        <strong><label>Fund Amount</label></strong>
-                                        <input type="number" name=fund_amount value="{{$subscription_plan_details->plan_price}}" class="form-control @error('fund_amount') is-invalid @enderror" id="fund_amount" value=""> @error('fund_amount')
+                                    <label><strong>Fund Amount</strong></label>
+                                        <input type="number" name=fund_amount value="{{$subscription_plan_details->plan_price}}" class="form-control @error('fund_amount') is-invalid @enderror" id="fund_amount" value=""> 
+                                        @error('fund_amount')
                                         <div class="invalid-feedback" style="display:block;">
                                             {{$message}}
                                         </div>
                                         @enderror
                                     </div>
-                                    <div class="py-2 col-sm-6 fund-label">
+                                    <div class="pt-2 pb-4 col-sm-6 fund-label error-fix">
                                         <label><strong> Fund Image</strong></label>
                                         <span class="file-input"></span>
-                                        <input type="file" name=fund_image src="" class="form-control @error('fund_image') is-invalid @enderror"> @error('fund_image')
+                                        
+                                        <input type="file" name=fund_image src=""  class="form-control @error('fund_image') is-invalid @enderror" id="fund_image"> 
+                                        @error('fund_image')
                                         <div class="invalid-feedback" style="display:block;">
                                             {{$message}}
                                         </div>
                                         @enderror
                                     </div>
+                                    <div class="col-md-12 mb-2">
+                        <img id="fund_image_preview" src="#"
+                        alt="" style="max-height: 250px;">
+
+              </div>
                                     <div class="col-md-12 d-flex text-center py-4 gap-2 justify-content-center">
                                         <button button type="submit" class="btn btn-primary  m-0  plan-btn text-white px-3">Activate Plan</button>
                                         <a href ="{{route('buyer.subscription-plans')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
@@ -87,3 +100,4 @@
 </div>
 </div>
 @endsection
+

@@ -151,9 +151,11 @@ $(document).on('change','#owner_type',function(){
     var value=$(this).val();
     if(value==1)
     {
+      $('#agency_name').attr('name','agency_name');
       $('#showagencydiv').show();
     }
     else{
+      $('#agency_name').attr('name','');
       $('#showagencydiv').hide();
     }
 });
@@ -358,6 +360,25 @@ originAutocomplete.addListener('place_changed', function(event) {
         });
     }
 });
+</script>
+
+
+<script type="text/javascript">
+
+$(document).ready(function (e) {
+   
+$('#fund_image').change(function(){
+let reader = new FileReader();
+reader.onload = (e) => {
+
+$('#fund_image_preview').attr('src', e.target.result);
+
+    }
+reader.readAsDataURL(this.files[0]);
+});
+
+   });
+
 </script>
 
 

@@ -158,17 +158,15 @@
                         <option value="{{$list['id']}}">
                             ({{$list['phonecode']}})</option>
                            @endforeach
-                         
-                           </select>          
-                        
-                        <input type="number" class="form-control @error('property_number') is-invalid @enderror" name="property_number" value="{{$userData->mobile}}"  aria-describedby="" placeholder="Enter Contact No" id = "property_number">  
-                        @if($errors->has('property_number'))
-                        <div class="invalid-feedback">
+                         </select>          
+                        <input type="text" class="form-control @error('property_number') is-invalid @enderror" name="property_number" value="{{$userData->mobile}}"  aria-describedby="" placeholder="Enter Contact No" id = "property_number">  
+                       
+                     </div>
+                      @if($errors->has('property_number'))
+                        <div class="invalid-feedback" style="display:block;">
                            {{$errors->first('property_number')}}
                         </div>
-                        @endif   
-                     
-                     </div>         
+                        @endif            
                      </div>
                   </div>
                   <div class="col-sm-6">
@@ -184,9 +182,15 @@
                   <div class="col-sm-12">
                      <div class="mb-4 position-relative address-group">
                         <input type="text" id="property_address"   class="form-control pe-5 @error('property_address') is-invalid @enderror" name="property_address" placeholder="Address">   
+                        @if($errors->has('property_address'))
+                        <div class="invalid-feedback">
+                           {{$errors->first('property_address')}}
+                        </div>
+                        @endif
                         <input type="hidden" name="property_latitude" id="property_latitude" value="" />
                         <input type="hidden" name="property_longitude" id="property_longitude" value="" />
                      </div>
+                     
                   </div>
                   <div class="col-sm-6">
                      <div class="mb-4">

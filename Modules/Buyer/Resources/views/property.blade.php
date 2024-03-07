@@ -44,6 +44,7 @@
                             <button type="submit" class="btn-search">
                             Search
                             </button>
+                            <a href ="{{route('buyer.property')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Reset</a>
                         </div>
                     </form>
                 </div>

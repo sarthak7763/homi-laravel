@@ -44,11 +44,11 @@
                </div>
                <div class="row">
                   <div class="col-12">
-                     <strong class="mb-2">Owner Type</strong>
+                     <strong class="mb-2">Owner Name</strong>
                   </div>
                   <div class="col-12 col-sm-6">
                      <div class="mb-4">
-                        <input type="text" class="form-control @error('name') is-invalid @enderror"  aria-describedby="" name="name"   value="{{$userInfo->name}}" placeholder="Please Enter Ower Name">
+                        <input type="text" class="form-control @error('name') is-invalid @enderror"  aria-describedby="" name="name"   value="{{$userInfo->name}}" placeholder="Please Enter Owner Name">
                         @if($errors->has('name'))
                         <div class="invalid-feedback">
                            {{$errors->first('name')}}
@@ -82,21 +82,20 @@
                      <div class="form-group mb-4">                        
                        <select class="form-select form-control @error('owner_type') is-invalid @enderror" name ="owner_type"   aria-label="Default select example" id="owner_type" >
                            <option value=""> Select owner type</option>
-                           <option value="1" {{ $userInfo->owner_type == 1 ? 'selected' : '' }}>Agency</option>
-                           <option value="2" {{ $userInfo->owner_type == 2 ? 'selected' : '' }}>Indiviuals</option>
-                         </select>
-                         <!-- @if (old('owner_type') == "1") {{ 'selected' }} @endif -->
-                        @if($errors->has('owner_type'))
+                            <option value="1" {{ old('owner_type')==1 || $userInfo->owner_type == 1 ? 'selected' : '' }}>Agency</option>
+                           <option value="2" {{ old('owner_type')==2 || $userInfo->owner_type == 2 ? 'selected' : '' }}>Indiviuals</option>
+                           </select>
+                         @if($errors->has('owner_type'))
                         <div class="invalid-feedback">
                            {{$errors->first('owner_type')}}
                         </div>
                         @endif           
                      </div>
                   </div>
-                  @if($userInfo->owner_type == 1)
+                  @if($userInfo->owner_type == 1 || old('owner_type') == 1 )
                   <div class="col-sm-6" id="showagencydiv" style="display:block;">
                      <div class="form-group mb-4" >
-                     <input type="text" class="form-control @error('agency_name') is-invalid @enderror" placeholder="Agency Name" id="agency_name" name="agency_name" id="agency_name" value = "{{$userInfo->agency_name}}">
+                     <input type="text" class="form-control @error('agency_name') is-invalid @enderror" placeholder="Agency Name" id="agency_name" name="agency_name" id="agency_name" value="{{$userInfo->agency_name}}">
                      @if($errors->has('agency_name'))
                      <div class="invalid-feedback">
                         {{$errors->first('agency_name')}}

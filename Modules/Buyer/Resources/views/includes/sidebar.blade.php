@@ -26,7 +26,7 @@
   @if($sellerinfo->profile_pic)
   <img class="rounded-pill-box" src="{{url('/')}}/images/user/{{$sellerinfo->profile_pic}}">
               @else
-    <img class="rounded-pill-box" src="{{url('/')}}/images/1699333958.jpg">
+    <img class="rounded-pill-box" src="{{url('/')}}/images/user-img.png">
             @endif  
    
  </div>

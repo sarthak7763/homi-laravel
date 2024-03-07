@@ -115,7 +115,8 @@
     @elseif($userInfo->owner_type == 2)
         <td colspan="2"><strong>Owner Type : </strong>Individual</td>
         @else
-        <td><strong>Owner Type : </strong></td>
+        <td colspan="2"><strong>Owner Type : </strong>NA
+     </td>
 
     @endif
 

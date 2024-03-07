@@ -81,8 +81,11 @@ Route::group(['middleware' => 'Isseller'], function ()
     Route::get('/dealer/subscription-plans', 'MysubscriptionController@allsubscriptions')->name('buyer.subscription-plans');
     Route::get('/dealer/seller-subscription/{id}', 'MysubscriptionController@sellerSubscription')->name('seller.subscription-details');
     Route::post('/dealer/seller-subscription-save', 'MysubscriptionController@sellerSubscriptionstore')->name('seller.subscription-details-save');
+
     Route::post('/dealer/user-subscription-confirmation/{id}', 'MysubscriptionController@subscriptionconfirmation')->name('buyer.subscription-confirmation');
     Route::get('/dealer/my-subscription', 'MysubscriptionController@index')->name('buyer.my-subscription');
+    Route::get('/dealer/my-pending-subscription', 'MysubscriptionController@pendingSubscription')->name('buyer.my-pending-subscription');
+
 
 
     // Route::get('/dealer/user-subscription/{id}', 'MysubscriptionController@usersubscription')->name('buyer.user-subscription');

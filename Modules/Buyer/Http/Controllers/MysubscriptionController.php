@@ -46,6 +46,35 @@ class MySubscriptionController extends Controller
     }
 
 
+
+    public function pendingSubscription()
+    {
+
+        $user_id = Auth::user()->id;
+
+        $seller_subscription_pending_plan = SellerSubscription::where('user_id',$user_id)->where('status','0')->get()->toArray();
+
+        $seller_subscrption_data =DB::table('seller_subscription_activation')->leftjoin('subscriptions','subscriptions.id','=','seller_subscription_activation.subscription_id')
+
+                                                            ->where('user_id',$user_id)
+                                                            ->where('seller_subscription_activation.status',2)
+                                                            ->select('seller_subscription_activation.*','subscriptions.*')
+                                                            ->get();
+                if($seller_subscrption_data)
+                {
+                    $seller_subscription_data = $seller_subscrption_data->first();
+    
+                }
+                else{
+                    return redirect()->back()->with('error', 'something wrong'); 
+                }                                       
+
+            return view('buyer::pending-subscription',compact('seller_subscription_data'));
+       
+    }
+
+
+
         
 
     public function allsubscriptions(Request $request)

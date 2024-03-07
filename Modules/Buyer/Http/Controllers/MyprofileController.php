@@ -18,6 +18,9 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,Redirect;
 			return view('buyer::my-profile',compact('userInfo'));
 		}
 
+
+		
+
 		public function edit(Request $request)
 		{
 			try{
@@ -50,23 +53,42 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,Redirect;
 					[
 					'name.required' => 'name is required.',
 					'name.regex'=>'  Name field only alphabetic characters.',
-
-					 'agency_name.required' => ' agency  name is required.',
-					 'agency_name.regex'=>'  Agency name field only alphabetic characters.',
 					'mobile.required' => 'mobile no field can’t be left blank.',
 					'mobile.numeric' => 'mobile no should be numeric.',
 					'mobile.digits' => 'mobile no should be only 10 digits',
 					 'owner_type.required' => 'owner type field can’t be left blank.',
 				]);
-						if($validator->fails()){
 
-							return Redirect::back()->withErrors($validator)->withInput();
-						}
+					if($validator->fails()){
+
+						return Redirect::back()->withErrors($validator)->withInput();
+					}
 
 
+					if($request->owner_type==1)
+				      {
+				          $validator = Validator::make($request->all(), [
+				            'agency_name'=>[
+				                    'required',
+				                    'regex:/^[\pL\s]+$/u',
+				              ],
+				        ],
+				        [
+				          'agency_name.required' => 'Agency Name field can’t be left blank.',
+				          'agency_name.regex' => 'Please enter only alphabetic characters.',
+				        ]);
+
+						    if($validator->fails()){
+
+								return Redirect::back()->withErrors($validator)->withInput();
+							}
+				      }
+
+				      
 						try{
 						$user  = User::find($user_id);
 						if(!empty($user)){
+
 							if ($request->hasFile('profile_pic')) {
 								$imageName = time().'.'.$request->profile_pic->extension(); 
 								
@@ -76,13 +98,13 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,Redirect;
 								$user->mobile = $data['mobile'];
 								$user->profile_pic = $imageName;
 								$user->owner_type = $data['owner_type'];
-								$user->agency_name = $data['agency_name'];
+								$user->agency_name = $data['agency_name'] ?? "";
 							}
 							else{
 								$user->name = $data['name'];
 								$user->mobile = $data['mobile'];
 								$user->owner_type = $data['owner_type'];
-								$user->agency_name = $data['agency_name'];
+								$user->agency_name = $data['agency_name'] ?? "";
 							}
 							
 						$user->save();
@@ -93,7 +115,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,Redirect;
 						}  
 					}
 					catch(Exception $e){
-						return redirect()->back()->with('error', 'something wrong');            
+						return redirect()->back()->with('error', $e->getMessage());            
 					}
         }	
     } 

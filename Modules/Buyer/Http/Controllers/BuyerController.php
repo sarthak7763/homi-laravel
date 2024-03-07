@@ -660,11 +660,11 @@ return Redirect::back()->withErrors($validator)->withInput();
                   'confirm_password' => 'required|same:new_password', 
           ],
             [
-            'current_password.required' => 'Old passsword is required.',
+            'current_password.required' => 'Old passsword field can’t be left blank.',
             'current_password.min'     => ' Old passsword should be minimum 6 characters.',
             'current_password.max'    => 'Old passsword must not be greater than 10 characters.',
             'current_password.regex' => 'Old passsword should be capital letter, small letter,special charcters and number .',
-            'new_password.required' => 'New password is required.',
+            'new_password.required' => 'New password field can’t be left blank.',
             'new_password.min'      => ' New password should be minimum 6 characters.',
             'new_password.max'     => ' New password must not be greater than 10 characters.',
             'new_password.regex'   => 'Password should be capital letter, small letter,special charcters and number .',
@@ -680,7 +680,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                 $curr_password = $request->current_password;
                 $new_password  = $request->new_password;
                     if(!Hash::check($curr_password,Auth::user()->password)){
-                        return redirect()->route('buyer.change-password')->with('error', 'Please enter correct password');
+                        return redirect()->route('buyer.change-password')->with('error', 'Please enter correct old password');
                       }
                     else{
                           $user_id = Auth::user()->id;

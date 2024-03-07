@@ -107,7 +107,7 @@ span.input-group-text {
                   </div>
                   @enderror
                   </div>
-                  <div  class="button-group justify-content-between">
+                  <div  class="button-group justify-content-between pt-3 mt-3 mt-md-0 pt-md-0">
                     <button type="submit"  class="btn btn-primary blue">Change Password</button>
                   </div>
               </div>

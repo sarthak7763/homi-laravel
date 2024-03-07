@@ -533,9 +533,9 @@
                             <div class="form-group country-select">
                                 <label class="font-weight-bold">Contact Number<span style="color:red;">*</span></label>
                                 <div class="d-flex input-wrap">
-                                <select id="country_id" name="country_id" class=" form-control">
+                                <select id="country_code" name="country_code" class=" form-control">
                                   @foreach($country_list as $list)
-                                      <option value="{{$list['id']}}">
+                                  <option value="{{$list['phonecode']}}">
                                       {{$list['phonecode']}}</option>
                                   @endforeach
                                 </select>
