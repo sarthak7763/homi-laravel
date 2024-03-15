@@ -5,7 +5,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
+<style>
+ 
+</style>
 <div class="col-md-8 col-lg-9">
     <div class="profile-box booking_page">
         <div class="profile-box-form">
@@ -20,7 +22,7 @@
     <form action = "{{route('buyer.bookings')}}" method="get" autocomplete="off">
                    
                         <div class="search-input-group">
-                            <div class="row form-outline p-2">
+                            <div class="row form-outline px-3 py-3">
 
                             <div class="col px-2 name-box">
                                     <label>Property Name</label>
@@ -41,19 +43,17 @@
                                  </select> 
                                 </div>
 
-                                <div class="col px-2 date-box">
+                                <div class="col-md-6 px-2 date-box">
                                     <label>Checkin Date</label>
                                     <input type="text" id="datepicker1" name = "check_in_search" value="{{$search_checkin}}" >
                                 </div>                         
-                                    <div class="col px-2 date-box">
+                                    <div class="col-md-6 px-2 date-box">
                                      <label>Checkout Date</label>
                                      <input type="text" id="datepicker2" name = "check_out_search" value="{{$search_checkout}}">
                                 </div>
-                                <div class="col-auto date-box-submit px-2">
-                                     <button type="submit" class="btn-search">
-                            Search
-                            </button>
-                            <a href ="{{route('buyer.bookings')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Reset</a>
+                                <div class="col-md-12 date-box-submit px-2  d-flex align-items-center pt-4 pb-4 justify-content-center">
+                                     <button type="submit" class="btn-search font-18  btn btn-primary mx-0 mt-0" >Search</button>
+                            <a href ="{{route('buyer.bookings')}}" button type="button" class="btn btn-danger ms-3 font-18 cancel_btn  mx-0 mt-0 px-3">Reset</a>
                                 </div> 
                                
                                 </div>                           
@@ -73,8 +73,8 @@
                             <th scope="col">Check in</th>
                             <th scope="col">Check out</th>
                             <th scope="col">Price</th>
-                            <th class="bookings-status" scope="col">&nbsp;&nbsp; Status</th>
-                            <th class="bookings-status" scope="col">&nbsp;&nbsp;Actions</th>
+                            <th class="bookings-status" scope="col"> Status</th>
+                            <th class="bookings-status" scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,7 +90,7 @@
                             
                             <td>{{date('M d, Y',strtotime($booking->user_checkout_date))}}</td>
                             <td>{{$booking->booking_property_price}}</td>
-                            <td class="text-end"><span class="text-warning"></span>
+                            <td class=""><span class="text-warning"></span>
                                 @if($booking->booking_status==0)
                                 {{'ongoing'}}
                                 @elseif($booking->booking_status==1) 

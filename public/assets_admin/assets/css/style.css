@@ -26078,16 +26078,20 @@ button.bid_status.btn-rejected {background: #001c4e;border-color: #001c4e;}
 
 .form-group.country-select input {
     float: right;
-    max-width: calc(100% - 80px );
-    border-left: 0;
+    max-width: calc(100% - 65px );
+    border-left: 1px solid #ddd;
 }
+
 .form-group.country-select select {
     width: auto;
     height: 35px !important;
     padding: 0;
     flex: 0 0 auto;
-    max-width: 64px;
+  
     min-width: auto;
+      display: inline-block;
+    max-width: 65px;
+    border-right: 0;
 }
 .form-group.country-select label {
     display: block;
@@ -26215,7 +26219,7 @@ form#multi-file-upload-ajax input[type="file"] {
 }
 div#image_preview .img-fluid {
     max-width: 120px;
-    min-height: 120px;
+    /*min-height: 120px;*/
     border: 1px solid #ddd;
     margin-bottom: 20px;
     max-height: 110px;
@@ -26268,4 +26272,8 @@ label.error{
 
 .img-hover {
     max-height: 120px;
+}
+.form-group.country-select label {
+    display: inline-block;
+    width: 100%;
 }

@@ -1,6 +1,6 @@
 @extends('buyer::layouts.master')
 @section('content')
-  <div class="col-md-12 col-lg-9">
+<div class="col-md-12 col-lg-9">
     <div class="profile-box">          
       <div class="profile-box-form">
         <h1 class="mb-3"> All Subscription Plans</h1>
@@ -58,7 +58,7 @@
             </div>
           
             @endforeach
-    `       </div>
+        </div>
    
         </section>
        
@@ -69,3 +69,6 @@
 </div>
 </div>
 @endsection
+
+
+

@@ -464,16 +464,14 @@ function getcountrylist()
     $country_list=[];
     foreach($countrylistarray as $list)
     {
-      $country_list[]=array(
-        'name'=>$list->name,
-        'phonecode'=>$list->phonecode,
-        'id'=>$list->id
-      );
+      $country_list[]=$list->phonecode;
     }
   }
   else{
     $country_list=[];
   }
+
+    $country_list=array_unique($country_list);
 
     return $country_list;
 }
@@ -613,7 +611,7 @@ function getconditionnamebylang($lang,$id)
 
 
 
-function getemailtemplate($template_id,$email,$username,$otp="",$sellername="",$selleremail="",$property_title="",$property_type="",$property_price="",$property_address="",$property_image_link="",$subscription_plan_name="",$subscription_plan_price="",$fund_amount="",$fund_screenshot="")
+function getemailtemplate($template_id,$email,$username,$otp="",$sellername="",$selleremail="",$property_title="",$property_type="",$property_price="",$property_address="",$property_image_link="",$subscription_plan_name="",$subscription_plan_price="",$fund_amount="",$fund_screenshot="",$user_password="")
   {
     try
             {
@@ -623,9 +621,9 @@ function getemailtemplate($template_id,$email,$username,$otp="",$sellername="",$
                     $email_content=$emailcontentdata->message;
                     $email_subject=$emailcontentdata->subject;
             
-                $variablesarray=array('[user]','[otp]','[contactname]','[contactinformation]','[contactinformationlink]','[contactsite]','[contactsitelink]','[sellername]','[selleremail]','[property_title]','[property_type]','[property_price]','[property_address]','[property_image_link]','[subscription_plan_name]','[subscription_plan_price]','[fund_amount]','[fund_screenshot]');
+                $variablesarray=array('[email]','[user]','[otp]','[contactname]','[contactinformation]','[contactinformationlink]','[contactsite]','[contactsitelink]','[sellername]','[selleremail]','[property_title]','[property_type]','[property_price]','[property_address]','[property_image_link]','[subscription_plan_name]','[subscription_plan_price]','[fund_amount]','[fund_screenshot]','[password]');
             
-                $variablesvaluesarray=array($username,$otp,'Homi Team','info@homi.com','mailto:info@homi.com','www.homi.com','https://www.homi.com',$sellername,$selleremail,$property_title,$property_type,$property_price,$property_address,$property_image_link,$subscription_plan_name,$subscription_plan_price,$fund_amount,$fund_screenshot);
+                $variablesvaluesarray=array($email,$username,$otp,'Homi Team','info@homi.com','mailto:info@homi.com','www.homi.com','https://www.homi.com',$sellername,$selleremail,$property_title,$property_type,$property_price,$property_address,$property_image_link,$subscription_plan_name,$subscription_plan_price,$fund_amount,$fund_screenshot,$user_password);
             
                 $email_content=str_replace($variablesarray,$variablesvaluesarray,$email_content);
                 $email_subject=str_replace($variablesarray,$variablesvaluesarray,$email_subject);

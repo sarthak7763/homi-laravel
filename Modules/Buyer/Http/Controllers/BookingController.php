@@ -26,7 +26,7 @@ class BookingController extends Controller
     
             $cancel_reasons = CancelReasons::where('reason_status',1)->get()->toArray();
 
-            
+            //DB::enableQueryLog();
             $bookingDataquery = DB::table('user_booking')->leftjoin('tbl_property','tbl_property.id','=','user_booking.property_id')
                                                     ->whereIN('user_booking.property_id',$property_id)
                                                     ->select('user_booking.*','tbl_property.title');
@@ -55,7 +55,7 @@ class BookingController extends Controller
 
                     if($search_checkout!=""){
                       $newcheckout_Date = date("Y-m-d", strtotime($search_checkout));
-                      $query->where("user_booking.user_checkout_date","=",$newcheckout_Date);  
+                      $query->where("user_booking.user_checkout_date","<=",$newcheckout_Date);  
                     }
 
                    
@@ -86,6 +86,7 @@ class BookingController extends Controller
 
 
         $bookingData = $bookingDataquery->get()->toArray();
+        //dd(DB::getQueryLog());
         // dd($booking_status);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
         return view('buyer::my-bookings',compact('bookingData','cancel_reasons','search_title','search_booking_id','search_checkin','search_checkout','booking_status'));
@@ -152,7 +153,7 @@ class BookingController extends Controller
 
             $booking_update = Userbooking :: where('booking_id',$data['booking_id'])->first();
             if(is_null($booking_update)){
-             return redirect()->route('buyer.booking','all')->with('error',"Something went wrong.");
+             return redirect()->route('buyer.booking')->with('error',"Something went wrong.");
           }
           if($booking_update->booking_status==1)
               {
@@ -165,7 +166,7 @@ class BookingController extends Controller
                 
                   $booking_update->booking_status = $status;   
                   $booking_update->save();
-              return redirect()->route('buyer.bookings','all')->with('success',"booking status updated successfully.");
+              return redirect()->route('buyer.bookings')->with('success',"booking status updated successfully.");
             }
       catch (\Exception $e){
           return response()->json(["status" => 'error','message'=>'Something went wrong.']);
@@ -193,7 +194,7 @@ class BookingController extends Controller
                                                             ]
                                                         );
                                                      
-        return redirect()->route('buyer.bookings','all')->with('success',"booking is cancelled successfully.");
+        return redirect()->route('buyer.bookings')->with('success',"booking is cancelled successfully.");
         }
         catch (\Exception $e){
             return response()->json(["status" => 'error','message'=>'Something went wrong.']);

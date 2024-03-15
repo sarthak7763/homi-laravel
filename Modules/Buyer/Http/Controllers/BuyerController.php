@@ -653,9 +653,9 @@ return Redirect::back()->withErrors($validator)->withInput();
                         'current_password' => 'required|min:6|max:10|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
                         'new_password' => [
                           'required',
-                          'min:8',
+                          'min:6',
                           'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#@%]).*$/',
-                          'max:25'
+                          'max:10'
                     ],
                   'confirm_password' => 'required|same:new_password', 
           ],

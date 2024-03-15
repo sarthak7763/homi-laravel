@@ -65,7 +65,7 @@
                                         </div>
                                         @enderror
                                     </div>
-                                    <div class="pt-2 pb-4 col-sm-6 fund-label error-fix">
+                                    <div class="pt-2 pb-4 col-sm-6 fund-label error-fix position-relative">
                                         <label><strong> Fund Image</strong></label>
                                         <span class="file-input"></span>
                                         
@@ -75,12 +75,12 @@
                                             {{$message}}
                                         </div>
                                         @enderror
+                                       
                                     </div>
-                                    <div class="col-md-12 mb-2">
-                        <img id="fund_image_preview" src="#"
-                        alt="" style="max-height: 250px;">
-
-              </div>
+                                    <div class="col-md-6 ml-auto mb-2 justify-content-center offset-md-6">
+                                        <img id="fund_image_preview" src="#"
+                                        alt="" style="max-height:150px;">
+                                    </div>
                                     <div class="col-md-12 d-flex text-center py-4 gap-2 justify-content-center">
                                         <button button type="submit" class="btn btn-primary  m-0  plan-btn text-white px-3">Activate Plan</button>
                                         <a href ="{{route('buyer.subscription-plans')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>

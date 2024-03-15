@@ -1,21 +1,40 @@
-
 <style>
-  button.btn.btn-primary.px-4 {
-    line-height: normal;
-}
-    .logout_modal  p {
-    font-size: 18px;
-    font-weight: bold;
-    color: #23323a;
+  button.btn.btn-primary.px-4 {line-height: normal;}
+  .logout_modal  p {font-size: 18px;font-weight: bold;color: #23323a;}
+  .logout_modal .btn {line-height: 36px;font-size: 16px;padding: 2px 10px;height: auto;min-height: auto;color: #fff;}
+.profile-nav > .item > a::after {
+display: none;
 }
 
-.logout_modal  .btn {
-    line-height: 36px;
-    font-size: 16px;
-    padding: 2px 10px;
-    height: auto;
-    min-height: auto;
-    color: #fff;
+.profile-nav li a:hover{text-decoration: none;}
+.profile-usermenu li.item {
+    position: relative;
+}
+.profile-usermenu li.item.active.show i {
+/*    transform: rotate(180deg);*/
+}
+.profile-usermenu li.item .dropdown-menu {
+    position: relative !important;
+    transform: translate(0) !important;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    transition: all .3s;
+    width: 0100%;
+}
+.profile-usermenu  .dropdown-menu.show a {
+    font-size: 14px !important;
+    padding: 14px 11px 14px 50px;
+    width: 100%;
+    line-height: 21px;
+    border-bottom: 1px solid #ddd;
+    color: var(--dark-gray2);
+    background: #f9fff2;
+    font-weight: 500;
+}
+.profile-usermenu .dropdown-menu.show a.dropdown-item:active {
+    background: transparent;
 }
 </style>
 <div class="col-md-4 col-lg-3  mb-4">
@@ -72,19 +91,45 @@
        Subscription Plans
     </a>
   </li>
-  <li class="item {{ (request()->is('dealer/my-subscription*')) ? 'active' : '' }}">
-    <a href="{{route('buyer.my-subscription')}}">
+  <li class="item  'active' : '' }}">
+    <a  class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+      <span class="user-icon subscription-icon">              
+      </span>
+      My Plans
+    </a>
+     <div class="dropdown-menu">
+      <a  class="dropdown-item" href="{{route('buyer.my-subscription')}}">My Subscription Plan</a>
+      <a class="dropdown-item" href="{{route('buyer.my-pending-subscription')}}">Pending Subscription plan</a>
+  
+  </div>
+  </li>
+<!--   <li class="item {{ (request()->is('dealer/my-subscription*')) ? 'active' : '' }}">
+    <a  class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="{{route('buyer.my-subscription')}}">
       <span class="user-icon subscription-icon">              
       </span>
       My Subscription Plan
     </a>
+    
   </li>
+ -->  <!-- <li class="item">
+  <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+   <span class="user-icon subscription-icon">              
+      </span> Pending Subscription Plan
+  </a>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Action</a>
+  
+  </div>
+</li> -->
   <li class="item {{ (request()->is('dealer/manage-properties*')) ? 'active' : '' }}">
     <a href="{{route('buyer.property')}}">
       <i class="fa-solid fa-building-user me-3"></i>
       Manage Properties
     </a> 
   </li>
+
+
+
   <!-- <li class="item {{ (request()->is('')) ? 'active' : '' }}">
     <a href="{{route('buyer.payment')}}">
       <span class="user-icon payments-icon">
@@ -114,3 +159,4 @@
     </div>
   </div>
 </div> -->
+

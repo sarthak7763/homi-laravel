@@ -33,8 +33,8 @@
         @endif
     </div>            
                   <div class="form-group mb-2 position-relative">
-                     <label for="email_address" class="col-form-label text-md-right">E-Mail Address</label>                    
-                        <input type="text" id="email_address" class="form-control" name="email"  autofocus>
+                     <label for="email_address"  class="col-form-label text-md-right">E-Mail Address</label>                    
+                        <input type="text" id="email_address" class="form-control" value="{{old('email')}}" name="email"  autofocus>
                         @error('email')
                        
                         <div class="error" style="display:block;">
@@ -45,7 +45,7 @@
                   
                   <div class="form-group mb-2 position-relative">
                      <label for="password" class="col-form-label text-md-right">Password</label>                     
-                        <input type="password" id="password" class="form-control" name="password"  autofocus>
+                        <input type="password" id="password"  class="form-control" name="password"  autofocus>
                         <span toggle="#password" class="input-group-text togglePassword border-0" id="">
 
                                 <svg class="eyeopen" width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">

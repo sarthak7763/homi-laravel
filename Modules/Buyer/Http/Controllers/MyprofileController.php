@@ -67,7 +67,7 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,Redirect;
 
 					if($request->owner_type==1)
 				      {
-				          $validator = Validator::make($request->all(), [
+				          $ownervalidator = Validator::make($request->all(), [
 				            'agency_name'=>[
 				                    'required',
 				                    'regex:/^[\pL\s]+$/u',
@@ -78,9 +78,9 @@ use Hash,Validator,Exception,DataTables,HasRoles,Auth,Mail,Str,Redirect;
 				          'agency_name.regex' => 'Please enter only alphabetic characters.',
 				        ]);
 
-						    if($validator->fails()){
+						    if($ownervalidator->fails()){
 
-								return Redirect::back()->withErrors($validator)->withInput();
+								return Redirect::back()->withErrors($ownervalidator)->withInput();
 							}
 				      }
 

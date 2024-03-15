@@ -45,7 +45,7 @@
                     </span>
                   </div>
                   <div class="col text-end">
-                    <h3><span class="text-success">{{$view_booking_data->property_price}}</span><span class="price">Rs/day</span></h3>
+                    <h3><span class="text-success">{{$view_booking_data->property_price}}</span><span class="price">Kz/day</span></h3>
                     <p>Payment mode:{{$view_booking_data->payment_mode}}</p>
                   </div>
                 </div>                  
@@ -272,7 +272,7 @@
                   <span >Sub Total</span>                          
                 </th>
                 <td class="text-end">
-                  <span class="price">{{$view_booking_data->booking_property_price}}</span>
+                  <span class="price">{{$view_booking_data->booking_property_price}} Kz</span>
                 </td>
               </tr>
 
@@ -281,7 +281,7 @@
                   <strong>Discount</strong>
                 </th>
                 <td class="text-end">
-                  <strong><span class="text-danger">{{$view_booking_data->booking_tax_price}}</span></strong>
+                  <strong><span class="text-danger">{{$view_booking_data->booking_tax_price}} Kz</span></strong>
                 </td>
               </tr>
               <tr class="grand totals">
@@ -289,7 +289,7 @@
                   <strong>Total Rent</strong>
                 </th>
                 <td class="text-end">
-                  <strong><span class="price">{{$view_booking_data->booking_price}}</span></strong>
+                  <strong><span class="price">{{$view_booking_data->booking_price}} Kz</span></strong>
                 </td>
               </tr>
 
@@ -301,7 +301,7 @@
 
     </div>  
      <div class="d-block text-center py-4 gap-2 profile-box justify-content-center fsdf">
-   <a href ="{{route('buyer.bookings','ongoing')}}" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
+   <a href ="{{route('buyer.bookings')}}" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
    </div>   
   </div>
 </div>

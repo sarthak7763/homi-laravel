@@ -149,8 +149,8 @@
                         <div class="country_code_div">
                         <select id="country_id" name="country_id" class=" form-control">
                                   @foreach($country_list as $list)
-                                      <option value="{{$list['id']}}" @if($propertyDetail['country_code']==$list['phonecode']) selected @endif>
-                                       ({{$list['phonecode']}})</option>
+                                      <option value="{{$list}}" @if($propertyDetail['country_code']==$list) selected @endif>
+                                       {{$list}}</option>
                                   @endforeach
                                 </select> 
                              <input type="text" class="form-control"  value="{{$propertyDetail->property_number}}" name="property_number" id="property_number" placeholder="Enter Contact Number" >  
@@ -382,12 +382,12 @@
                             </button>
                         </div>
                         @endforeach
-                        <div class="images-preview-div"> </div>
+                        <div class="images-preview-div" id="images-preview-div"> </div>
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-3 justify-content-center pb-4">
                     <button type="submit" class="btn btn-primary w-auto mt-0 mx-0">Update</button>
-                    <a href ="{{route('buyer.property','all')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
+                    <a href ="{{route('buyer.property')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
                     
                 </div>
                 </form>
@@ -442,7 +442,7 @@
           var selectoption6="";
         }
     
-        optionhtmlonload+='<option '+selectoption4+' value="4">Per night</option>';
+        optionhtmlonload+='<option '+selectoption4+' value="4">Per Month</option>';
       }
       else{
         if(property_price_type==1)
@@ -533,7 +533,7 @@
     
     };
     $('#edit_property_gallery_image').on('change', function() {
-       
+       $('#images-preview-div').html('');
         previewImages(this, 'div.images-preview-div');
     
     

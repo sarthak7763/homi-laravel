@@ -203,7 +203,7 @@
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">Built In Year:</p>
-                     <strong> {{$propertyData->built_in_year ? $propertyData->built_in_year : '--' }}</strong> 
+                     <strong> {{$propertyData->built_in_year ? date('Y',strtotime($propertyData->built_in_year)) : '--' }}</strong> 
                   </div>
                </div>
                <div class="col-sm-6 col-md-4">
@@ -275,7 +275,7 @@
       </div>
    </div>
    <div class="d-block text-center py-4 gap-2 justify-content-center">
-   <a href ="{{route('buyer.property','all')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
+   <a href ="{{route('buyer.property')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
    </div>
 </div>
 @endsection

@@ -1,3 +1,14 @@
+<style>
+.toast-success {
+    background-color: #51a351 !important;
+}
+
+.toast-error {
+    background-color: #bd362f !important;
+}
+</style>
+
+
 <footer>
 
   <div class="copyright-section text-center">
@@ -309,24 +320,56 @@ $('#property_type').on('change',function(){
         var get_lenght = get_string.length;
         console.log(get_lenght);
         if(get_lenght > 5 && get_lenght < 10){
-      
-          // $("#country_id").css("max-width","100px !important");
-          $("#country_id").css({ "max-width": "110px"});
+        $("#country_id").css({ "max-width": "110px"});
         }else if(get_lenght > 10){
           $("#country_id").css({ "max-width": "200px"});
         }else{
           $("#country_id").css({ "max-width": "70px"});
         }
         
-      //  var booking_id= $(this).attr('data-id');
-       
-      //  var booking_status= $(this).attr('data-status');
-       
-      //   $('#booking_hidden_id').val(booking_id);
-      //   $('#booking_hidden_status').val(booking_status);    
+          
 	}); 
 });
  
+</script>
+
+
+<script>
+  @if(Session::has('message'))
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.success("{{ session('message') }}");
+  @endif
+
+  @if(Session::has('error'))
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.error("{{ session('error') }}");
+  @endif
+
+  @if(Session::has('info'))
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.info("{{ session('info') }}");
+  @endif
+
+  @if(Session::has('warning'))
+  toastr.options =
+  {
+  	"closeButton" : true,
+  	"progressBar" : true
+  }
+  		toastr.warning("{{ session('warning') }}");
+  @endif
 </script>
 
 
@@ -380,6 +423,9 @@ reader.readAsDataURL(this.files[0]);
    });
 
 </script>
+
+
+
 
 
 

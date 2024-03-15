@@ -49,27 +49,16 @@ class MySubscriptionController extends Controller
 
     public function pendingSubscription()
     {
-
         $user_id = Auth::user()->id;
-
-        $seller_subscription_pending_plan = SellerSubscription::where('user_id',$user_id)->where('status','0')->get()->toArray();
-
         $seller_subscrption_data =DB::table('seller_subscription_activation')->leftjoin('subscriptions','subscriptions.id','=','seller_subscription_activation.subscription_id')
 
                                                             ->where('user_id',$user_id)
                                                             ->where('seller_subscription_activation.status',2)
-                                                            ->select('seller_subscription_activation.*','subscriptions.*')
-                                                            ->get();
-                if($seller_subscrption_data)
-                {
-                    $seller_subscription_data = $seller_subscrption_data->first();
-    
-                }
-                else{
-                    return redirect()->back()->with('error', 'something wrong'); 
-                }                                       
-
-            return view('buyer::pending-subscription',compact('seller_subscription_data'));
+                                                            ->select('seller_subscription_activation.created_at','subscriptions.*')
+                                                            ->first();
+                                                           
+                                                          
+        return view('buyer::pending-subscription',compact('seller_subscrption_data'));
        
     }
 
@@ -130,10 +119,7 @@ class MySubscriptionController extends Controller
 
                 $id = $request->hidden_id;
 
-               
-               
-
-                $user_id = Auth::User()->id;
+               $user_id = Auth::User()->id;
                 
                 $check_status = SellerSubscription::where('user_id',$user_id)->first();
                 if(!empty($check_status))
@@ -167,10 +153,8 @@ class MySubscriptionController extends Controller
                         $property_image_link="",$subscription_plan_details->name,$subscription_plan_details->plan_price,
                         $seller->fund_amount,$fund_screenshot);
 
-                      
-
-                        return redirect()->route('buyer.subscription-plans')->with('success','please wait .All details has been sent to admin for activation subcription plan by mail');
-                        }
+                        return redirect()->route('buyer.subscription-plans')->with('message','your subscription request has been send to super admin for approval plz wait till the super admin activates your subscription ');
+                       }
                       else
                       {
 

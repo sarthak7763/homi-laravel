@@ -76,7 +76,7 @@
                      <div class="mb-4">
                   <label> Property Built In Year</label>
 
-                        <input type="date" name="built_in_year"   class="form-control datepicker @error('built_in_year') is-invalid @enderror"    id="built_in_year" >            
+                        <input type="date" name="built_in_year" value="{{old('built_in_year')}}"  class="form-control datepicker @error('built_in_year') is-invalid @enderror" id="built_in_year" >            
                         @if($errors->has('built_in_year'))
                         <div class="invalid-feedback">
                            {{$errors->first('built_in_year')}}
@@ -155,8 +155,8 @@
                         <div class="country_code_div">
                         <select id="country_id" name="country_id" class=" form-control">
                         @foreach($country_list as $list)
-                        <option value="{{$list['id']}}">
-                            ({{$list['phonecode']}})</option>
+                        <option value="{{$list}}">
+                            {{$list}}</option>
                            @endforeach
                          </select>          
                         <input type="text" class="form-control @error('property_number') is-invalid @enderror" name="property_number" value="{{$userData->mobile}}"  aria-describedby="" placeholder="Enter Contact No" id = "property_number">  
@@ -181,7 +181,7 @@
                   </div>
                   <div class="col-sm-12">
                      <div class="mb-4 position-relative address-group">
-                        <input type="text" id="property_address"   class="form-control pe-5 @error('property_address') is-invalid @enderror" name="property_address" placeholder="Address">   
+                        <input type="text" id="property_address" value="{{old('property_address')}}"  class="form-control pe-5 @error('property_address') is-invalid @enderror" name="property_address" placeholder="Address">   
                         @if($errors->has('property_address'))
                         <div class="invalid-feedback">
                            {{$errors->first('property_address')}}
@@ -219,7 +219,7 @@
                      <div class="mb-4">
                         <input type="file"  id="property_image" value="{{old('property_image')}}" class="form-control @error('property_image') is-invalid @enderror" name="property_image">            
                         @if($errors->has('property_image'))
-                        <div class="invalid-feedback">
+                        <div class="invalid-feedback" id="image_preview_validation">
                            {{$errors->first('property_image')}}
                         </div>
                         @endif
@@ -275,7 +275,7 @@
                </div>
                <div class="col-12">
                   <div class="mb-4">            
-                     <textarea class="form-control @error('property_description') is-invalid @enderror"  name = "property_description" id="exampleFormControlTextarea1" rows="3" placeholder="Property Description"></textarea>         
+                     <textarea class="form-control @error('property_description') is-invalid @enderror" value="{{old('property_description')}}"  name="property_description"  id="exampleFormControlTextarea1" rows="3" placeholder="Property Description">{{old('property_description')}}</textarea>         
                      @if($errors->has('property_description'))
                         <div class="invalid-feedback">
                            {{$errors->first('property_description')}}
@@ -372,13 +372,13 @@
     </div>
    <div class="col-md-12">
       <div class="mt-1 text-center">
-         <div class="images-preview-div"> </div>
+         <div class="images-preview-div" id="images-preview-div"> </div>
       </div>
    </div> 
           
           <div class="d-flex text-center py-4 gap-2 justify-content-center">
             <button type="submit" class="btn btn-primary w-auto m-0 ">Save</button>
-            <a href ="{{route('buyer.property','all')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
+            <a href ="{{route('buyer.property')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>
          </form>
       </div>
    </div>
@@ -435,7 +435,7 @@
           var selectoption6="";
         }
     
-        optionhtmlonload+='<option '+selectoption4+' value="4">Per night</option>';
+        optionhtmlonload+='<option '+selectoption4+' value="4">Per Month</option>';
       }
       else{
         if(property_price_type==1)
@@ -502,7 +502,14 @@ reader.onload = (e) => {
 $('#property_image_preview').attr('src', e.target.result);
 
     }
+
+$('#image_preview_validation').html('');
+
 reader.readAsDataURL(this.files[0]);
+
+ 
+
+
 });
 
    });
@@ -532,6 +539,7 @@ reader.readAsDataURL(this.files[0]);
     };
 
     $('#property_gallery_image').on('change', function() {
+         $('#images-preview-div').html('');
         previewImages(this, 'div.images-preview-div');
     });
   });

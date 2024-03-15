@@ -32,7 +32,7 @@
                       
                         <div class="search-input-group input-group-property">
                             
-                            <div class="form-outline">
+                            <div class="form-outline me-md-1 me-0 px-md-2">
                                 <input type="text" id="title_search" class="form-control" name="title_search" placeholder="Search data" value ="{{$search_title}}" />
                                 <select name="status_search">
                                   <option value ="" >select status</option> 
@@ -41,10 +41,10 @@
                                   <option value ="pending" {{ $search_status == 'pending' ? 'selected' : '' }}>Pending</option>
                                  </select>                                
                                 </div>
-                            <button type="submit" class="btn-search">
+                            <button type="submit" class="btn-search me-1">
                             Search
                             </button>
-                            <a href ="{{route('buyer.property')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Reset</a>
+                            <a href ="{{route('buyer.property')}}" button type="button" class="btn btn-danger me-0 me-sm-1 font-18 cancel_btn mx-0 mt-0 px-3">Reset</a>
                         </div>
                     </form>
                 </div>
@@ -73,7 +73,7 @@
                         <div class="col-12 col-md">
                             <div class="manage-list-text">
                                 <h2>
-                                    <a href="#">{{$property['title']}}</a>
+                                    <a href="{{route('buyer.view-property',($property['id']))}}">{{$property['title']}}</a>
                                 </h2>
                                 <p>
                                     <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">

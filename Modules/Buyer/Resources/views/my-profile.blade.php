@@ -5,17 +5,11 @@
     margin-top: -40px;
 }
 
+
 .user-box.profilepics-icon img {
     height: 100%;
     object-fit: cover;
     object-position: center center;
-}
-.user-box {
-    border: 1px solid #7591a3;
-    padding: 5px;
-    
-
-    
 }
 
 .display-block {
@@ -25,13 +19,25 @@
 
 .display-none {
     display: none;
+}
+
+.user-box.profilepics-icon img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
 }  
 </style>
-<div class="col-md-8 col-lg-9 mt-4">  
-<div class="profile-box border px-4 mt-3">
+<div class=" col-md-8 col-lg-9">  
+<div class="profile-box">
+      <div class="profile-box-form">
+      <h1 class="mb-3">My Profile</h1>
+        
+    <div>
+    <div class="profile-form">
+   
      <div class="row">
                <div class="col-12 text-center">
-                  <div class="user-box overflow-visible position-relative profilepics-icon mb-0 mt-40">
+                  <div class="user-box overflow-visible position-relative profilepics-icon mb-0 ">
                     @if($userInfo->profile_pic)
                            <img class="rounded-pill profilepics" src="{{url('/')}}/images/user/{{$userInfo->profile_pic}}">
                            @else
@@ -46,8 +52,8 @@
                   </div>
                </div>
             </div>
-    <div class="profile-box-form">
-        <h1 class="mb-3">My Profile</h1>
+    <div class="profile-box-form mt-4">
+      
         <div>
             @if (session()->has('success'))
                 <div class="alert alert-success">
@@ -68,7 +74,7 @@
 <tbody>
     <tr>
         
-        <td><strong>Owner Name : </strong> 
+        <td><strong class="m-0">Owner Name : </strong> 
             @if(!empty($userInfo->name))
             <span> {{$userInfo->name}}</span>
             @else
@@ -77,7 +83,7 @@
             @endif
 
         </td>
-        <td><strong>Owner Email Id : </strong> 
+        <td><strong class="m-0">Owner Email Id : </strong> 
         @if(!empty($userInfo->email))
             <span> {{$userInfo->email}}</span>
             @else
@@ -88,7 +94,7 @@
     </td>
     </tr>
     <tr>
-        <td><strong>Contact No. : </strong>
+        <td><strong class="m-0">Contact No. : </strong>
         @if(!empty($userInfo->mobile))
             <span> {{$userInfo->mobile}}</span>
             @else
@@ -97,7 +103,7 @@
             @endif
     
     </td>
-        <td><strong>Registration Date : </strong> 
+        <td><strong class="m-0">Registration Date : </strong> 
         @if(!empty($userInfo->created_at))
             <span>{{date('d M , Y',strtotime($userInfo->created_at))}}</span>
             @else
@@ -110,12 +116,12 @@
 
  <tr>
     @if($userInfo->owner_type == 1)    
-        <td><strong>Owner Type : </strong> </span>Agency</span> </td> <td><strong>Agency Name : </strong>
+        <td><strong class="m-0">Owner Type : </strong> </span>Agency</span> </td> <td><strong class="m-0">Agency Name : </strong>
         <span> {{$userInfo->agency_name}}</span></td>
     @elseif($userInfo->owner_type == 2)
-        <td colspan="2"><strong>Owner Type : </strong>Individual</td>
+        <td colspan="2"><strong class="m-0">Owner Type : </strong>Individual</td>
         @else
-        <td colspan="2"><strong>Owner Type : </strong>NA
+        <td colspan="2"><strong class="m-0">Owner Type : </strong>NA
      </td>
 
     @endif

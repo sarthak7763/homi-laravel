@@ -183,7 +183,7 @@ class PropertyController extends Controller
       $property_access  =$this->propertyAccess();
         if($property_access=='true')
         {
-          return redirect()->route('buyer.property','all')->with('error',"Property cant be add more.");;
+          return redirect()->route('buyer.property')->with('error',"Property cant be add more.");;
         }
 
 
@@ -203,7 +203,6 @@ class PropertyController extends Controller
                 'no_of_balcony'=>'required|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
-                'property_features'=>'required',
                 'property_area'=>'required|numeric',
                 'property_address'=>'required',
                 'property_email'=>'required',
@@ -212,6 +211,7 @@ class PropertyController extends Controller
                 'no_of_lift'=>'required',
                 'no_of_garden'=>'required',
                 'no_of_parking'=>'required',
+                'property_description'=>'required',
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
                 'property_image' => 'required|mimes:jpeg,png,jpg',
@@ -244,6 +244,7 @@ class PropertyController extends Controller
   'property_address.required'=>'Property address field can’t be left blank',
   'property_email.required'=>'Property email  is required.',
   'property_number.required'=>'Property number is required.',
+  'property_description.required'=>'Property description is required.',
   'no_of_pool.required'=>'Pool field can’t be left blank',
   'no_of_lift.required'=>'Lift field can’t be left blank',
   'no_of_garden.required'=>'Garden field can’t be left blank',
@@ -262,18 +263,6 @@ if($validator->fails()){
 return Redirect::back()->withErrors($validator)->withInput();
 }
       $data=$request->all();
-      
-     
-
-      $country_data = Country ::where('id',$data['country_id'])->select('phonecode')->first();
-     
-      
-
-      
-
-      
-
-      
                   
             $checkpropertycategory=Category::where('id',$data['property_category'])->where('category_type',$data['property_type'])->where('status',1)->get()->first();
             if(!$checkpropertycategory)
@@ -315,6 +304,14 @@ return Redirect::back()->withErrors($validator)->withInput();
             else{
               $property_description_pt="";
             }
+
+            if(isset($data['property_features']) && $data['property_features']!="")
+            {
+              $property_features=json_encode($data['property_features']);
+            }
+            else{
+              $property_features="";
+            }
             if($request->hasFile('property_image')){      
                           $imageName = time().'.'.$request->property_image->extension();
                           $image = $request->property_image->move(public_path('images/property/thumbnail/'), $imageName);
@@ -342,15 +339,12 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_longitude=$data['property_longitude'] ?? "";
                           $property->property_email=$data['property_email'];
                           $property->property_number=$data['property_number'];
-                          $property->country_code=$country_data->phonecode;
-                          
-
-                        
+                          $property->country_code=$data['country_id'];
                           $property->property_price=$data['property_price'];
                           $property->property_price_type=$data['property_price_type'];
                           $property->property_category=$data['property_category'];
                           $property->property_condition=$data['property_condition'];
-                          $property->property_features=json_encode($data['property_features']);
+                          $property->property_features=$property_features;
                           $property->meta_title=$data['meta_title'];
                           $property->meta_title_pt=$meta_title_pt;
                           $property->meta_keywords=$data['meta_keywords'];
@@ -361,7 +355,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
-                          $property->country_code=$country_data->phonecode;
+                          $property->country_code=$data['country_id'];
                           $property->property_status=0;
                           // $property->property_status=1;
                           $property->publish_date=date('Y-m-d');
@@ -425,7 +419,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                       getemailtemplate($template_id='6',$admin->email,$admin->name,$otp="",$seller->name,$seller->email="",$data['title'],$property_typevalue,$data['property_price'],$data['property_address'],$property_image_link); 
                           
                           
-                      return redirect()->route('buyer.property','all')->with('success', 'Property has been added and property email has been sent to admin verify and publish to homi panel !');      
+                      return redirect()->route('buyer.property')->with('success', 'Property has been added and property email has been sent to admin verify and publish to homi panel !');      
                       }
                      else{
                           return back()->with('error','Please choose property thumbnail image.');
@@ -445,14 +439,16 @@ return Redirect::back()->withErrors($validator)->withInput();
         $country_list=getcountrylist();
         $propertyDetail = Property::where('id',$id)->get()->first();
 
-       
-
+        if($propertyDetail->property_features!="")
+        {
+          $my_property_features = $propertyDetail->property_features;
+          $featuresArray = json_decode($my_property_features, true);
+        }
+        else{
+          $featuresArray=[];
+        }
         
-        
-        $my_property_features = $propertyDetail->property_features;
-        $featuresArray = json_decode($my_property_features, true);
         $propertyGallery = PropertyGallery::where('property_id',$id)->where('status',1)->get()->toArray();
-        $featuresArray = json_decode($my_property_features, true);
         return view('buyer::editproperty',compact('propertyDetail','propertyGallery','featuresArray','country_list'));
       }
       catch (\Exception $e){
@@ -476,6 +472,8 @@ return Redirect::back()->withErrors($validator)->withInput();
         $remaining_images = 7-$uploaded_images;
 
 
+
+
         $validator = Validator::make($request->all(), [
           'title'=>'required|regex:/^[\pL\s]+$/u',
 			     'property_type'=>[
@@ -491,13 +489,12 @@ return Redirect::back()->withErrors($validator)->withInput();
                 'no_of_balcony'=>'required|numeric',
                 'no_of_floors'=>'required|numeric',
                 'property_condition'=>'required',
-                'property_features'=>'required',
                 'property_area'=>'required|numeric',
                 'property_address'=>'required',
                 'property_price'=>'required|numeric',
                 'property_price_type'=>'required',
-                'property_gallery_image' => 'array|max:'.$remaining_images,
                 'property_email'=>'required',
+                'property_description'=>'required',
                 'property_number'=>'required|numeric',
                 'no_of_pool'=>'required',
                 'no_of_lift'=>'required',
@@ -533,6 +530,7 @@ return Redirect::back()->withErrors($validator)->withInput();
   'property_price.required'=>'Property price field can’t be left blank',
   'property_price.numeric'=>'Property price field only allows number',
   'property_price_type.required'=>'Property price type is required.',
+  'property_description.required'=>'Property description is required.',
   'property_email.required'=>'Property email  is required.',
   'property_number.required'=>'Property number is required.',
   'property_number.numeric'=>'Property number field only allows number',
@@ -540,20 +538,27 @@ return Redirect::back()->withErrors($validator)->withInput();
   'no_of_lift.required'=>'Lift field can’t be left blank',
   'no_of_garden.required'=>'Garden field can’t be left blank',
   'no_of_parking.required'=>'Parking field can’t be left blank',
-
-
-
- 
-  'property_gallery_image.max'=>' please upload only'.' '.$remaining_images.' gallery images' 
-
   ]);
 if($validator->fails()){
 
 return Redirect::back()->withErrors($validator)->withInput();
 }
 
-       
 
+if($remaining_images!=0)
+{
+  $imagevalidator = Validator::make($request->all(), [
+  'property_gallery_image' => 'array|max:'.$remaining_images,
+  ],
+  [
+    'property_gallery_image.max'=>' please upload only'.' '.$remaining_images.' gallery images'
+  ]);
+
+  if($imagevalidator->fails()){
+  return Redirect::back()->withErrors($imagevalidator)->withInput();
+}
+
+}
        
               $property=Property::find($id);
 
@@ -602,6 +607,17 @@ return Redirect::back()->withErrors($validator)->withInput();
             else{
               $property_description_pt="";
             }
+
+
+            if(isset($data['property_features']) && $data['property_features']!="")
+            {
+              $property_features=json_encode($data['property_features']);
+            }
+            else{
+              $property_features="";
+            }
+
+
             if($property->title==$data['title'])
             {
               if($request->hasFile('property_image')){      
@@ -631,7 +647,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_price_type=$data['property_price_type'];
                           $property->property_category=$data['property_category'];
                           $property->property_condition=$data['property_condition'];
-                          $property->property_features=json_encode($data['property_features']);
+                          $property->property_features=$property_features;
                           $property->meta_title=$data['meta_title'];
                           $property->meta_title_pt=$meta_title_pt;
                           $property->meta_keywords=$data['meta_keywords'];
@@ -642,10 +658,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
-                          $property->country_code=$property['country_id'];
-                          $property->property_status=0;
-                          $property->country_code=$country_data->phonecode;
-                          // $property->property_status=1;
+                          $property->country_code=$data['country_id'];
                           $property->publish_date=date('Y-m-d');
               }
               else{
@@ -671,7 +684,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                   $property->property_price_type=$data['property_price_type'];
                   $property->property_category=$data['property_category'];
                   $property->property_condition=$data['property_condition'];
-                  $property->property_features=json_encode($data['property_features']);
+                  $property->property_features=$property_features;
                   $property->meta_title=$data['meta_title'];
                   $property->meta_title_pt=$meta_title_pt;
                   $property->meta_keywords=$data['meta_keywords'];
@@ -681,9 +694,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                   $property->property_description=$data['property_description'];
                   $property->property_description_pt=$property_description_pt;
                   $property->built_in_year=$data['built_in_year'];
-                   $property->property_status=0;
-                   $property->country_code=$country_data->phonecode;
-                  // $property->property_status=1;
+                  $property->country_code=$data['country_id'];
                   $property->publish_date=date('Y-m-d');
               }
             }
@@ -721,7 +732,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_price_type=$data['property_price_type'];
                           $property->property_category=$data['property_category'];
                           $property->property_condition=$data['property_condition'];
-                          $property->property_features=json_encode($data['property_features']);
+                          $property->property_features=$property_features;
                           $property->meta_title=$data['meta_title'];
                           $property->meta_title_pt=$meta_title_pt;
                           $property->meta_keywords=$data['meta_keywords'];
@@ -732,9 +743,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                           $property->property_description_pt=$property_description_pt;
                           $property->built_in_year=$data['built_in_year'];
                           $property->property_image=$imageName;
-                          $property->property_status=0;
-                          $property->country_code=$country_data->phonecode;
-                          // $property->property_status=1;
+                          $property->country_code=$data['country_id'];
                           $property->publish_date=date('Y-m-d');
                       }
                   else{
@@ -762,7 +771,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                     $property->property_price_type=$data['property_price_type'];
                     $property->property_category=$data['property_category'];
                     $property->property_condition=$data['property_condition'];
-                    $property->property_features=json_encode($data['property_features']);
+                    $property->property_features=$property_features;
                     $property->meta_title=$data['meta_title'];
                     $property->meta_title_pt=$meta_title_pt;
                     $property->meta_keywords=$data['meta_keywords'];
@@ -772,10 +781,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                     $property->property_description=$data['property_description'];
                     $property->property_description_pt=$property_description_pt;
                     $property->built_in_year=$data['built_in_year'];
-                    $property->country_code=$country_data->phonecode;
-                    $property->property_status=0;
-
-                    // $property->property_status=1;
+                    $property->country_code=$data['country_id'];
                     $property->publish_date=date('Y-m-d');
                   }
               }
@@ -787,12 +793,12 @@ return Redirect::back()->withErrors($validator)->withInput();
                        
                         $property_id = $property->id;
 
+                          if($request->hasFile('property_gallery_image')){
+
                         if($remaining_images==0)
                         {
                             return redirect()->back()->with('error', 'you cant upload  new gallery image.');
                         }
-                       
-                          if($request->hasFile('property_gallery_image')){
 
                             $allowedfileExtension = ['jpeg','jpg','png'];
                             
@@ -816,7 +822,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                                   }
                             }
                           // toastr()->success('Property information saved successfully!','',["progressBar"=> false, "showDuration"=>"3000", "hideDuration"=> "3000", "timeOut"=>"100"]);
-                          return redirect()->route('buyer.property','all')->with('success', 'Property has been updated !'); 
+                          return redirect()->route('buyer.property')->with('success', 'Property has been updated !'); 
                 }
                 
                 else
@@ -858,7 +864,7 @@ return Redirect::back()->withErrors($validator)->withInput();
                   }
                   $propertyupdate->property_status=$status;
                   $propertyupdate->save();
-                  return redirect()->route('buyer.property','all')->with('success',"Property status updated successfully.");
+                  return redirect()->route('buyer.property')->with('success',"Property status updated successfully.");
                 }
           catch (\Exception $e){
               return response()->json(["status" => 'error','message'=>$e->getMessage()]);
@@ -882,10 +888,15 @@ return Redirect::back()->withErrors($validator)->withInput();
                                                           
 
       $propertyData = Property::where('id',$id)->get()->first();
-      $my_property_features = $propertyData->property_features;
+
+      if($propertyData->property_features!="")
+      {
+        $my_property_features = $propertyData->property_features;
       $featuresArray = json_decode($my_property_features, true);
-    
-     
+      }
+      else{
+        $featuresArray=[];
+      } 
       
       $property_gallery = PropertyGallery :: where('property_id',$id)->get()->toArray();
       $property_conditionData = DB::table('tbl_property')->join('property_condition','property_condition.id','=','tbl_property.property_condition')
