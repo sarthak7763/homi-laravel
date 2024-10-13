@@ -6,6 +6,9 @@
    object-fit: cover;
    object-position: center;
    }
+   .view-info .img-thumbnail {
+    max-width: 100px;
+}
 </style>
 <div class="col-md-8 col-lg-9 pb-4">
 <div class="profile-box">
@@ -44,8 +47,15 @@
          </div>
       </div>
       @endif
-      <div class="view-info mt-3"> 
-         <div class="booking-detail">
+      <div class="view-info mt-2"> 
+      
+      
+      <div class="booking-detail border py-3">
+      <div class="card-block view-info pb-3">
+         <div class="col-lg-12">
+               <img class="img-thumbnail" src="{{url('/')}}/images/property/thumbnail/{{ $propertyData->property_image}}" alt="user-pic" title="Featured Image">
+         </div>
+      </div>   
             <div class="row">
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
@@ -69,6 +79,12 @@
                   <div class="booking-detail-box">
                    <p class="mb-0"> Property Title :</p>
                   <strong>{{$propertyData->title ? ucfirst($propertyData->title) : '--' }}</strong> 
+               </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                  <div class="booking-detail-box">
+                   <p class="mb-0"> Property Owner :</p>
+                  <strong>{{$property_owner->name}}</strong> 
                </div>
                </div>
                <div class="col-sm-6 col-md-4">
@@ -97,7 +113,7 @@
                </div>
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
-                   <p class="mb-0">No Of Lift :</p>
+                   <p class="mb-0">Lift :</p>
                   <strong>@if($propertyData->no_of_lift==1)
                   {{'Yes'}}
                   @else
@@ -105,16 +121,7 @@
                   @endif</strong> 
                </div>
                </div>
-               <div class="col-sm-6 col-md-4">
-                  <div class="booking-detail-box">
-                   <p class="mb-0">No Of Lift :</p>
-                  <strong>@if($propertyData->no_of_lift==1)
-                  {{'Yes'}}
-                  @else
-                  {{'No'}}
-                  @endif</strong> 
-               </div>
-               </div>
+              
                 <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
                    <p class="mb-0">No Of Bedroom : </p>
@@ -129,7 +136,7 @@
                </div>
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
-                   <p class="mb-0">No Of Garden :</p>
+                   <p class="mb-0">Garden :</p>
                   <strong>@if($propertyData->no_of_garden==1)
                   {{'Yes'}}
                   @else
@@ -140,7 +147,7 @@
                
                <div class="col-sm-6 col-md-4">
                   <div class="booking-detail-box">
-                     <p class="mb-0">No Of Parking :</p>
+                     <p class="mb-0">Parking :</p>
                      <strong>@if($propertyData->no_of_parking==1)
                      {{'Yes'}}
                      @else
@@ -150,7 +157,7 @@
                </div>
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
-                  <p class="mb-0">No Of Pool :</p>
+                  <p class="mb-0"> Pool :</p>
                      <strong> @if($propertyData->no_of_pool==1)
                   {{'Yes'}}
                   @else
@@ -190,13 +197,9 @@
                                     {{'Fixed'}}
                                     @elseif ($propertyData->property_price_type==3)
                                     {{'Persq.Yard'}}
-                                    @elseif ($propertyData->property_price_type==4)
-                                    {{'Per Night'}}
-                                    @elseif ($propertyData->property_price_type==5)
+                                    @else ($propertyData->property_price_type==4)
                                     {{'Per Month'}}
-                                    @elseif ($propertyData->property_price_type==6)
-                                    {{'Per Annual'}}
-                                    @endif
+                                   @endif
                            </strong> 
                          </div>
                         </div>
@@ -204,6 +207,12 @@
                    <div class="booking-detail-box">
                   <p class="mb-0">Built In Year:</p>
                      <strong> {{$propertyData->built_in_year ? date('Y',strtotime($propertyData->built_in_year)) : '--' }}</strong> 
+                  </div>
+               </div>
+               <div class="col-sm-6 col-md-4">
+                   <div class="booking-detail-box">
+                  <p class="mb-0">Property Area:</p>
+                     <strong> {{$propertyData->property_area}}</strong> 
                   </div>
                </div>
                <div class="col-sm-6 col-md-4">
@@ -226,7 +235,7 @@
                      <strong> {{$propertyData->property_address ? $propertyData->property_address : '--' }}</strong> 
                   </div>
                </div>
-                              <div class="col-sm-6 col-md-4">
+                  <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">Property Status: </p>
                      <strong>  @if($propertyData->property_status==1)
@@ -239,7 +248,7 @@
                <div class="col-sm-6 col-md-4">
                    <div class="booking-detail-box">
                   <p class="mb-0">Publish Date:</p>
-                     <strong>  {{$propertyData->publish_date ? $propertyData->publish_date : '--' }}</strong> 
+                     <strong>  {{$propertyData->publish_date ? $publish_date : '--' }}</strong> 
                   </div>
                </div>
                <div class="col-sm-6 col-md-4">
@@ -268,11 +277,7 @@
                </div>
 
 
-            </div>
-         </div>
-               
-                    
-      </div>
+              
    </div>
    <div class="d-block text-center py-4 gap-2 justify-content-center">
    <a href ="{{route('buyer.property')}}" button type="button" class="btn btn-danger cancel_btn  mx-0 mt-0 px-3">Back</a>

@@ -278,8 +278,6 @@ return Redirect::back()->withErrors($validator)->withInput();
                       'otp' =>$email_token
                     ];
 
-
-
                     getemailtemplate($template_id='1',$data['email'],$data['name'],$email_token);
 
    

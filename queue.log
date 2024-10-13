@@ -1,0 +1,23 @@
+[2022-04-06 09:44:06][1] Processing: App\Jobs\SendAddBidMailToBidders
+[2022-04-06 09:44:12][1] Processed:  App\Jobs\SendAddBidMailToBidders
+[2022-04-06 09:44:12][2] Processing: App\Jobs\SendAddBidMailToBidders
+[2022-04-06 09:44:16][2] Processed:  App\Jobs\SendAddBidMailToBidders
+
+   Symfony\Component\Process\Exception\ProcessSignaledException 
+
+  The process has been signaled with signal "1".
+
+  at vendor/symfony/process/Process.php:441
+    437▕             usleep(1000);
+    438▕         }
+    439▕ 
+    440▕         if ($this->processInformation['signaled'] && $this->processInformation['termsig'] !== $this->latestSignal) {
+  ➜ 441▕             throw new ProcessSignaledException($this);
+    442▕         }
+    443▕ 
+    444▕         return $this->exitcode;
+    445▕     }
+
+      [2m+17 vendor frames [22m
+  18  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle()

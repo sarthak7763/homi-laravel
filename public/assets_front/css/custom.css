@@ -2137,7 +2137,10 @@ a.btn.btn-danger.cancel_btn {
     padding: 30px 30px 20px;
     border-radius: 10px;
 }
-
+[role="navigation"] .justify-between {
+    justify-content: flex-end;
+    display: flex;
+}
 @media (min-width:576px) {
     .modal-dialog {
         max-width: 450px;

@@ -888,6 +888,14 @@ if($remaining_images!=0)
                                                           
 
       $propertyData = Property::where('id',$id)->get()->first();
+      
+      $property_owner = User::where('id',$propertyData->add_by)->select('name')->first();
+
+      $publish_date = date('d M, Y',strtotime($propertyData->publish_date)) ;
+     
+
+     
+      
 
       if($propertyData->property_features!="")
       {
@@ -904,7 +912,7 @@ if($remaining_images!=0)
                                                           ->where('tbl_property.id',$id)
                                                           ->get()
                                                           ->first();
-        return view('buyer::viewproperty',compact('propertyData','property_gallery','property_conditionData','featuresArray')); 
+        return view('buyer::viewproperty',compact('propertyData','property_gallery','property_conditionData','featuresArray','property_owner','publish_date')); 
       }
       catch (\Exception $e){
         return response()->json(["status" => 'error','message'=>'Something went wrong.']);

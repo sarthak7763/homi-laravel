@@ -909,6 +909,11 @@ table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td
     .email-read .mail-img [class*="col-"]:last-child {
         margin-bottom: 0
     }
+
+
+    input#property_gallery:after {
+        content: "";
+    }
 }
 
 @media only screen and (max-width: 991px) {
@@ -1191,6 +1196,10 @@ table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td
 
     figure.effect-moses p {
         padding: 5px
+    }
+
+    input#property_gallery:after {
+        content: "";
     }
 }
 
@@ -26205,6 +26214,21 @@ input#property_gallery_image:after {
     padding-right: 10px;
     line-height: 18px;
 }
+
+input#property_gallery:after {
+    content: "\f093";
+    font: normal normal normal 20px/1 FontAwesome;
+    float: right;
+    color: #111c4e;
+    width: 100%;
+    text-align: end;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    padding-right: 63%;
+    line-height: 18px;
+}
+
 .form-group {
     position: relative;
 }

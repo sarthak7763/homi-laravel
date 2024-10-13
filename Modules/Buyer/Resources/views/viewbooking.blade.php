@@ -27,7 +27,7 @@
       <div class="row align-items-center">
         <div class="col-sm-4">
           <div class="properties-top-img">
-            <img src="{{url('/')}}//images/property/thumbnail/1683619110-a66063ec4bdc74958acedff692e2f099.jpg">
+            <img src="{{url('/')}}/images/property/thumbnail/{{$view_booking_data->property_image}}">
           </div>
         </div>
     
@@ -44,10 +44,10 @@
 
                     </span>
                   </div>
-                  <div class="col text-end">
+                  <!-- <div class="col text-end">
                     <h3><span class="text-success">{{$view_booking_data->property_price}}</span><span class="price">Kz/day</span></h3>
                     <p>Payment mode:{{$view_booking_data->payment_mode}}</p>
-                  </div>
+                  </div> -->
                 </div>                  
                   <h2>
                     <a href="#"></a>
@@ -59,7 +59,7 @@
                                                                                       
                     
 
-                    <li><span>Payment status: {{$view_booking_data->payment_status}}</span></li>                     
+                    <!-- <li><span>Payment status: {{$view_booking_data->payment_status}}</span></li>                      -->
                   </ul>
                   <p>Booking status: <span class="text-success">
                   @if($view_booking_data->booking_status==0)
@@ -77,7 +77,7 @@
       </div>
         <div class="listing-content">                  
           <ul class="row listing-details">
-            <li class="col li-rooms">
+           <li class="col li-rooms">
               <div class="details-row d-flex justify-content-center w-100">
                 <div class="details-col-icon">
                   <span>
@@ -196,12 +196,19 @@
         <div class="booking-detail">
           <h2 class="mb-3">Booking Detail</h2>
           <div class="row">
+          <div class="col-sm-6 col-lg-4 col-md-6">
+              <div class="booking-detail-box">
+                <p class="mb-0">Property name</p>
+                <strong>{{$view_booking_data->title}}</strong>
+              </div>
+            </div>
             <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
-                <p class="mb-0">Full name</p>
+                <p class="mb-0">User name</p>
                 <strong>{{$view_booking_data->user_name}}</strong>
               </div>
             </div>
+           
             <div class="col-sm-6 col-lg-4 col-md-6">
               <div class="booking-detail-box">
                 <p class="mb-0">Email</p>

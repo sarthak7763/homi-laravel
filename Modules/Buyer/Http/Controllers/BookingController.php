@@ -29,8 +29,8 @@ class BookingController extends Controller
             //DB::enableQueryLog();
             $bookingDataquery = DB::table('user_booking')->leftjoin('tbl_property','tbl_property.id','=','user_booking.property_id')
                                                     ->whereIN('user_booking.property_id',$property_id)
-                                                    ->select('user_booking.*','tbl_property.title');
-
+                                                    ->select('user_booking.*','tbl_property.title')
+                                                    ->where('user_id',$user_id);
             $search_title = $request->title_search;
             $search_booking_id = $request->booking_id_search;
             $search_status = $request->status_search;
@@ -85,7 +85,14 @@ class BookingController extends Controller
               });
 
 
-        $bookingData = $bookingDataquery->get()->toArray();
+        //  $bookingData = $bookingDataquery->get()->toArray();
+
+                  
+
+         $bookingData = $bookingDataquery->paginate(10);
+        
+
+      
         //dd(DB::getQueryLog());
         // dd($booking_status);
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
@@ -123,9 +130,8 @@ class BookingController extends Controller
                   $years = floor($diff / (365*60*60*24));
                   $months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
                   $days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-                 
 
-               return view('buyer::viewbooking',compact('view_booking_data','days','cancel_reason'));
+                return view('buyer::viewbooking',compact('view_booking_data','days','cancel_reason'));
            }
           catch (\Exception $e){
             
